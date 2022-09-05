@@ -1,2 +1,2 @@
 # davar
-Flutter app - memorize words or sentences, learning new language
+Flutter app - helps memorize words or sentences and learning new language.
