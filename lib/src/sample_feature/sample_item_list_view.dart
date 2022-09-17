@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../authentication/auth_provider.dart';
 import '../settings/settings_view.dart';
 import 'sample_item.dart';
 import 'sample_item_details_view.dart';
@@ -49,7 +51,13 @@ class SampleItemListView extends StatelessWidget {
           final item = items[index];
 
           return ListTile(
-            title: Text('SampleItem ${item.id}'),
+            title: Column(
+              children: [
+                Text('SampleItem ${item.id}'),
+                Text('Auth user id: ${context.watch<AuthProvider>().user.id}'),
+                Text('Auth user name: ${context.watch<AuthProvider>().user.name}'),
+              ],
+            ),
             leading: const CircleAvatar(
               // Display the Flutter Logo image asset.
               foregroundImage: AssetImage('assets/images/flutter_logo.png'),

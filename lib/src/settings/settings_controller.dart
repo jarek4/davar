@@ -1,3 +1,4 @@
+import 'package:davar/locator.dart';
 import 'package:flutter/material.dart';
 
 import 'settings_service.dart';
@@ -8,10 +9,10 @@ import 'settings_service.dart';
 /// Controllers glue Data Services to Flutter Widgets. The SettingsController
 /// uses the SettingsService to store and retrieve user settings.
 class SettingsController with ChangeNotifier {
-  SettingsController(this._settingsService);
+ // SettingsController(this._settingsService);
 
   // Make SettingsService a private variable so it is not used directly.
-  final SettingsService _settingsService;
+  final SettingsService _settingsService = locator<SettingsService>();
 
   // Make ThemeMode a private variable so it is not updated directly without
   // also persisting the changes with the SettingsService.
