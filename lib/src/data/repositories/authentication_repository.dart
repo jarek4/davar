@@ -45,6 +45,7 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       print('AuthenticationRepository register created user id: $id\n');
       Map<String, dynamic> registeredUser =
           await _selectUserFromDatabase(user.email, user.password);
+      print('registeredUser.isNotEmpty: ${registeredUser.isNotEmpty}');
       if (registeredUser.isNotEmpty) {
         User newUser = User.fromJson(registeredUser);
         await _ss.persistEmail(user.email);
@@ -54,7 +55,7 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
         _controller.add(_user = newUser);
       }
     } catch (e) {
-      throw Exception(e);
+      throw Exception('AuthenticationRepository register Exception!');
     }
   }
 
@@ -137,6 +138,7 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       print('AuthenticationRepository-> _selectUserFromDatabase user id: ${res[0]['id']}');
       return res[0];
     } catch (e) {
+      throw Exception('AuthenticationRepository register selectUserFromDatabase Exception!!');
       print('AuthenticationRepository-> _selectUserFromDatabase Exception: \n----------\n$e');
       return {};
     }

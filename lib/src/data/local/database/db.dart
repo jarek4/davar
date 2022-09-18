@@ -64,7 +64,8 @@ class DB implements IUserLocalDb<Map<String, dynamic>> {
       print('DB-createUser-newUserId: $newUserId');
       return newUserId;
     } catch (e) {
-      throw Exception(e);
+      String msg = 'Local database-createUser:\n$e';
+      throw Exception(msg);
     }
   }
 
