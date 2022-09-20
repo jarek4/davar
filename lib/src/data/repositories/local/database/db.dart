@@ -1,9 +1,11 @@
 import 'dart:async';
 
-import 'package:davar/src/data/local/database/db_consts.dart';
+
 import 'package:davar/src/domain/i_user_local_db.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'db_consts.dart';
 
 class DB implements IUserLocalDb<Map<String, dynamic>> {
   static final DB instance = DB._init();

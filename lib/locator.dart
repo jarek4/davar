@@ -1,4 +1,4 @@
-import 'package:davar/src/data/local/secured.dart';
+import 'package:davar/src/data/repositories/local/secured.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/data/repositories/authentication_repository.dart';
 import 'package:davar/src/domain/i_authentication_repository.dart';
@@ -8,7 +8,7 @@ import 'package:davar/src/settings/settings_controller.dart';
 import 'package:davar/src/settings/settings_service.dart';
 import 'package:get_it/get_it.dart';
 
-import 'src/data/local/database/db.dart';
+import 'src/data/repositories/local/database/db.dart';
 
 GetIt locator = GetIt.instance;
 

@@ -42,7 +42,7 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
     print('AuthenticationRepository register userToJson.remove: $userToJson\n');
     try {
       final int id = await _localDB.createUser(userToJson);
-      print('AuthenticationRepository register created user id: $id\n');
+      print('AuthenticationRepository register - created user id: $id\n');
       Map<String, dynamic> registeredUser =
           await _selectUserFromDatabase(user.email, user.password);
       print('registeredUser.isNotEmpty: ${registeredUser.isNotEmpty}');
