@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-// flutter pub run build_runner build
+// flutter pub run build_runner build --delete-conflicting-outputs
 
 @GenerateNiceMocks([MockSpec<ISecureStorage>(as: #MockSecureStorage)])
 @GenerateNiceMocks([MockSpec<IUserLocalDb<Map<String, dynamic>>>(as: #MockLocalDb)])
@@ -120,34 +120,34 @@ void main() {
         final Map<String, dynamic> userAsJson = newUser.toJson();
         Future<List<Map<String, dynamic>>> isEmailTakenResponse = Future.value([]);
         Future<List<Map<String, dynamic>>> selectUserFromDbResponse = Future.value([userAsJson]);
-        when(db.select(where: ['email'], values: [newUser.email]))
+        when(db.selectUser(where: ['email'], values: [newUser.email]))
             .thenAnswer((_) => isEmailTakenResponse);
         when(db.createUser(userAsJson)).thenAnswer((_) => Future.value(newUser.id));
-        when(db.select(where: ['email', 'password'], values: [newUser.email, newUser.password]))
+        when(db.selectUser(where: ['email', 'password'], values: [newUser.email, newUser.password]))
             .thenAnswer((_) => selectUserFromDbResponse);
         // act
         // assert
         expect(aR.register(newUser), isA<Future<void>>());
       });
-      test('throw exception when given email is taken', () async {
+      test('return -1 when given email is taken', () async {
         // arrange
         const User newUser = User(email: 'test@test.test', password: 'pwd', name: 'test');
-        when(db.select(where: ['email'], values: [newUser.email]))
-            .thenThrow(Exception('User with this email: ${newUser.email} already exists'));
+        when(db.selectUser(where: ['email'], values: [newUser.email]))
+            .thenAnswer((_) => Future.value([newUser.toJson()]));
         // act
         // assert
-        expect(aR.register(newUser), throwsException);
+        expect(await aR.register(newUser), -1);
       });
-      test('throw exception when Local database createUser function throws Exception', () async {
+      test('returns 0 when Local database createUser function throws Exception', () async {
         // arrange
-        const User newUser = User(email: 'test@test.test', password: 'pwd', name: 'test', id: 11);
+        const User newUser = User(email: 'test22@test.test', password: 'pwd', name: 'test', id: 11);
         final Map<String, dynamic> json = newUser.toJson();
         when(db.createUser(json)).thenThrow(Exception());
-        when(db.select(where: ['email', 'password'], values: [newUser.email, newUser.password]))
+        when(db.selectUser(where: ['email', 'password'], values: [newUser.email, newUser.password]))
             .thenThrow(Exception());
         // act
         // assert
-        expect(aR.register(newUser), throwsException);
+        expect(await aR.register(newUser), 0);
       });
     });
     group('stream controller:', () {

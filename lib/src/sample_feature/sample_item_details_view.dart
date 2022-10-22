@@ -1,5 +1,5 @@
 import 'package:davar/src/authentication/auth_provider.dart';
-import 'package:davar/src/data/repositories/local/database/db.dart';
+import 'package:davar/src/data/local/database/db.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

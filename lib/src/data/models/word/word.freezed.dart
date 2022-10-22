@@ -20,18 +20,19 @@ Word _$WordFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Word {
-  String? get category => throw _privateConstructorUsedError;
   String get catchword => throw _privateConstructorUsedError;
-  String? get clue => throw _privateConstructorUsedError;
-  String? get createdAt => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
+  int get userId => throw _privateConstructorUsedError;
+  String get userTranslation => throw _privateConstructorUsedError;
+  String get category => throw _privateConstructorUsedError;
+  int get categoryId => throw _privateConstructorUsedError;
   int get isFavorite => throw _privateConstructorUsedError;
   int get isSentence => throw _privateConstructorUsedError;
   int get points => throw _privateConstructorUsedError;
-  String get userId => throw _privateConstructorUsedError;
   String get userLearning => throw _privateConstructorUsedError; // ?
-  String get userNative => throw _privateConstructorUsedError; // ?
-  String get userTranslation => throw _privateConstructorUsedError;
+  String get userNative => throw _privateConstructorUsedError;
+  String? get clue => throw _privateConstructorUsedError;
+  String? get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,18 +44,19 @@ abstract class $WordCopyWith<$Res> {
   factory $WordCopyWith(Word value, $Res Function(Word) then) =
       _$WordCopyWithImpl<$Res>;
   $Res call(
-      {String? category,
-      String catchword,
-      String? clue,
-      String? createdAt,
+      {String catchword,
       int id,
+      int userId,
+      String userTranslation,
+      String category,
+      int categoryId,
       int isFavorite,
       int isSentence,
       int points,
-      String userId,
       String userLearning,
       String userNative,
-      String userTranslation});
+      String? clue,
+      String? createdAt});
 }
 
 /// @nodoc
@@ -67,39 +69,44 @@ class _$WordCopyWithImpl<$Res> implements $WordCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? category = freezed,
     Object? catchword = freezed,
-    Object? clue = freezed,
-    Object? createdAt = freezed,
     Object? id = freezed,
+    Object? userId = freezed,
+    Object? userTranslation = freezed,
+    Object? category = freezed,
+    Object? categoryId = freezed,
     Object? isFavorite = freezed,
     Object? isSentence = freezed,
     Object? points = freezed,
-    Object? userId = freezed,
     Object? userLearning = freezed,
     Object? userNative = freezed,
-    Object? userTranslation = freezed,
+    Object? clue = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
-      category: category == freezed
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
       catchword: catchword == freezed
           ? _value.catchword
           : catchword // ignore: cast_nullable_to_non_nullable
               as String,
-      clue: clue == freezed
-          ? _value.clue
-          : clue // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: createdAt == freezed
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      userId: userId == freezed
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      userTranslation: userTranslation == freezed
+          ? _value.userTranslation
+          : userTranslation // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: category == freezed
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      categoryId: categoryId == freezed
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
               as int,
       isFavorite: isFavorite == freezed
           ? _value.isFavorite
@@ -113,10 +120,6 @@ class _$WordCopyWithImpl<$Res> implements $WordCopyWith<$Res> {
           ? _value.points
           : points // ignore: cast_nullable_to_non_nullable
               as int,
-      userId: userId == freezed
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       userLearning: userLearning == freezed
           ? _value.userLearning
           : userLearning // ignore: cast_nullable_to_non_nullable
@@ -125,10 +128,14 @@ class _$WordCopyWithImpl<$Res> implements $WordCopyWith<$Res> {
           ? _value.userNative
           : userNative // ignore: cast_nullable_to_non_nullable
               as String,
-      userTranslation: userTranslation == freezed
-          ? _value.userTranslation
-          : userTranslation // ignore: cast_nullable_to_non_nullable
-              as String,
+      clue: clue == freezed
+          ? _value.clue
+          : clue // ignore: cast_nullable_to_non_nullable
+              as String?,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -139,18 +146,19 @@ abstract class _$$_WordCopyWith<$Res> implements $WordCopyWith<$Res> {
       __$$_WordCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String? category,
-      String catchword,
-      String? clue,
-      String? createdAt,
+      {String catchword,
       int id,
+      int userId,
+      String userTranslation,
+      String category,
+      int categoryId,
       int isFavorite,
       int isSentence,
       int points,
-      String userId,
       String userLearning,
       String userNative,
-      String userTranslation});
+      String? clue,
+      String? createdAt});
 }
 
 /// @nodoc
@@ -164,39 +172,44 @@ class __$$_WordCopyWithImpl<$Res> extends _$WordCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? category = freezed,
     Object? catchword = freezed,
-    Object? clue = freezed,
-    Object? createdAt = freezed,
     Object? id = freezed,
+    Object? userId = freezed,
+    Object? userTranslation = freezed,
+    Object? category = freezed,
+    Object? categoryId = freezed,
     Object? isFavorite = freezed,
     Object? isSentence = freezed,
     Object? points = freezed,
-    Object? userId = freezed,
     Object? userLearning = freezed,
     Object? userNative = freezed,
-    Object? userTranslation = freezed,
+    Object? clue = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(_$_Word(
-      category: category == freezed
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
       catchword: catchword == freezed
           ? _value.catchword
           : catchword // ignore: cast_nullable_to_non_nullable
               as String,
-      clue: clue == freezed
-          ? _value.clue
-          : clue // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: createdAt == freezed
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String?,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      userId: userId == freezed
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      userTranslation: userTranslation == freezed
+          ? _value.userTranslation
+          : userTranslation // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: category == freezed
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      categoryId: categoryId == freezed
+          ? _value.categoryId
+          : categoryId // ignore: cast_nullable_to_non_nullable
               as int,
       isFavorite: isFavorite == freezed
           ? _value.isFavorite
@@ -210,10 +223,6 @@ class __$$_WordCopyWithImpl<$Res> extends _$WordCopyWithImpl<$Res>
           ? _value.points
           : points // ignore: cast_nullable_to_non_nullable
               as int,
-      userId: userId == freezed
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as String,
       userLearning: userLearning == freezed
           ? _value.userLearning
           : userLearning // ignore: cast_nullable_to_non_nullable
@@ -222,10 +231,14 @@ class __$$_WordCopyWithImpl<$Res> extends _$WordCopyWithImpl<$Res>
           ? _value.userNative
           : userNative // ignore: cast_nullable_to_non_nullable
               as String,
-      userTranslation: userTranslation == freezed
-          ? _value.userTranslation
-          : userTranslation // ignore: cast_nullable_to_non_nullable
-              as String,
+      clue: clue == freezed
+          ? _value.clue
+          : clue // ignore: cast_nullable_to_non_nullable
+              as String?,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -234,31 +247,36 @@ class __$$_WordCopyWithImpl<$Res> extends _$WordCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Word implements _Word {
   const _$_Word(
-      {this.category,
-      required this.catchword,
-      this.clue,
-      this.createdAt,
+      {required this.catchword,
       required this.id,
+      required this.userId,
+      required this.userTranslation,
+      this.category = '',
+      this.categoryId = 1,
       this.isFavorite = 0,
       this.isSentence = 0,
       this.points = 0,
-      required this.userId,
       this.userLearning = 'Turkish',
       this.userNative = 'English',
-      required this.userTranslation});
+      this.clue,
+      this.createdAt});
 
   factory _$_Word.fromJson(Map<String, dynamic> json) => _$$_WordFromJson(json);
 
   @override
-  final String? category;
-  @override
   final String catchword;
   @override
-  final String? clue;
-  @override
-  final String? createdAt;
-  @override
   final int id;
+  @override
+  final int userId;
+  @override
+  final String userTranslation;
+  @override
+  @JsonKey()
+  final String category;
+  @override
+  @JsonKey()
+  final int categoryId;
   @override
   @JsonKey()
   final int isFavorite;
@@ -269,21 +287,20 @@ class _$_Word implements _Word {
   @JsonKey()
   final int points;
   @override
-  final String userId;
-  @override
   @JsonKey()
   final String userLearning;
 // ?
   @override
   @JsonKey()
   final String userNative;
-// ?
   @override
-  final String userTranslation;
+  final String? clue;
+  @override
+  final String? createdAt;
 
   @override
   String toString() {
-    return 'Word(category: $category, catchword: $catchword, clue: $clue, createdAt: $createdAt, id: $id, isFavorite: $isFavorite, isSentence: $isSentence, points: $points, userId: $userId, userLearning: $userLearning, userNative: $userNative, userTranslation: $userTranslation)';
+    return 'Word(catchword: $catchword, id: $id, userId: $userId, userTranslation: $userTranslation, category: $category, categoryId: $categoryId, isFavorite: $isFavorite, isSentence: $isSentence, points: $points, userLearning: $userLearning, userNative: $userNative, clue: $clue, createdAt: $createdAt)';
   }
 
   @override
@@ -291,41 +308,44 @@ class _$_Word implements _Word {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Word &&
-            const DeepCollectionEquality().equals(other.category, category) &&
             const DeepCollectionEquality().equals(other.catchword, catchword) &&
-            const DeepCollectionEquality().equals(other.clue, clue) &&
-            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
             const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.userId, userId) &&
+            const DeepCollectionEquality()
+                .equals(other.userTranslation, userTranslation) &&
+            const DeepCollectionEquality().equals(other.category, category) &&
+            const DeepCollectionEquality()
+                .equals(other.categoryId, categoryId) &&
             const DeepCollectionEquality()
                 .equals(other.isFavorite, isFavorite) &&
             const DeepCollectionEquality()
                 .equals(other.isSentence, isSentence) &&
             const DeepCollectionEquality().equals(other.points, points) &&
-            const DeepCollectionEquality().equals(other.userId, userId) &&
             const DeepCollectionEquality()
                 .equals(other.userLearning, userLearning) &&
             const DeepCollectionEquality()
                 .equals(other.userNative, userNative) &&
-            const DeepCollectionEquality()
-                .equals(other.userTranslation, userTranslation));
+            const DeepCollectionEquality().equals(other.clue, clue) &&
+            const DeepCollectionEquality().equals(other.createdAt, createdAt));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(category),
       const DeepCollectionEquality().hash(catchword),
-      const DeepCollectionEquality().hash(clue),
-      const DeepCollectionEquality().hash(createdAt),
       const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(userId),
+      const DeepCollectionEquality().hash(userTranslation),
+      const DeepCollectionEquality().hash(category),
+      const DeepCollectionEquality().hash(categoryId),
       const DeepCollectionEquality().hash(isFavorite),
       const DeepCollectionEquality().hash(isSentence),
       const DeepCollectionEquality().hash(points),
-      const DeepCollectionEquality().hash(userId),
       const DeepCollectionEquality().hash(userLearning),
       const DeepCollectionEquality().hash(userNative),
-      const DeepCollectionEquality().hash(userTranslation));
+      const DeepCollectionEquality().hash(clue),
+      const DeepCollectionEquality().hash(createdAt));
 
   @JsonKey(ignore: true)
   @override
@@ -342,31 +362,34 @@ class _$_Word implements _Word {
 
 abstract class _Word implements Word {
   const factory _Word(
-      {final String? category,
-      required final String catchword,
-      final String? clue,
-      final String? createdAt,
+      {required final String catchword,
       required final int id,
+      required final int userId,
+      required final String userTranslation,
+      final String category,
+      final int categoryId,
       final int isFavorite,
       final int isSentence,
       final int points,
-      required final String userId,
       final String userLearning,
       final String userNative,
-      required final String userTranslation}) = _$_Word;
+      final String? clue,
+      final String? createdAt}) = _$_Word;
 
   factory _Word.fromJson(Map<String, dynamic> json) = _$_Word.fromJson;
 
   @override
-  String? get category;
-  @override
   String get catchword;
   @override
-  String? get clue;
-  @override
-  String? get createdAt;
-  @override
   int get id;
+  @override
+  int get userId;
+  @override
+  String get userTranslation;
+  @override
+  String get category;
+  @override
+  int get categoryId;
   @override
   int get isFavorite;
   @override
@@ -374,13 +397,13 @@ abstract class _Word implements Word {
   @override
   int get points;
   @override
-  String get userId;
-  @override
   String get userLearning;
   @override // ?
   String get userNative;
-  @override // ?
-  String get userTranslation;
+  @override
+  String? get clue;
+  @override
+  String? get createdAt;
   @override
   @JsonKey(ignore: true)
   _$$_WordCopyWith<_$_Word> get copyWith => throw _privateConstructorUsedError;

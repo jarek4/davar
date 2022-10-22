@@ -1,9 +1,10 @@
 abstract class IUserLocalDb<T> {
 
+  /// returns created user id, or -1 if email is taken, 0 if conflict
   Future<int> createUser(T newUser);
 
   /// returns List of records as List<Map<String, dynamic>>
-  Future<List<T>> select({required List<String> where, required List<dynamic> values});
+  Future<List<T?>> selectUser({required List<String> where, required List<dynamic> values});
 
   Future<int> rawUpdateUser({
     required List<String> columns,

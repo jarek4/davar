@@ -33,4 +33,11 @@ class AppBarTabsController with ChangeNotifier {
     _moreScreenTabInitialIndex = value;
     notifyListeners();
   }
+
+  void resetTabsIndexes() {
+    _addScreenTabInitialIndex = 0;
+    _moreScreenTabInitialIndex = 0;
+    _schoolScreenTabInitialIndex = 0;
+    _youScreenTabInitialIndex = 0;
+  }
 }

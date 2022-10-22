@@ -184,10 +184,10 @@ class _$_User implements _User {
   const _$_User(
       {this.createdAt = '0000.00.00',
       this.email = 'empty',
-      this.id = -1,
-      this.learning = 'Turkish',
+      this.id = 1,
+      this.learning = 'empty',
       this.name = 'empty',
-      this.native = 'English',
+      this.native = 'empty',
       this.password = '',
       this.authToken});
 

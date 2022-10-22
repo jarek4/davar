@@ -1,7 +1,7 @@
-import 'package:davar/src/ui/screens/add_screen.dart';
-import 'package:davar/src/ui/screens/more_screen.dart';
-import 'package:davar/src/ui/screens/school_screen.dart';
-import 'package:davar/src/ui/screens/you_screen.dart';
+import 'package:davar/src/ui/screens/add/add_screen.dart';
+import 'package:davar/src/ui/screens/more/more_screen.dart';
+import 'package:davar/src/ui/screens/school/school_screen.dart';
+import 'package:davar/src/ui/screens/you/you_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,11 +49,11 @@ class BottomNavigation extends StatelessWidget {
         ), // BottomNavigationBarItem
       ],
       showUnselectedLabels: true,
-      currentIndex: context.watch<NavigationController>().selectedIndex,
+      currentIndex: Provider.of<BottomNavigationController>(context).selectedIndex,
       selectedItemColor: Colors.amber[800],
       unselectedItemColor: Colors.grey,
       onTap: (index) => context
-          .read<NavigationController>()
+          .read<BottomNavigationController>()
           .onScreenChange(_getRouteName(index), index: index),
     );
   }

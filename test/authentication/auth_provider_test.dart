@@ -4,6 +4,7 @@ import 'package:davar/locator.dart';
 import 'package:davar/src/authentication/auth_provider.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_authentication_repository.dart';
+import 'package:davar/src/utils/utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 
@@ -13,9 +14,8 @@ import 'auth_provider_test.mocks.dart';
 void main() {
   late IAuthenticationRepository<User> aR;
   late AuthProvider sut;
-  const User emptyUser = User();
-  const User notEmptyUser =
-      User(id: 2, email: 'test', name: 'notEmptyUser', authToken: 'testToken');
+  const User emptyUser = AppConst.emptyUser;
+  const User unknownUser = AppConst.unknownUser;
 
   setUpAll(() {
     setupLocator();
@@ -31,22 +31,15 @@ void main() {
       });
 
       test('empty user', () async {
-        // arrange
-        // act
-        User u = sut.user;
+        // arrange // act
         // assert
-        // verify(ss.deleteAll()).called(1);
-        expect(emptyUser, u);
+        expect(sut.user, emptyUser);
       });
-      test('isLoading true', () async {
-        // arrange
-        // act
-        bool isLoading = sut.isLoading;
-        // assert
-        expect(true, isLoading);
+      test('status AuthenticationStatus.unknown', () async {
+        expect(sut.status, AuthenticationStatus.unknown);
       });
     });
-    group('emmit user from AuthenticationRepository stream:', () {
+    group('when authentication repository Stream<User> emits', () {
       late StreamController<User> controller;
       setUp(() {
         aR = MockAuthenticationRepository();
@@ -58,14 +51,20 @@ void main() {
         controller.close();
       });
 
-      test('empty user id isNonPositive', () async {
+      test('emptyUser then unknownUser, status=AuthenticationStatus.unknown', () async {
+        // arrange // act
+        expect(sut.status, AuthenticationStatus.unknown);
+        controller.add(emptyUser);
+        controller.add(unknownUser);
+      });
+      test('emptyUser, then user=emptyUser', () async {
         // arrange
         Stream<User> stream = controller.stream;
         // act
         stream.listen(
           expectAsync1(
             (event) {
-              expect(event.id, isNonPositive);
+              expect(event, emptyUser);
             },
           ),
         );

@@ -1,17 +1,20 @@
 import 'dart:async';
 
-// default or empty User is returned when there is NO User:
-// empty-User(email: 'empty', id: -1, authToken: null)
+// emptyUser=(email: 'empty', id: 1, password: '', authToken: null);
+// unknownUser=(createdAt: '-11111:-11:-11', email: 'unknown', id: -1, name: 'unknown');
+// emptyUser if unauthenticated, unknownUser if status unknown (starting app, logged out)
 
 abstract class IAuthenticationRepository<T> {
   ///Stream<User> get user.
   ///[User(email: 'empty', id: -1, name: 'empty', password: '', authToken: null)] if the user is not authenticated.
   Stream<T> get user;
 
-  Future<void> loginWithEmailAndPassword(
+  /// Returns logged in user id or null
+  Future<int?> loginWithEmailAndPassword(
       {required String email, required String password});
 
-  Future<void> register(T user);
+  /// Returns created user id or null. If email is taken returns -1
+  Future<int?> register(T user);
 
   Future<void> signOut();
 

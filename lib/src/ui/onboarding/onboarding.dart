@@ -1,8 +1,8 @@
-import 'package:davar/src/authentication/auth_provider.dart';
+import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'onboarding_bottom_bar.dart';
 import 'slide.dart';
 import 'slides_indicator.dart';
 
@@ -17,9 +17,9 @@ class Onboarding extends StatefulWidget {
     'There is no need to wait,',
   ];
   static const List<String> slidesSubtitles = [
-    'WORD, ДУМА, KELIME',
-    'You decide what you need to learn',
-    'Let\'s start'
+    'Challenge your creativity',
+    'You control what to learn',
+    'DAVAR won\'t make you waste time'
   ];
   static const List<List<String>> slidesContent = [
     [
@@ -28,11 +28,11 @@ class Onboarding extends StatefulWidget {
       'English - български - романи - Türkçe',
     ],
     [
-      'Cheerful Quiz in School section.',
-      'Track your stats',
+      'Cheerful Quiz. Track your stats.',
+      'Learn only what is necessary',
       'You can use offline.',
     ],
-    ['At first sign in or register', 'For personal use only!', '** This is a learning project **'],
+    ['Sign in or register first', 'For personal use only!', '** This is a learning project **'],
   ];
 
   static final List<Widget> onBoardingSlides = [
@@ -65,26 +65,25 @@ class Onboarding extends StatefulWidget {
 
 class _OnboardingState extends State<Onboarding> {
   final PageController _pageController = PageController();
-  double _currentIndex = 0.0;
-  bool _isLastSlide = false;
+  int currentPageIndex = 0;
+  bool _isSlideIndicatorVisible = true;
 
   @override
   void initState() {
     super.initState();
-    _pageController.addListener(() {
-      if (_pageController.page != _currentIndex) {
-        setState(() {
-          _currentIndex = _pageController.page ?? 0.0;
-        });
-      }
-    });
   }
 
   @override
   void dispose() {
-    _pageController.removeListener(() {});
     _pageController.dispose();
     super.dispose();
+  }
+
+  void onPageChangeHandler(int index) {
+    setState(() {
+      currentPageIndex = index;
+      _isSlideIndicatorVisible = index < 2;
+    });
   }
 
   @override
@@ -94,7 +93,7 @@ class _OnboardingState extends State<Onboarding> {
         children: [
           PageView.builder(
             controller: _pageController,
-            onPageChanged: (index) => setState(() => _isLastSlide = index == 2),
+            onPageChanged: (index) => onPageChangeHandler(index),
             itemCount: Onboarding.onBoardingSlides.length,
             itemBuilder: (BuildContext context, int index) {
               return Onboarding.onBoardingSlides[index];
@@ -105,65 +104,32 @@ class _OnboardingState extends State<Onboarding> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                if (!_isLastSlide)
+                if (_isSlideIndicatorVisible)
                   TextButton(
                       onPressed: () =>
                           _pageController.jumpToPage(Onboarding.onBoardingSlides.length - 1),
                       child: const Text('Skip')),
-                if (!_isLastSlide)
+                if (_isSlideIndicatorVisible)
                   SlidesIndicator(
-                    slidesNumber: Onboarding.onBoardingSlides.length,
-                    currentPage: _currentIndex,
+                    // slidesNumber: Onboarding.onBoardingSlides.length,
+                    slidesNumber: 3,
+                    currentPage: currentPageIndex.toDouble(),
                   ),
-                !_isLastSlide
-                    ? TextButton(
-                        onPressed: () => _pageController.nextPage(
-                            duration: const Duration(microseconds: 700), curve: Curves.easeInOut),
-                        child: const Text('Next'),
-                      )
-                    : Expanded(
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
-                          child: Container(
-                            color: Colors.green.shade400,
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(Colors.green.shade400)),
-                                  onPressed: () => context.read<AuthProvider>().register(),
-                                  child: const Text(
-                                    'Register',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19.0,
-                                        height: 2),
-                                  ),
-                                ),
-                                TextButton(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(Colors.green.shade400)),
-                                  onPressed: () {},
-                                  child: const Text(
-                                    'Sign in',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19.0,
-                                        height: 2),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                if (_isSlideIndicatorVisible)
+                  TextButton(
+                    onPressed: () => _pageController.nextPage(
+                        duration: const Duration(microseconds: 700), curve: Curves.easeInOut),
+                    child: const Text('Next'),
+                  ),
+                if (currentPageIndex >= 2)
+                  Expanded(
+                    child: OnboardingBottomBar(
+                      leftBtnText: 'Register',
+                      rightBtnText: 'Login',
+                      leftBtnOnPressed: () => context.read<AuthProvider>().onRegisterRequest(),
+                      rightBtnOnPressed: () => context.read<AuthProvider>().onLoginRequest(),
+                    ),
+                  ),
               ],
             ),
           ),

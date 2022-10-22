@@ -132,24 +132,25 @@ class MockLocalDb extends _i1.Mock
         returnValueForMissingStub: _i3.Future<int>.value(0),
       ) as _i3.Future<int>);
   @override
-  _i3.Future<List<Map<String, dynamic>>> select({
+  _i3.Future<List<Map<String, dynamic>?>> selectUser({
     required List<String>? where,
     required List<dynamic>? values,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
-          #select,
+          #selectUser,
           [],
           {
             #where: where,
             #values: values,
           },
         ),
-        returnValue: _i3.Future<List<Map<String, dynamic>>>.value(
-            <Map<String, dynamic>>[]),
-        returnValueForMissingStub: _i3.Future<List<Map<String, dynamic>>>.value(
-            <Map<String, dynamic>>[]),
-      ) as _i3.Future<List<Map<String, dynamic>>>);
+        returnValue: _i3.Future<List<Map<String, dynamic>?>>.value(
+            <Map<String, dynamic>?>[]),
+        returnValueForMissingStub:
+            _i3.Future<List<Map<String, dynamic>?>>.value(
+                <Map<String, dynamic>?>[]),
+      ) as _i3.Future<List<Map<String, dynamic>?>>);
   @override
   _i3.Future<int> rawUpdateUser({
     required List<String>? columns,

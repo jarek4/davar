@@ -22,6 +22,7 @@ class SlidesIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print('SlidesIndicator currentPage = $currentPage');
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Row(

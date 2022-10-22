@@ -1,19 +1,22 @@
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/navigation/navigation.dart';
-
 import 'package:davar/src/ui/onboarding/Onboarding.dart';
 import 'package:davar/src/ui/root_widget.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
+import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'authentication/auth_provider.dart';
+import 'authentication/authentication.dart';
 import 'settings/settings_controller.dart';
 
 /// The Widget that configures your application.
-class MyApp extends StatelessWidget {
-  const MyApp({
+class DavarApp extends StatelessWidget {
+  const DavarApp({
     super.key,
     required this.settingsController,
   });
@@ -22,10 +25,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Glue the SettingsController to the MaterialApp.
-    //
-    // The AnimatedBuilder Widget listens to the SettingsController for changes.
-    // Whenever the user updates their settings, the MaterialApp is rebuilt.
     return MultiProvider(
       providers: [
         // StreamProvider<User>(create: (_) => AuthenticationRepository().user, initialData: const User(),),
@@ -37,24 +36,21 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthProvider()..tryToAuthenticate(),
           lazy: false,
         ),
-        ChangeNotifierProvider<NavigationController>(
-            create: (_) => NavigationController()),
-        ChangeNotifierProvider<AppBarTabsController>(
-            create: (_) => AppBarTabsController()),
+        ChangeNotifierProvider<BottomNavigationController>(
+            create: (_) => BottomNavigationController()),
+        ChangeNotifierProvider<AppBarTabsController>(create: (_) => AppBarTabsController()),
       ],
       child: AnimatedBuilder(
         animation: settingsController,
         builder: (BuildContext context, Widget? child) {
-          bool isEmptyUser =
-              context.watch<AuthProvider>().isCurrentUserAnEmptyUser;
-          bool isLoading = context.watch<AuthProvider>().isLoading;
-
           return MaterialApp(
             // Providing a restorationScopeId allows the Navigator built by the
             // MaterialApp to restore the navigation stack when a user leaves and
             // returns to the app after it has been killed while running in the
             // background.
+            scaffoldMessengerKey: scaffoldKey,
             restorationScopeId: 'app',
+            navigatorObservers: [SentryNavigatorObserver()],
 
             // Provide the generated AppLocalizations to the MaterialApp. This
             // allows descendant Widgets to display the correct translations
@@ -74,27 +70,83 @@ class MyApp extends StatelessWidget {
             //
             // The appTitle is defined in .arb files found in the localization
             // directory.
-            onGenerateTitle: (BuildContext context) =>
-                AppLocalizations.of(context)!.appTitle,
-
-            // Define a light and dark color theme. Then, read the user's
-            // preferred ThemeMode (light, dark, or system default) from the
-            // SettingsController to display the correct theme.
+            onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
             theme: ThemeData(),
             darkTheme: ThemeData.dark(),
             themeMode: settingsController.themeMode,
-
-            // Define a function to handle named routes in order to support
-            // Flutter web url navigation and deep linking.
-            home: isLoading
-                ? const FullScreenProgressIndicator()
-                : (isEmptyUser
-                    ? const Onboarding()
-                    : const RootWidget()), // const RootWidget(),
+            home: Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider provider, _) {
+              print('app.dart - provider.status: ${provider.status}');
+              switch (provider.status) {
+                case AuthenticationStatus.authenticated:
+                  return MultiProvider(providers: [
+                    ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
+                      create: (_) => WordsProvider(provider.user),
+                      update: (_, auth, __) => WordsProvider(auth.user),
+                    ),
+                    ChangeNotifierProxyProvider<AuthProvider, CategoriesProvider>(
+                      create: (_) => CategoriesProvider(provider.user),
+                      update: (_, auth, __) => CategoriesProvider(auth.user),
+                    ),
+                  ], child: const RootWidget());
+                case AuthenticationStatus.error:
+                  return _onAuthenticationError(provider.authenticationError, context);
+                case AuthenticationStatus.unauthenticated:
+                  return const Onboarding();
+                case AuthenticationStatus.login:
+                  return ChangeNotifierProvider<LoginProvider>(
+                      create: (_) => LoginProvider(),
+                      child: const LoginView());
+                case AuthenticationStatus.register:
+                  return ChangeNotifierProvider<RegistrationProvider>(
+                      create: (_) => RegistrationProvider(),
+                      child: const RegisterView());
+                case AuthenticationStatus.loggedOut:
+                  return LoggedOutView(
+                      loginOnPressed: () => context.read<AuthProvider>().onLoginRequest());
+                default:
+                  return _authenticationStatusUnknown();
+              }
+            }),
           );
         },
       ),
     );
   }
 
+  Scaffold _authenticationStatusUnknown() => Scaffold(
+        body: Container(
+          color: Colors.green.shade200,
+          child: Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('Trying to log you in :) ', textAlign: TextAlign.center),
+              SizedBox(height: 30),
+              CircularProgressIndicator(),
+            ],
+          )),
+        ),
+      );
+
+  FullScreenProgressIndicator _onAuthenticationError(String error, BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _showMsg(context, error);
+    });
+    return FullScreenProgressIndicator(
+      additionalErrorMessage: error,
+      actionButton: TextButton(
+        onPressed: () => context.read<AuthProvider>().onCancelAuthenticationRequest(),
+        child: const Icon(Icons.arrow_circle_left_outlined),
+      ),
+    );
+  }
+
+  void _showMsg(BuildContext context, String authenticationError) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.grey,
+        content: Text(authenticationError, textAlign: TextAlign.center),
+      ),
+    );
+  }
 }

@@ -32,7 +32,7 @@ class MockAuthenticationRepository extends _i1.Mock
         returnValueForMissingStub: _i4.Stream<_i3.User>.empty(),
       ) as _i4.Stream<_i3.User>);
   @override
-  _i4.Future<void> loginWithEmailAndPassword({
+  _i4.Future<int?> loginWithEmailAndPassword({
     required String? email,
     required String? password,
   }) =>
@@ -45,18 +45,18 @@ class MockAuthenticationRepository extends _i1.Mock
             #password: password,
           },
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i4.Future<int?>.value(),
+        returnValueForMissingStub: _i4.Future<int?>.value(),
+      ) as _i4.Future<int?>);
   @override
-  _i4.Future<void> register(_i3.User? user) => (super.noSuchMethod(
+  _i4.Future<int?> register(_i3.User? user) => (super.noSuchMethod(
         Invocation.method(
           #register,
           [user],
         ),
-        returnValue: _i4.Future<void>.value(),
-        returnValueForMissingStub: _i4.Future<void>.value(),
-      ) as _i4.Future<void>);
+        returnValue: _i4.Future<int?>.value(),
+        returnValueForMissingStub: _i4.Future<int?>.value(),
+      ) as _i4.Future<int?>);
   @override
   _i4.Future<void> signOut() => (super.noSuchMethod(
         Invocation.method(

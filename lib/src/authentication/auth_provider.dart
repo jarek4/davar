@@ -9,94 +9,156 @@ import 'package:flutter/foundation.dart';
 
 import '../data/models/models.dart';
 
-// empty User(email: 'empty' , id: -1, authToken: null);
+// default User == emptyUser returned when unauthenticated [AppConst.emptyUser]:
+// emptyUser (email: 'empty' , id: 1, name: 'empty', password: '', authToken: null);
+// unknownUser=(createdAt: '-11111:-11:-11', email: 'unknown', id: -1, name: 'unknown');
+
+enum AuthenticationStatus {
+  authenticated,
+  error,
+  forgotPassword,
+  loggedOut,
+  login,
+  register,
+  unauthenticated,
+  unknown
+}
 
 class AuthProvider with ChangeNotifier {
   AuthProvider() : super() {
-    // _authRepositorySubscription = _authRepository.user.listen((user) {
-    //   _onUserChange(user);
-    // });
     _authRepositorySubscription = _authRepository.user.listen((user) => _onUserChange(user));
   }
 
-  User _user = AppConst.emptyUser;
-  bool _isLoading = true;
+  AuthenticationStatus _status = AuthenticationStatus.unknown;
+  User _user = AppConst.emptyUser; // User _user = AppConst.unknownUser;
+  String _errorMsg = '';
 
   final IAuthenticationRepository<User> _authRepository =
       locator<IAuthenticationRepository<User>>();
   late StreamSubscription<User> _authRepositorySubscription;
 
+  AuthenticationStatus get status => _status;
+
   User get user => _user;
 
-  bool get isLoading => _isLoading;
-
-  bool get isCurrentUserAnEmptyUser => (_user.id == AppConst.emptyUser.id &&
-      _user.authToken == AppConst.emptyUser.authToken &&
-      _user.email == AppConst.emptyUser.email);
+  String get authenticationError => _errorMsg;
 
   void _onUserChange(User user) {
-    if (user == _user) return;
+    final String m = 'AuthProvider _onUserChange [user.id: ${user.id}, user.name: ${user.name}]';
+    print(m);
+    // if (user == _user) return; // it may case error - stacks at status unknown
+    if (user == AppConst.emptyUser) {
+      _errorMsg = '';
+      _status = AuthenticationStatus.unauthenticated;
+      print('1 _onUserChange AuthenticationStatus.unauthenticated _user.id: ${_user.id}');
+    } else if (user != AppConst.unknownUser) {
+      // else if (user != AppConst.emptyUser && user != AppConst.unknownUser)
+      _status = AuthenticationStatus.authenticated;
+      _errorMsg = '';
+      print('2 _onUserChange AuthenticationStatus.authenticated id: ${_user.id}');
+    } else {
+      _status = AuthenticationStatus.unknown;
+      _errorMsg = '';
+      print('3 _onUserChange AuthenticationStatus.unknown id: ${_user.id}');
+    }
     _user = user;
-    _isLoading = false;
     notifyListeners();
   }
 
-  void register() async {
-    _isLoading = true;
-    notifyListeners();
-    await Future.delayed(const Duration(seconds: 2), () {
-      print('delay 2 sec');
-    });
-    User u = const User(email: 'test1@test.eu', name: 'Test1', password: 'Aa12345');
-    print('AuthProvider register');
-    await _authRepository.register(u);
-    _isLoading = false;
+  void onLoginRequest() {
+    _status = AuthenticationStatus.login;
     notifyListeners();
   }
 
-  void login() async {
-    _isLoading = true;
+  void onRegisterRequest() {
+    _status = AuthenticationStatus.register;
     notifyListeners();
-    await _authRepository.loginWithEmailAndPassword(email: 'test1@test.eu', password: 'Aa12345');
-    _isLoading = false;
+  }
+
+  void onForgotPasswordRequest() {
+    _status = AuthenticationStatus.forgotPassword;
+    notifyListeners();
+  }
+
+  void onCancelAuthenticationRequest() {
+    _status = AuthenticationStatus.unauthenticated;
     notifyListeners();
   }
 
   Future<void> tryToAuthenticate() async {
-    _isLoading = true;
+    if (_status == AuthenticationStatus.authenticated) return;
+    _errorMsg = '';
+    _status = AuthenticationStatus.unknown;
     notifyListeners();
-    await Future.delayed(const Duration(seconds: 2), () {
-      print('delay 2 sec');
-    });
-    await _authRepository.tryToAuthenticate();
-    _isLoading = false;
-    notifyListeners();
+    try {
+      /// TODO: delete delay
+      await Future.delayed(const Duration(seconds: 1), () {
+        print('delay 1 sec');
+      });
+      await _authRepository.tryToAuthenticate();
+
+    } catch (e) {
+      String err = e.toString();
+      String msg = 'Please, login first.\n$err';
+      _errorMsg = msg;
+      _status = AuthenticationStatus.error;
+      notifyListeners();
+    }
   }
 
   void signOut() async {
-    _isLoading = true;
+    _errorMsg = '';
+    _status = AuthenticationStatus.unknown;
     notifyListeners();
-    await _authRepository.signOut();
-    _isLoading = false;
-    notifyListeners();
+    try {
+      await _authRepository.signOut();
+      /// TODO: delete delay
+      await Future.delayed(const Duration(seconds: 2), () {
+        print('delay 2 sec');
+      });
+      _status = AuthenticationStatus.loggedOut;
+      notifyListeners();
+    } catch (e) {
+      final String err = e.toString();
+      final String msg = 'Sorry! You maybe still logged in.\n$err';
+      _errorMsg = msg;
+      _status = AuthenticationStatus.error;
+      notifyListeners();
+    }
   }
 
   void permanentlyRemoveCurrentUser() async {
-    _isLoading = true;
+    _errorMsg = '';
+    _status = AuthenticationStatus.unknown;
     notifyListeners();
-    await Future.delayed(const Duration(seconds: 2), () {
-      print('delay 2 sec');
-    });
-    print('AuthProvider permanentlyRemoveCurrentUser');
-    int records = await _authRepository.permanentlyRemoveCurrentUser();
-    _isLoading = false;
-    notifyListeners();
-    print('AuthProvider permanentlyRemoveCurrentUser; deleted records: $records');
+    try {
+      /// TODO: delete delay
+      await Future.delayed(const Duration(seconds: 2), () {
+        print('delay 2 sec');
+      });
+      print('AuthProvider permanentlyRemoveCurrentUser');
+      int records = await _authRepository.permanentlyRemoveCurrentUser();
+      // notifyListeners();
+      print('AuthProvider permanentlyRemoveCurrentUser; deleted records: $records');
+    } catch (e) {
+      final String err = e.toString();
+      final String msg = 'Sorry! It was not allowed to remove some data.\n$err';
+      _errorMsg = msg;
+      _status = AuthenticationStatus.error;
+      notifyListeners();
+    }
+  }
+
+  // TEST:
+  Future<void> loginTest() async {
+    await _authRepository.tryToAuthenticate();
+
   }
 
   @override
   void dispose() {
     super.dispose();
+    _errorMsg = '';
     _authRepositorySubscription.cancel();
   }
 }
