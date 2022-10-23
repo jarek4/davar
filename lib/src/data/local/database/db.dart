@@ -48,18 +48,14 @@ class DB {
       // create common category [no category] in word_categories table
       await db.insert(DbConsts.tableUsers, AppConst.emptyUser.toJson());
       await db.insert(DbConsts.tableWordCategories, DbConsts.commonNoCategory);
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
-          Exception('Database error. DB class when openDatabase was called - onCreate callback'),
-          stackTrace: stackTrace);
+          Exception('Database error. DB class when openDatabase was called - onCreate callback'));
       print(e.toString());
       throw Exception('Database can not to be created. Sorry!');
-    } on PlatformException catch (err, stackTrace) {
+    } on PlatformException catch (err) {
       await ErrorsReporter.genericThrow(
-        err.toString(),
-        PlatformException(code: err.code, details: 'Sqflite-class DB-_onCreate'),
-        stackTrace: stackTrace,
-      );
+          err.toString(), PlatformException(code: err.code, details: 'Sqflite-class DB-_onCreate'));
       throw Exception(
           'Same error occurs. Please check whether the application has the required permissions');
     } catch (e) {
@@ -69,18 +65,14 @@ class DB {
 
   _onOpen(Database db) async {
     try {
-      print('DB-onOpen. Database name: ${DbConsts.dbName}. Is open - ${db.isOpen}');
-    } on DatabaseException catch (e, stackTrace) {
+      print('DB-onOpen. Database name: ${DbConsts.dbName}');
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
-          Exception('Database error. DB class when openDatabase was called - onOpen callback'),
-          stackTrace: stackTrace);
+          Exception('Database error. DB class when openDatabase was called - onOpen callback'));
       throw Exception('Database can not to be open. Sorry!');
-    } on PlatformException catch (err, stackTrace) {
+    } on PlatformException catch (err) {
       await ErrorsReporter.genericThrow(
-        err.toString(),
-        PlatformException(code: err.code, details: 'Sqflite-class DB-_onOpen'),
-        stackTrace: stackTrace,
-      );
+          err.toString(), PlatformException(code: err.code, details: 'Sqflite-class DB-_onOpen'));
       throw Exception(
           'Same error occurs. Please check whether the application has the required permissions');
     } catch (e) {
@@ -88,24 +80,18 @@ class DB {
     }
   }
 
-  // UPGRADE DATABASE TABLES
   FutureOr<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     try {
       if (oldVersion < newVersion) {
-        // you can execute drop table and create table
         print('DB-onUpgrade. Database name: ${DbConsts.dbName}');
       }
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
-          Exception('Database error. DB class when openDatabase was called - onUpgrade callback'),
-          stackTrace: stackTrace);
+          Exception('Database error. DB class when openDatabase was called - onUpgrade callback'));
       throw Exception('Database upgrade without success. Sorry!');
-    } on PlatformException catch (err, stackTrace) {
-      await ErrorsReporter.genericThrow(
-        err.toString(),
-        PlatformException(code: err.code, details: 'Sqflite-class DB-_onUpgrade'),
-        stackTrace: stackTrace,
-      );
+    } on PlatformException catch (err) {
+      await ErrorsReporter.genericThrow(err.toString(),
+          PlatformException(code: err.code, details: 'Sqflite-class DB-_onUpgrade'));
       throw Exception(
           'Same error occurs. Please check whether the application has the required permissions');
     } catch (e) {
@@ -129,15 +115,14 @@ class DB {
       final List res =
           await db.query(tableName, columns: ['id'], where: '$filter=?', whereArgs: values);
       return res.length;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(),
           Exception(
-              'DatabaseException. DB class _queryRowCount(). where = $where || values = $values'),
-          stackTrace: stackTrace);
-      throw Exception('Same error occurs. Sorry!');
+              'DatabaseException. DB class _queryRowCount(). Where= $where; Values= $values'));
+      throw Exception('Database exception. Sorry!');
     } catch (_) {
-      throw Exception('Same error occurs. Sorry!');
+      throw Exception('Database error. Sorry!');
     }
   }
 

@@ -102,7 +102,6 @@ class _LoginViewState extends State<LoginView> {
           },
           initialValue: '',
           keyboardType: TextInputType.emailAddress,
-          obscureText: false,
           decoration: inputDecoration(label: label)),
     );
   }

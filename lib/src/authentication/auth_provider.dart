@@ -96,10 +96,11 @@ class AuthProvider with ChangeNotifier {
         print('delay 1 sec');
       });
       await _authRepository.tryToAuthenticate();
-
     } catch (e) {
       String err = e.toString();
-      String msg = 'Please, login first.\n$err';
+      List<String> removerExceptionTitle = err.split('Exception:');
+      removerExceptionTitle.removeAt(0);
+      String msg = '${removerExceptionTitle.join(',')}\nGo back and try again';
       _errorMsg = msg;
       _status = AuthenticationStatus.error;
       notifyListeners();
@@ -112,6 +113,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     try {
       await _authRepository.signOut();
+
       /// TODO: delete delay
       await Future.delayed(const Duration(seconds: 2), () {
         print('delay 2 sec');
@@ -125,34 +127,6 @@ class AuthProvider with ChangeNotifier {
       _status = AuthenticationStatus.error;
       notifyListeners();
     }
-  }
-
-  void permanentlyRemoveCurrentUser() async {
-    _errorMsg = '';
-    _status = AuthenticationStatus.unknown;
-    notifyListeners();
-    try {
-      /// TODO: delete delay
-      await Future.delayed(const Duration(seconds: 2), () {
-        print('delay 2 sec');
-      });
-      print('AuthProvider permanentlyRemoveCurrentUser');
-      int records = await _authRepository.permanentlyRemoveCurrentUser();
-      // notifyListeners();
-      print('AuthProvider permanentlyRemoveCurrentUser; deleted records: $records');
-    } catch (e) {
-      final String err = e.toString();
-      final String msg = 'Sorry! It was not allowed to remove some data.\n$err';
-      _errorMsg = msg;
-      _status = AuthenticationStatus.error;
-      notifyListeners();
-    }
-  }
-
-  // TEST:
-  Future<void> loginTest() async {
-    await _authRepository.tryToAuthenticate();
-
   }
 
   @override

@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/local/database/db.dart';
 import 'package:davar/src/domain/i_user_local_db.dart';
@@ -128,8 +129,13 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
   }
 
   Future<bool> _checkIsEmailTaken(String email) async {
-    final int rowCount = await instance.queryRowCount(
-        tableName: DbConsts.tableUsers, where: [DbConsts.colUEmail], values: [email]);
-    return rowCount > 0;
+    try {
+      final int rowCount = await instance.queryRowCount(
+              tableName: DbConsts.tableUsers, where: [DbConsts.colUEmail], values: [email]);
+      return rowCount > 0;
+    } catch (e) {
+      print('AuthDb checkIsEmailTaken (email: $e).\n Error: $e');
+      rethrow;
+    }
   }
 }

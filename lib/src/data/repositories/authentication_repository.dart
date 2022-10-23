@@ -25,17 +25,19 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
   final IUserLocalDb _localDB = locator<IUserLocalDb<Map<String, dynamic>>>();
 
   @override
+
+  /// Returns logged in user id or 0. Null on error!
   Future<int?> loginWithEmailAndPassword({required String email, required String password}) async {
     try {
       Map<String, dynamic> searchResult = await _selectUserFromDatabase(email, password);
-      print('log in - isNotEmpty? -> ${searchResult.isNotEmpty}');
+      print('log in found user->${searchResult.isNotEmpty}');
+      print('isE: ${_user == AppConst.emptyUser}; isU: ${_user == AppConst.unknownUser}');
       if (searchResult.isEmpty) {
         // this check allows to show login error info during logging in process
-        print('isE: ${_user == AppConst.emptyUser}; isU: ${_user == AppConst.unknownUser}');
         if (_user != AppConst.emptyUser && _user != AppConst.unknownUser) {
           _controller.add(_user = AppConst.emptyUser);
         }
-        return null;
+        return 0;
       }
       User foundUser = User.fromJson(searchResult);
       await _ss.persistEmail(email);
@@ -43,183 +45,135 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       print('AuthenticationRepository loginWithEmailAndPassword');
       _controller.add(_user = foundUser);
       return foundUser.id;
-      // _controller.add(_user = const User(id: 3, name: 'testUser3', email: 'new3@email.eu', password: 'ppp')); // TESTS!
-
-    } catch (e, stackTrace) {
-      Exception exception = Exception('Bad connection to the database! Not able to log in.');
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        exception,
-        stackTrace: stackTrace,
-      );
-      throw exception;
+    } catch (e) {
+      print('AuthRepository-loginWithEmailAndPassword (email = $email)\n Exception: $e');
+      return null;
     }
   }
 
   @override
 
-  /// Returns created user id or null. If email is taken returns -1
+  /// Returns created user id or 0. If email is taken returns -1. null on error!
   Future<int?> register(User user) async {
-    if (await _isEmailTaken(user.email)) {
-      return -1;
-    }
-    Map<String, dynamic> userAsJson = user.toJson();
-    //id is auto increment by DB, createdAt is set by DB
-    userAsJson.remove('id');
-    userAsJson.remove('createdAt');
-    print('AuthenticationRepository register userToJson.remove: $userAsJson\n');
     try {
+      if (await _isEmailTaken(user.email)) {
+        return -1;
+      }
+      Map<String, dynamic> userAsJson = user.toJson();
+      //id is auto increment by DB, createdAt is set by DB
+      userAsJson.remove('id');
+      userAsJson.remove('createdAt');
+      print('AuthenticationRepository register userToJson.remove: $userAsJson\n');
       final int id = await _localDB.createUser(userAsJson);
       print('AuthenticationRepository register - created user id: $id\n');
-      Map<String, dynamic> lastInserted = await _selectUserFromDatabase(user.email, user.password);
-      print('registeredUser.isNotEmpty: ${lastInserted.isNotEmpty}');
+      Map<String, dynamic>? lastInserted = await _selectUserFromDatabase(user.email, user.password);
+
       if (lastInserted.isEmpty) return 0;
+
       final User registered = User.fromJson(lastInserted);
       await _ss.persistEmail(user.email);
       await _ss.persistPassword(user.password);
-      print(
-          'AuthenticationRepository register newUser.fromJson createdAt: ${registered.createdAt}\n');
+      print('AuthenticationRepository ${registered.name} created');
       _controller.add(_user = registered);
       return registered.id;
-    } catch (e, stackTrace) {
-      const String msg =
-          'AuthenticationRepository register Exception! Bad connection to the database! Not able to sign up.';
-      Exception exception = Exception(msg);
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        exception,
-        stackTrace: stackTrace,
-      );
-      throw exception;
+    } catch (e) {
+      print('AuthRepository-register (user.email = ${user.email}) Exception: $e');
+      return null;
     }
   }
 
   /// Checks if user with given email already exists in database. Returns false if not taken.
   Future<bool> _isEmailTaken(String email) async {
-    final List<dynamic> res = await _localDB.selectUser(where: ['email'], values: [email]);
-    if (res.isNotEmpty) return true;
-    return false;
+    try {
+      final List<dynamic> res = await _localDB.selectUser(where: ['email'], values: [email]);
+      if (res.isNotEmpty) return true;
+      return false;
+    } catch (e) {
+      print('AuthRepository-isEmailTaken($email). Exception: $e');
+      rethrow;
+    }
   }
 
   @override
   Future<void> signOut() async {
     print('AuthenticationRepository -> signOut()');
-    await _ss.deleteAll();
-    // important
-    //if _user=AppConst.emptyUser then there is no loggedOut view shown, but onboarding screen!
-    _controller.add(_user = AppConst.unknownUser);
+    try {
+      await _ss.deleteAll();
+      // important
+      //if _user=AppConst.emptyUser then there is no loggedOut view shown, but onboarding screen!
+      _controller.add(_user = AppConst.unknownUser);
+    } catch (e) {
+      print('signOut Error: $e');
+      /*Exception exception = Exception('AuthenticationRepository signOut Error');
+      await ErrorsReporter.genericThrow(
+        e.toString(),
+        exception,
+      );*/
+      _controller.add(_user = AppConst.unknownUser);
+    }
   }
 
 // Attention!
   @override
+
+  /// Emits user or emptyUser/unknownUser. On error throws Exception!
   Future<void> tryToAuthenticate() async {
-    print('AuthenticationRepository -> tryToAuthenticate()1');
-    // User u2 = const User(id: 3, name: 'testUser3', email: 'new3@email.eu', password: 'password');
-    final List<String>? emailAndPassword = await _checkStoredCredentials();
-    if (emailAndPassword == null || emailAndPassword.isEmpty) {
-      print('AuthenticationRepository -> tryToAuthenticate()2 -> emailOrPassword == null');
-      _controller.add(_user = AppConst.emptyUser);
-      return;
-    }
     try {
-      print('AuthenticationRepository -> tryToAuthenticate()3');
+      final List<String>? emailAndPassword = await _checkStoredCredentials();
+      if (emailAndPassword == null || emailAndPassword.isEmpty) {
+        print('AuthenticationRepository->tryToAuthenticate: emailOrPassword == null');
+        return _controller.add(_user = AppConst.emptyUser);
+      }
       final Map<String, dynamic> searchResult =
           await _selectUserFromDatabase(emailAndPassword[0], emailAndPassword[1]);
-
-      if (searchResult.isEmpty) return _controller.add(_user = AppConst.emptyUser);
-
+      if (searchResult.isEmpty) {
+        return _controller.add(_user = AppConst.emptyUser);
+      }
       _controller.add(_user = User.fromJson(searchResult));
-    } catch (e, stackTrace) {
-      print('tryToAuthenticate4 Exception: \n----------\n$e');
-      Exception exception = Exception('AuthenticationRepository tryToAuthenticate');
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        exception,
-        stackTrace: stackTrace,
-      );
-      // not authenticated!
-      // _controller.add(_user = AppConst.emptyUser);
-
+    } catch (e) {
+      print('AuthRepository-tryToAuthenticate Exception: $e');
+      throw Exception('Error during authentication!');
     }
   }
 
+  /// returns Array with email, pwd or empty. Null on error
   Future<List<String>?> _checkStoredCredentials() async {
     print('AuthenticationRepository -> _checkStoredCredentials()');
     try {
       final String? email = await _ss.getEmail();
       final String? pwd = await _ss.getPassword();
-      final bool hasCredentials =
-          (email != null && pwd != null && email.isNotEmpty && pwd.isNotEmpty);
-
-      if (!hasCredentials) return null;
-      print('AuthenticationRepository -> _checkStoredCredentials()[email, pwd] = [$email, $pwd]');
+      print('AuthenticationRepository >_checkStoredCredentials()[email, pwd]=[$email, $pwd]');
+      if (email == null || pwd == null || email.isEmpty || pwd.isEmpty) return [];
       return [email, pwd];
-    } catch (e, stackTrace) {
-      print(' \n----------\ncheck stored credentials Exception: $e');
-      Exception exception = Exception('AuthenticationRepository check stored credentials');
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        exception,
-        stackTrace: stackTrace,
-      );
-      return [];
+    } catch (e) {
+      print('_checkStoredCredentials: $e');
+      return null;
     }
   }
 
-  /// If there is no matching user may return an empty Map.
-  /// selectUserFromDatabase(String email, String pwd)
+  /// If there is no matching user returns an empty Map. On error throws Exception!
+  /// selectUserFromDatabase(String email, String password)
   Future<Map<String, dynamic>> _selectUserFromDatabase(String email, String pwd) async {
-    print(
-        '\n----------\nAuthenticationRepository-> _selectUserFromDatabase [email, password]: $email, $pwd');
     try {
       List<Map<String, dynamic>?> res = await _localDB.selectUser(
         where: ['email', 'password'],
         values: [email, pwd],
       ) as List<Map<String, dynamic>>;
-      print('\n----------\nAuthenticationRepository-> _selectUserFromDatabase res: $res');
+      print('AuthenticationRepository-> _selectUserFromDatabase res: $res');
       if (res.isEmpty || res[0] == null || res[0]!.isEmpty) return {};
       final Map<String, dynamic> firstFound = res.first!;
-      print('AuthenticationRepository-> _selectUserFromDatabase user id: ${res[0]?['id']}');
       if (res.first!.isEmpty) return {};
       return firstFound;
-    } catch (e, stackTrace) {
-      Exception exception = Exception('AuthenticationRepository register selectUserFromDatabase');
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        exception,
-        stackTrace: stackTrace,
-      );
-      print('\n----------\nAuthenticationRepository-> _selectUserFromDatabase Exception: $e');
-      return {};
+    } catch (e) {
+      print('AuthenticationRepository-> _selectUserFromDatabase Exception: $e');
+      rethrow;
     }
   }
 
   @override
   Stream<User> get user async* {
-    print(
-        'AuthenticationRepository Stream<User> get user async* [ id: ${_user.id}, name: ${_user.name}]');
     yield _user;
     yield* _controller.stream;
-  }
-
-  @override
-  Future<int> permanentlyRemoveCurrentUser() async {
-    try {
-      final int res = await _localDB.deleteUser(_user.id);
-      await _ss.deleteAll();
-      _controller.add(_user = AppConst.emptyUser);
-      return res;
-    } catch (e, stackTrace) {
-      print(
-          'AuthenticationRepository-> permanentlyRemoveCurrentUser(id: ${_user.id}) Exception: \n----------\n$e');
-      Exception exception = Exception('AuthenticationRepository permanentlyRemoveCurrentUser');
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        exception,
-        stackTrace: stackTrace,
-      );
-      return 0;
-    }
   }
 
   @override

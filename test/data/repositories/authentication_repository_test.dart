@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/data/repositories/authentication_repository.dart';
@@ -51,13 +52,6 @@ void main() {
         verify(ss.getEmail());
         verify(ss.getPassword());
       });
-      test('deleteAll - on permanentlyRemoveCurrentUser', () async {
-        // arrange
-        // act
-        await aR.permanentlyRemoveCurrentUser();
-        // assert
-        verify(ss.deleteAll());
-      });
     });
     group('- should NOT call ISecureStorage method:', () {
       setUp(() {
@@ -96,13 +90,6 @@ void main() {
         // assert
         verifyNever(ss.deleteEmail());
       });
-      test('persistPassword - on permanentlyRemoveCurrentUser', () async {
-        // arrange
-        // act
-        await aR.permanentlyRemoveCurrentUser();
-        // assert
-        verifyNever(ss.persistPassword('password'));
-      });
     });
     group('register method should:', () {
       setUp(() {
@@ -138,7 +125,7 @@ void main() {
         // assert
         expect(await aR.register(newUser), -1);
       });
-      test('returns 0 when Local database createUser function throws Exception', () async {
+      test('returns null when Local database createUser function throws Exception', () async {
         // arrange
         const User newUser = User(email: 'test22@test.test', password: 'pwd', name: 'test', id: 11);
         final Map<String, dynamic> json = newUser.toJson();
@@ -147,7 +134,7 @@ void main() {
             .thenThrow(Exception());
         // act
         // assert
-        expect(await aR.register(newUser), 0);
+        expect(await aR.register(newUser), null);
       });
     });
     group('stream controller:', () {
@@ -167,7 +154,7 @@ void main() {
         Stream<User> stream = controller.stream;
         const User emptyUser = User();
         stream.listen((event) {
-         // print(event);
+          // print(event);
         });
 
         expectLater(stream, emits(emptyUser));
@@ -179,7 +166,7 @@ void main() {
         const User notEmptyUser = User(id: 2, email: 'test', authToken: 'testToken');
         stream.listen(
           expectAsync1(
-                (event) {
+            (event) {
               expect(event, notEmptyUser);
             },
           ),
@@ -187,15 +174,16 @@ void main() {
         controller.add(notEmptyUser);
       });
       test('emits users in right order', () async {
-       Stream<User> stream = controller.stream;
+        Stream<User> stream = controller.stream;
         const User emptyUser = User();
-        const User notEmptyUser = User(id: 2, email: 'test', name: 'notEmptyUser', authToken: 'testToken');
+        const User notEmptyUser =
+            User(id: 2, email: 'test', name: 'notEmptyUser', authToken: 'testToken');
         List<User> expectedRecords = [notEmptyUser, emptyUser, notEmptyUser];
-        int i = 0;
+        // int i = 0;
         expect(stream, emitsInAnyOrder(expectedRecords));
-       controller.add(notEmptyUser);
-       controller.add(emptyUser);
-       controller.add(notEmptyUser);
+        controller.add(notEmptyUser);
+        controller.add(emptyUser);
+        controller.add(notEmptyUser);
       });
     });
   });

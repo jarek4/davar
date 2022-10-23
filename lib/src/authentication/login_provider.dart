@@ -37,17 +37,21 @@ class LoginProvider with ChangeNotifier {
     });
     try {
       final int? id = await _authRepository.loginWithEmailAndPassword(email: _email, password: _password);
-      print('LoginProvider onSubmit id=$id');
+      if(id == 0) {
+        _errorMsg = 'Email or password is incorrect.\nPlease try again';
+        _status = LoginStatus.success; // error
+        notifyListeners();
+      } else if(id != null && id > 0) {
+        _errorMsg = '';
+        _status = LoginStatus.success;
+        notifyListeners();
+      }
       if(id == null) {
         _errorMsg = 'Email or password is incorrect.\nPlease try again';
         _status = LoginStatus.success; // error
         notifyListeners();
       }
-      if(id != null && id > 0) {
-        _errorMsg = '';
-        _status = LoginStatus.success;
-        notifyListeners();
-      }
+
       print('LoginProvider onSubmit LoginStatus=$_status');
      //  _status = LoginStatus.success;
      //  notifyListeners();

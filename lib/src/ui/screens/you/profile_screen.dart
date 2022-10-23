@@ -64,11 +64,6 @@ class ProfileScreen extends StatelessWidget {
                     () => context.read<AuthProvider>().signOut()),
               ),
               const Divider(thickness: 1.2),
-              ListTile(
-                title: const Text('Test Login id33-nNn-e-em@test'),
-                leading: const Icon(Icons.delete_sweep_outlined),
-                onTap: () => context.read<AuthProvider>().loginTest(),
-              ),
             ]),
       ),
     ]);

@@ -10,6 +10,8 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
   final DB instance = locator<DB>();
 
   @override
+
+  /// Returns created item id. -1 if already exists, 0 if conflict
   Future<int> createWordCategory(Map<String, dynamic> category) async {
     final Database db = await instance.database;
     final String name = category['name'];
@@ -26,10 +28,9 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
       );
       print('DB createWordCategory response: $response \n');
       return response;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
-          Exception('DatabaseException. DB class createWordCategory. Category = $category'),
-          stackTrace: stackTrace);
+          Exception('DatabaseException. DB class createWordCategory. Category = $category'));
       throw Exception('Category was not created. Sorry!');
     } catch (e) {
       throw Exception('category was not created. Sorry!');
@@ -37,16 +38,17 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
   }
 
   @override
+
+  /// Returns the number of rows affected.
   Future<int> deleteWordCategory(int id) async {
     try {
       final Database db = await instance.database;
       final int res = await db
           .delete(DbConsts.tableWordCategories, where: '${DbConsts.colId} = ?', whereArgs: [id]);
       return res;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class deleteWordCategory. id = $id'),
-          stackTrace: stackTrace);
+          e.toString(), Exception('DatabaseException. DB class deleteWordCategory. id = $id'));
       throw Exception('Category was not deleted. Sorry!');
     } catch (e) {
       print(e);
@@ -56,7 +58,7 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
 
   @override
 
-  /// returns  list of categories belongs to the user
+  /// returns list of categories belongs to the user
   Future<List<Map<String, dynamic>>> readAllWordCategory(int userId) async {
     // fetch DbConsts.commonNoCategory [id: 1, name: 'no-category']; id should be an int!
     int noCategoryId = _parseToIntOr1(DbConsts.commonNoCategory[DbConsts.colId]);
@@ -70,10 +72,9 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
         orderBy: '${DbConsts.colId} DESC',
       );
       return res;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
-          Exception('DatabaseException. DB class readAllWordCategory. UserId = $userId'),
-          stackTrace: stackTrace);
+          Exception('DatabaseException. DB class readAllWordCategory. UserId = $userId'));
       throw Exception('Category error!');
     } catch (e) {
       print(e);
@@ -91,7 +92,7 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
 
   @override
 
-  /// returns single category
+  /// returns single category or null
   Future<Map<String, dynamic>?> readWordCategory(int id) async {
     try {
       final Database db = await instance.database;
@@ -104,10 +105,9 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
       );
       if (res.isEmpty) return null;
       return res.first;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class readWordCategory. Id = $id'),
-          stackTrace: stackTrace);
+          e.toString(), Exception('DatabaseException. DB class readWordCategory. Id = $id'));
       throw Exception('Category error!');
     } catch (e) {
       print(e);
@@ -119,15 +119,17 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
 
   /// Returns the number of changes made
   Future<int> updateWordCategory(Map<String, dynamic> category) async {
+    final id = _parseToIntOr1(category['id']);
     try {
       final Database db = await instance.database;
       final int res = await db.update(DbConsts.tableWordCategories, category,
+          where: '${DbConsts.colId} = ?',
+          whereArgs: [id],
           conflictAlgorithm: ConflictAlgorithm.replace);
       return res;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
-          Exception('DatabaseException. DB class updateWordCategory. Category = $category'),
-          stackTrace: stackTrace);
+          Exception('DatabaseException. DB class updateWordCategory. Category = $category'));
       throw Exception('Category was not updated. Sorry!');
     } catch (e) {
       throw Exception('category was not updated. Sorry!');

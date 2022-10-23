@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_word_categories_repository.dart';
@@ -24,38 +26,99 @@ class CategoriesProvider with ChangeNotifier {
 
   List<String> get categoriesNames => _categories.map((e) => e.name).toList();
 
-  // List<String> get categoriesNames => ['no category', 'animals', 'people'];
+  String _errorMsg = '';
+
+  String get categoriesErrorMsg => _errorMsg;
+
+  String _newCategoryName = '';
+
+  String get newCategoryName => _newCategoryName;
+
+  void onNewCategoryNameChange(String value) {
+    if (_newCategoryName != value) {
+      _newCategoryName = value;
+    }
+  }
 
   Future<void> create() async {
+    // final WordCategory created = WordCategory(id: -1, userId: _user.id, name: _newCategoryName);
+    // print('CategoriesProvider create(): $created');
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
-    // Map<String, dynamic> cat = {'id': -1, 'name': 'testCategory', 'userId': 2};
-    int response =
-        await _categoriesRepository.create(const WordCategory(id: 32, name: 'cat no.5', userId: 1));
-    print('CategoriesProvider-create created id: $response');
-    await _fetchCategories();
+    final WordCategory created = WordCategory(id: -1, userId: _user.id, name: _newCategoryName);
+    try {
+      final int response = await _categoriesRepository.create(created);
+      // this category already exists
+      if (response == -1) {
+        _errorMsg = 'Category: ${created.name} already exists!';
+        _status = CategoriesProviderStatus.success;
+        notifyListeners();
+        return;
+      }
+      // category successfully created
+      _fetchCategories();
+    } catch (e) {
+      _errorMsg = 'The word: ${created.name} was not created!';
+      _status = CategoriesProviderStatus.error;
+      notifyListeners();
+      print(e);
+    }
   }
 
-  Future<void> update() async {
+  Future<void> update(WordCategory category) async {
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
-    const WordCategory w = WordCategory(id: 1, name: 'updated4', userId: 1);
-    await _categoriesRepository.update(w);
-    await _fetchCategories();
+    final WordCategory created = WordCategory(id: category.id, userId: _user.id, name: _newCategoryName);
+    try {
+      final int res = await _categoriesRepository.update(created);
+      if (res == -1) {
+        _errorMsg = 'The last category change was not saved!';
+        _status = CategoriesProviderStatus.success;
+        notifyListeners();
+        return;
+      }
+      await _fetchCategories();
+    } catch (e) {
+      _errorMsg = 'The last category change was not saved!';
+      _status = CategoriesProviderStatus.error;
+      notifyListeners();
+      print(e);
+    }
   }
+
   Future<void> delete(int id) async {
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
-    const WordCategory w = WordCategory(id: 1, name: 'updated4', userId: 1);
-    await _categoriesRepository.update(w);
-    await _fetchCategories();
+    try {
+      final int res = await _categoriesRepository.delete(id);
+      if (res < 1) {
+        _errorMsg = 'The category change was not deleted!';
+        _status = CategoriesProviderStatus.success;
+        notifyListeners();
+        return;
+      }
+      await _fetchCategories();
+    } catch (e) {
+      _errorMsg = 'The category change was not deleted!';
+      _status = CategoriesProviderStatus.error;
+      notifyListeners();
+      print(e);
+    }
   }
 
   Future<void> _fetchCategories() async {
+    _errorMsg = '';
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
-    _categories = await _categoriesRepository.readAll(_user.id);
-    _status = CategoriesProviderStatus.success;
-    notifyListeners();
+    try {
+      _categories = await _categoriesRepository.readAll(_user.id);
+      _status = CategoriesProviderStatus.success;
+      notifyListeners();
+    } catch (e) {
+      _errorMsg = 'Some thing bad has happened 🥴\n Try to restart the application';
+      _status = CategoriesProviderStatus.error;
+      notifyListeners();
+      print(e);
+    }
   }
 }

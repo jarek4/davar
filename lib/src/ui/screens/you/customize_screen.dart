@@ -1,8 +1,12 @@
 import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/categories_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+
+import 'add_edit_word_category/add_edit_word_category.dart';
 
 class CustomizeScreen extends StatelessWidget {
   const CustomizeScreen({Key? key}) : super(key: key);
@@ -48,7 +52,13 @@ class CustomizeScreen extends StatelessWidget {
           final bool isStatusSuccess = provider.status == CategoriesProviderStatus.success;
           return TextButton(
             // style: ButtonStyle(),
-            onPressed: isStatusSuccess ? () => provider.create() : null,
+            onPressed: !isStatusSuccess
+                ? null
+                : () => _showAddEditDialog(
+                      context: context,
+                      title: 'Add',
+                      onConfirmation: () => provider.create(),
+                    ),
             child: Text(isStatusSuccess ? 'Add new category' : 'Wait...',
                 style: TextStyle(fontSize: isLandscape ? 20 : 16)),
           );
@@ -63,8 +73,16 @@ class CustomizeScreen extends StatelessWidget {
             case CategoriesProviderStatus.loading:
               return const Text('Wait...');
             default:
-              return const Text('ERROR');
+              return _buildErrorInformation();
           }
+        }),
+        Consumer<CategoriesProvider>(
+            builder: (BuildContext context, CategoriesProvider provider, _) {
+          final bool isError = provider.categoriesErrorMsg.isNotEmpty;
+          if (!isError) return const SizedBox();
+          return Text(provider.categoriesErrorMsg,
+              style: const TextStyle(color: Colors.red, fontSize: 11.0),
+              textAlign: TextAlign.center);
         }),
       ]),
     );
@@ -102,7 +120,12 @@ class CustomizeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-              onPressed: () {},
+              onPressed: () => _showAddEditDialog(
+                    context: context,
+                    title: 'Edit',
+                    onConfirmation: () => context.read<CategoriesProvider>().update(item),
+                    category: item,
+                  ),
               icon: const Icon(
                 Icons.edit,
                 size: 16,
@@ -136,5 +159,51 @@ class CustomizeScreen extends StatelessWidget {
                 ],
               ),
             ));
+  }
+
+  void _showAddEditDialog({
+    required BuildContext context,
+    required String title,
+    required VoidCallback onConfirmation,
+    WordCategory? category,
+  }) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title, textAlign: TextAlign.center),
+        content: AddEditWordCategory(
+          title: title,
+          onConfirmation: onConfirmation,
+          category: category,
+          onChangeHandle: (value) =>
+              context.read<CategoriesProvider>().onNewCategoryNameChange(value),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorInformation() {
+    return Consumer<CategoriesProvider>(
+        builder: (BuildContext context, CategoriesProvider provider, _) {
+      final String error = provider.categoriesErrorMsg;
+      final bool isErrorMessage = error.isNotEmpty;
+      switch (isErrorMessage) {
+        case true:
+          _showErrorSnackBar(context, error);
+          return Text(error,
+              style: const TextStyle(color: Colors.red), textAlign: TextAlign.center);
+        default:
+          return const SizedBox();
+      }
+    });
+  }
+
+  void _showErrorSnackBar(BuildContext context, String authenticationError) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.grey,
+        content: Text(authenticationError, textAlign: TextAlign.center),
+      ));
+    });
   }
 }

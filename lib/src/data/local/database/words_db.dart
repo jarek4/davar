@@ -22,17 +22,13 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       );
       print('DB-createWord - created word: $word');
       return newWordId;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class createWord(word): $word'),
-          stackTrace: stackTrace);
+          e.toString(), Exception('DatabaseException. DB class createWord(word): $word'));
       throw Exception('Word was not created. Sorry!');
-    } catch (e, stackTrace) {
+    } catch (e) {
       await ErrorsReporter.genericThrow(
-        e.toString(),
-        Exception('Local database-createWord \n word = $word'),
-        stackTrace: stackTrace,
-      );
+          e.toString(), Exception('Local database-createWord \n word = $word'));
       throw Exception('word was not created. Sorry!');
     }
   }
@@ -46,13 +42,12 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       final int res =
           await db.delete(DbConsts.tableWords, where: '${DbConsts.colId}=?', whereArgs: [id]);
       return res;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class deleteWord. Id = $id'),
-          stackTrace: stackTrace);
+          e.toString(), Exception('DatabaseException. DB class deleteWord. Id = $id'));
       throw Exception('Word was not deleted. Sorry!');
     } catch (e) {
-      print(e);
+      await ErrorsReporter.genericThrow(e.toString(), Exception('DB class deleteWord. Id = $id'));
       throw Exception('word was not deleted. Sorry!');
     }
   }
@@ -71,19 +66,14 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       final Database db = await instance.database;
       final int count = await db.rawUpdate(updateQuery, [...values, wordId]);
       return count;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(),
           Exception(
-              'DatabaseException. DB class rawWordUpdate. columns $columns || values = $values'),
-          stackTrace: stackTrace);
+              'DatabaseException. DB class rawWordUpdate. columns $columns || values = $values'));
       throw Exception('Word is not updated. Sorry!');
-    } catch (e, stackTrace) {
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        Exception('DB class rawWordUpdate()'),
-        stackTrace: stackTrace,
-      );
+    } catch (e) {
+      await ErrorsReporter.genericThrow(e.toString(), Exception('DB class rawWordUpdate()'));
       throw Exception('word is not updated. Sorry!');
     }
   }
@@ -117,14 +107,12 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
 
       final List<Map<String, dynamic>> resJoin = await db.rawQuery(sql, [userId]);
       return resJoin;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class readAllWords. UserId = $userId'),
-          stackTrace: stackTrace);
-      throw Exception('Words error!');
+          e.toString(), Exception('DatabaseException. DB class readAllWords. UserId = $userId'));
+      throw Exception('Sorry. Can not load your words!');
     } catch (e) {
-      print(e);
-      throw Exception('words error!');
+      throw Exception('Sorry! Cannot load your words.');
     }
   }
 
@@ -140,14 +128,13 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
         limit: 1,
       );
       return res.first;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class readWord. Id = $id'),
-          stackTrace: stackTrace);
-      throw Exception('Word error!');
+          e.toString(), Exception('DatabaseException. DB class readWord. Id = $id'));
+      throw Exception('Can not read the word!');
     } catch (e) {
       print(e);
-      throw Exception('word error!');
+      throw Exception('Cannot read the word!');
     }
   }
 
@@ -160,10 +147,9 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       final int res =
           await db.update(DbConsts.tableWords, word, conflictAlgorithm: ConflictAlgorithm.replace);
       return res;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class updateWord. Word = $word'),
-          stackTrace: stackTrace);
+          e.toString(), Exception('DatabaseException. DB class updateWord. Word = $word'));
       throw Exception('Word was not updated. Sorry!');
     } catch (e) {
       throw Exception('word was not updated. Sorry!');
@@ -179,13 +165,12 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       final Database db = await instance.database;
       final List<Map<String, dynamic>> res = await db.rawQuery(query, args);
       return res;
-    } on DatabaseException catch (e, stackTrace) {
+    } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
-          e.toString(), Exception('DatabaseException. DB class rawQueryWords. query = $query'),
-          stackTrace: stackTrace);
-      throw Exception('Sorry. Words error!');
+          e.toString(), Exception('DatabaseException. DB class rawQueryWords. query = $query'));
+      throw Exception('Sorry. Can not load words!');
     } catch (e) {
-      throw Exception('Sorry. Words error!');
+      throw Exception('Sorry! Cannot load words.');
     }
   }
 }

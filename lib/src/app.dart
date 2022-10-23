@@ -94,17 +94,15 @@ class DavarApp extends StatelessWidget {
                   return const Onboarding();
                 case AuthenticationStatus.login:
                   return ChangeNotifierProvider<LoginProvider>(
-                      create: (_) => LoginProvider(),
-                      child: const LoginView());
+                      create: (_) => LoginProvider(), child: const LoginView());
                 case AuthenticationStatus.register:
                   return ChangeNotifierProvider<RegistrationProvider>(
-                      create: (_) => RegistrationProvider(),
-                      child: const RegisterView());
+                      create: (_) => RegistrationProvider(), child: const RegisterView());
                 case AuthenticationStatus.loggedOut:
                   return LoggedOutView(
                       loginOnPressed: () => context.read<AuthProvider>().onLoginRequest());
                 default:
-                  return _authenticationStatusUnknown();
+                  return _authenticationStatusUnknown(context, 'Trying to log you in... ');
               }
             }),
           );
@@ -113,16 +111,21 @@ class DavarApp extends StatelessWidget {
     );
   }
 
-  Scaffold _authenticationStatusUnknown() => Scaffold(
+  Scaffold _authenticationStatusUnknown(BuildContext context, String text) => Scaffold(
         body: Container(
           color: Colors.green.shade200,
           child: Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('Trying to log you in :) ', textAlign: TextAlign.center),
-              SizedBox(height: 30),
-              CircularProgressIndicator(),
+            children: [
+              Text(text, textAlign: TextAlign.center),
+              const SizedBox(height: 30),
+              const CircularProgressIndicator(),
+              const SizedBox(height: 30),
+              TextButton(
+                onPressed: () => context.read<AuthProvider>().onCancelAuthenticationRequest(),
+                child: const Icon(Icons.arrow_circle_left_outlined),
+              ),
             ],
           )),
         ),
