@@ -8,7 +8,7 @@ import 'package:davar/src/domain/i_words_local_db.dart';
 import 'package:davar/src/domain/i_words_repository.dart';
 
 class WordsRepository implements IWordsRepository<Word> {
-  // List<Word> _words = [];
+  // word max 25 characters, sentence 50.
 
   final IWordsLocalDb _localDB = locator<IWordsLocalDb<Map<String, dynamic>>>();
 

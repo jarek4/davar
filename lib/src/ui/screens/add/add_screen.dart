@@ -1,6 +1,9 @@
+import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/providers/words_provider.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 class AddScreen extends StatelessWidget {
@@ -9,23 +12,63 @@ class AddScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
+    return Consumer<CategoriesProvider>(
+        builder: (BuildContext context, CategoriesProvider provider, _) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.only(top: 60.0),
           child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             const Text('ADD NEW:', style: TextStyle(fontSize: 20)),
-            Text('status: ${context.read<WordsProvider>().status.toString()}'),
             _buildButton(
-                'Word', () => _showAddWordDialog(context, const AddNewWordModal(), 'New Word')),
+              'Word',
+              () => _addNewSentence(
+                  context: context,
+                  categories: provider.categories,
+                  onSubmit: (Word w) => context.read<WordsProvider>().create(w)),
+            ),
             _buildButton(
-                'Sentence',
-                () => _showAddWordDialog(
-                    context, const AddNewWordModal(isSentence: true), 'New Sentence'))
+              'Sentence',
+              () => _addNewSentence(
+                  context: context,
+                  isSentence: true,
+                  categories: provider.categories,
+                  onSubmit: (Word w) => context.read<WordsProvider>().create(w)),
+            ),
+            // errors:
+            Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
+              final bool hasErrorMsg = provider.wordsErrorMsg.isNotEmpty;
+              if(hasErrorMsg) _showErrorSnackBar(context, provider.wordsErrorMsg);
+              switch (provider.status) {
+                case WordsProviderStatus.error:
+                  _showErrorSnackBar(context, provider.wordsErrorMsg);
+                  return Text(provider.wordsErrorMsg);
+                case WordsProviderStatus.loading:
+                  return const Text('Wait...');
+                default:
+                  return const SizedBox();
+              }
+            })
           ]),
         ),
       );
     });
+  }
+
+  void _addNewSentence({
+    required BuildContext context,
+    bool isSentence = false,
+    required List<WordCategory> categories,
+    required Function onSubmit,
+  }) {
+    _showAddWordDialog(
+        context,
+        AddNewWordModal(
+            isSentence: isSentence,
+            categories: categories,
+            handleSubmit: onSubmit,
+          handleErrorMessage: (String v) => context.read<WordsProvider>().errorMsg = v,
+        ),
+        'New Sentence');
   }
 
   Widget _buildButton(String text, VoidCallback handle) {
@@ -48,7 +91,7 @@ class AddScreen extends StatelessWidget {
     );
   }
 
-  Future<dynamic> _showAddWordDialog(BuildContext ctx, Widget alertContentWidget, String title) =>
+  Future<dynamic> _showAddWordDialog(BuildContext ctx, Widget alertContent, String title) =>
       showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         barrierDismissible: true,
@@ -68,9 +111,17 @@ class AddScreen extends StatelessWidget {
                   scrollable: true,
                   shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
                   title: Text(title),
-                  content: alertContentWidget,
+                  content: alertContent,
                 ),
               ));
         },
       );
+
+  void _showErrorSnackBar(BuildContext context, String msg) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(msg, textAlign: TextAlign.center),
+      ));
+    });
+  }
 }

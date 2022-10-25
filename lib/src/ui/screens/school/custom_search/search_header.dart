@@ -7,7 +7,6 @@ class SearchHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return SliverAppBar(
       automaticallyImplyLeading: false,
       floating: true,
@@ -15,11 +14,15 @@ class SearchHeader extends StatelessWidget {
       title: const Text('search'),
       centerTitle: true,
       actions: <Widget>[
-        IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showSearch(context: context, delegate: WordSearchDelegate());
-            }),
+        Column(
+          children: [
+            IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  showSearch(context: context, delegate: WordSearchDelegate());
+                }),
+          ],
+        ),
       ],
     );
   }

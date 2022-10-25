@@ -14,7 +14,7 @@ class Word with _$Word {
     @Default('') String category,
     @Default(1) int categoryId,
     @Default(0) int isFavorite,
-    @Default(0) int isSentence,
+    @Default(0) int isSentence, //word max 25 characters, sentence 50.
     @Default(0) int points,
     @Default('Turkish') String userLearning, // ?
     @Default('English') String userNative,

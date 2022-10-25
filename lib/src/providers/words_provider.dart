@@ -20,6 +20,13 @@ class WordsProvider with ChangeNotifier {
   WordsProviderStatus _status = WordsProviderStatus.success;
   String _errorMsg = '';
 
+  set errorMsg(String value) {
+    if(_errorMsg != value) {
+      _errorMsg = value;
+      notifyListeners();
+    }
+  }
+
   WordsProviderStatus get status => _status;
 
   List<Word> get words => _words;
@@ -27,10 +34,14 @@ class WordsProvider with ChangeNotifier {
   String get wordsErrorMsg => _errorMsg;
 
   Future<void> create(Word word) async {
+    // replace the fake user id from form!
+    Word newWithUserId = word.copyWith(userId: _user.id);
+    print('WordsProvider create newWithUserId: $newWithUserId');
+    _errorMsg = '';
     _status = WordsProviderStatus.loading;
     notifyListeners();
     try {
-      final int res = await _wordsRepository.create(word);
+      final int res = await _wordsRepository.create(newWithUserId);
       if (res == -1) {
         _errorMsg = 'The word: ${word.catchword} was not saved!';
         _status = WordsProviderStatus.success;
