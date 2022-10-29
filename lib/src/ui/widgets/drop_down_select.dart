@@ -1,5 +1,6 @@
 import 'package:davar/src/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 
 class DropDownSelect<T> extends StatelessWidget {
   final String hintText;
@@ -29,7 +30,7 @@ class DropDownSelect<T> extends StatelessWidget {
             child: DropdownButton<T>(
               dropdownColor: Colors.amberAccent,
               elevation: 16,
-              hint: Text(hintText),
+              hint: Text(utils.trimTextIfLong(hintText)),
               value: value,
               isDense: true,
               onChanged: onChanged,
@@ -37,7 +38,7 @@ class DropDownSelect<T> extends StatelessWidget {
                 return DropdownMenuItem<T>(
                   key: Key('DropdownMenuItem-$value'),
                   value: value,
-                  child: Text(getLabel(value)),
+                  child: Text(utils.trimTextIfLong(getLabel(value))),
                 );
               }).toList(),
             ),

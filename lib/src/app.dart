@@ -78,7 +78,8 @@ class DavarApp extends StatelessWidget {
               print('app.dart - provider.status: ${provider.status}');
               switch (provider.status) {
                 case AuthenticationStatus.authenticated:
-                  return MultiProvider(providers: [
+                  return const RootWidget();
+                  /*return MultiProvider(providers: [
                     ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
                       create: (_) => WordsProvider(provider.user),
                       update: (_, auth, __) => WordsProvider(auth.user),
@@ -87,7 +88,7 @@ class DavarApp extends StatelessWidget {
                       create: (_) => CategoriesProvider(provider.user),
                       update: (_, auth, __) => CategoriesProvider(auth.user),
                     ),
-                  ], child: const RootWidget());
+                  ], child: const RootWidget());*/
                 case AuthenticationStatus.error:
                   return _onAuthenticationError(provider.authenticationError, context);
                 case AuthenticationStatus.unauthenticated:

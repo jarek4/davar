@@ -2,50 +2,66 @@ import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 
-import 'custom_search/filters_bar.dart';
-import 'custom_search/search_header.dart';
+import 'custom_search/custom_search.dart';
 
 class WordsListScreen extends StatelessWidget {
   const WordsListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(slivers: [
-      const SearchHeader(),
-      SliverList(
-        delegate: SliverChildListDelegate([
-          FiltersBar(
-            handleOnlyFavorite: () {},
-            handleOrder: () {},
-            // handleOrder: context.read<WordsProvider>().triggerFavorite(0),
-          ),
+    final FilteredWordsProvider fp = Provider.of<FilteredWordsProvider>(context, listen: false);
+    final String str = Provider.of<FilteredWordsProvider>(context).errorMsg;
+    // final CategoriesProvider cp = Provider.of<CategoriesProvider>(context, listen: false);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 12.0),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          const Expanded(child: SizedBox()),
+          Consumer<CategoriesProvider>(
+              builder: (BuildContext context, CategoriesProvider provider, _) {
+                final bool hasErrorMsg = provider.categoriesErrorMsg.isNotEmpty;
+                if (hasErrorMsg) utils.showSnackBarInfo(context, msg: provider.categoriesErrorMsg);
+            return CategoriesFilter(provider.categories, (WordCategory? c) {});
+          }),
+          const SizedBox(width: 4.0),
+          Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
+            final bool hasErrorMsg = provider.wordsErrorMsg.isNotEmpty;
+            if (hasErrorMsg) utils.showSnackBarInfo(context, msg: provider.wordsErrorMsg);
+            return Row(children: [
+              const FavoriteFilter(),
+              const SizedBox(width: 4.0),
+              // SearchFilter(() => showSearch(context: context, delegate: WordSearchDelegate())),
+              SearchFilter(() => fp.filter(),
+              ),
+            ]);
+          }),
+          const Expanded(child: SizedBox()),
         ]),
-      ),
-      Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
-        final bool hasErrorMsg = provider.wordsErrorMsg.isNotEmpty;
-        if (hasErrorMsg) _showErrorSnackBar(context, provider.wordsErrorMsg);
-        switch (provider.status) {
-          case WordsProviderStatus.loading:
-            return SliverList(
-                delegate:
-                    SliverChildListDelegate([const LinearLoadingWidget(info: 'Please wait...')]));
-          case WordsProviderStatus.success:
-            return _buildWordListWidget(context, provider.words);
-          case WordsProviderStatus.error:
-            return SliverList(delegate: SliverChildListDelegate([Text(provider.wordsErrorMsg)]));
-          default:
-            const msg = 'Something has happened. Please try again';
-            return SliverList(
-                delegate: SliverChildListDelegate([const LinearLoadingWidget(info: msg)]));
-        }
-      })
-    ]);
+        const Divider(),
+        const Flexible(
+          child: PaginatedItemsList(),
+        ),
+        /*Flexible(
+          child: Consumer<WordsProvider>(
+            builder: (BuildContext context, WordsProvider provider, _) {
+              if(provider.words.isEmpty) return _emptyListInfo();
+              return PaginatedItemsList(
+                onLoadMore: () {},
+                snapshotItems: const [],
+              );
+            },
+          ),
+        ),*/
+        // PaginatedItemsList(),
+      ],
+    );
   }
 
-  Widget _buildWordListWidget(context, List<Word> words) {
+  Widget _buildWordsList(context, List<Word> words) {
     List<Word> itemsToDisplay = words;
     late List<Word> filteredItems;
     const bool onlyFav = 1 == 8 - 4;
@@ -55,11 +71,12 @@ class WordsListScreen extends StatelessWidget {
       filteredItems = itemsToDisplay;
     }
     if (words.isEmpty) return SliverList(delegate: SliverChildListDelegate([_emptyListInfo()]));
-    return WordsList(
+    return const PaginatedItemsList();
+    /*return WordsList(
       itemsToDisplay: filteredItems,
       // cardOnTap: (BuildContext ctx, Word item) =>
       //     ctx.router.push(EditWordRoute(word: item, id: item.id)),
-    );
+    );*/
   }
 
   Widget _emptyListInfo() => Center(
@@ -74,12 +91,33 @@ class WordsListScreen extends StatelessWidget {
           ]),
         ),
       );
+}
+/*
+      Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
+        final bool hasErrorMsg = provider.wordsErrorMsg.isNotEmpty;
+        if (hasErrorMsg) _showErrorSnackBar(context, provider.wordsErrorMsg);
+        switch (provider.status) {
+          case WordsProviderStatus.loading:
+            return SliverList(
+                delegate:
+                    SliverChildListDelegate([const LinearLoadingWidget(info: 'Please wait...')]));
+          case WordsProviderStatus.success:
+            // return SliverToBoxAdapter(child: PaginatedItemsList(),);
+            return _buildWordListWidget(context, provider.words);
+          case WordsProviderStatus.error:
+            return SliverList(delegate: SliverChildListDelegate([Text(provider.wordsErrorMsg)]));
+          default:
+            const msg = 'Something has happened. Please try again';
+            return SliverList(
+                delegate: SliverChildListDelegate([const LinearLoadingWidget(info: msg)]));
+        }
+      })
+    */
 
-  void _showErrorSnackBar(BuildContext context, String msg) {
+/*  void _showErrorSnackBar(BuildContext context, String msg) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(msg, textAlign: TextAlign.center),
       ));
     });
-  }
-}
+  }*/

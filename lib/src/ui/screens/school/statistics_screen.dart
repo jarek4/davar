@@ -14,7 +14,8 @@ class StatisticsScreen extends StatelessWidget {
         // return _buildScreenBody(
         //     context, provider.user.name, provider.user.email, provider.user.native,
         //     provider.user.learning);
-          return const UnauthenticatedInfo(key: Key('value4'),);
+          // return const UnauthenticatedInfo(key: Key('value4'),);
+          return const PaginatedItemsList();
         default:
           return const UnauthenticatedInfo(key: Key('School-StatisticsScreen'));
       }

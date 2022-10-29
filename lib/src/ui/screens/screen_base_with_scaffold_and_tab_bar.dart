@@ -55,14 +55,6 @@ class _ScreenBaseWithScaffoldAndTabBarState extends State<ScreenBaseWithScaffold
       key: Key('ScreenBaseWithScaffoldAndTabBarState-${widget.title}'),
       appBar: buildAppBar(),
       body: _buildBody(context),
-     /* body: Column(
-        children: [
-          CustomScrollView(slivers: [
-            SliverList(delegate: SliverChildListDelegate([_buildBody(context)]))
-          ],
-            shrinkWrap: true,),
-        ],
-      ),*/
     );
   }
 

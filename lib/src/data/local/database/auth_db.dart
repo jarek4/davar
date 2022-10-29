@@ -75,7 +75,7 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
     // database.rawUpdate('UPDATE Test SET name = ?, value = ? WHERE name = ?', ['updated name', '9876', 'some name']);
     // spaces at the ends are important!
     String updateQuery = 'UPDATE ${DbConsts.tableUsers}';
-    final String set = 'SET ${instance.prepareRawUpdateFilterFromArray(columns)} ';
+    final String set = 'SET ${instance.prepareRawComaFilterFromArray(DbConsts.tableUsers, columns)} ';
     const String where = 'WHERE ${DbConsts.colId} = ?';
     updateQuery = '$updateQuery $set $where';
 
@@ -109,7 +109,7 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
   }) async {
     try {
       final Database db = await instance.database;
-      final String filter = instance.prepareRawSelectFilterFromArray(where);
+      final String filter = instance.prepareRawAndFilterFromArray(DbConsts.tableUsers, where);
       final List<Map<String, dynamic>?> res =
           await db.query(DbConsts.tableUsers, where: filter, whereArgs: values);
       return res;

@@ -1,3 +1,6 @@
+import 'package:davar/src/authentication/authentication.dart';
+import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/navigation/navigation.dart';
 import 'package:davar/src/ui/screens/add/add_screen.dart';
 import 'package:davar/src/ui/screens/more/more_screen.dart';
@@ -12,14 +15,30 @@ class RootWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: [
-        const SchoolScreen(),
-        const AddScreen(),
-        const YouScreen(),
-        const MoreScreen(),
-      ].elementAt((context.watch<BottomNavigationController>().selectedIndex)),
-      bottomNavigationBar: const BottomNavigation(),
-    );
+    User u = Provider.of<AuthProvider>(context).user;
+    final int bottomTabBarSelectedIndex = context.watch<BottomNavigationController>().selectedIndex;
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
+            create: (_) => WordsProvider(u),
+            update: (_, auth, __) => WordsProvider(auth.user),
+          ),
+          ChangeNotifierProxyProvider<AuthProvider, CategoriesProvider>(
+            create: (_) => CategoriesProvider(u),
+            update: (_, auth, __) => CategoriesProvider(auth.user),
+          ),
+          ChangeNotifierProvider<FilteredWordsProvider>(
+            create: (context) => FilteredWordsProvider(u),
+          ),
+        ],
+        child: Scaffold(
+          body: [
+            const SchoolScreen(),
+            const AddScreen(),
+            const YouScreen(),
+            const MoreScreen(),
+          ].elementAt(bottomTabBarSelectedIndex),
+          bottomNavigationBar: const BottomNavigation(),
+        ));
   }
 }

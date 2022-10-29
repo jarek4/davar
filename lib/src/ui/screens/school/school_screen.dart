@@ -24,14 +24,15 @@ class SchoolScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int initIndex =
+        Provider.of<AppBarTabsController>(context, listen: false).schoolScreenTabInitialIndex;
     return ScreenBaseWithScaffoldAndTabBar(
       key: const Key('SchoolScreen-$routeName'),
       title: appBarTitle,
       appBarGradientColors: appBarGradientColors,
       appBarBottomTabs: appBarBottomTabs,
       bodyWidgets: bodyWidgets,
-      tabControllerInitIndex:
-          Provider.of<AppBarTabsController>(context, listen: false).schoolScreenTabInitialIndex,
+      tabControllerInitIndex: initIndex,
       onTabIndexChange: (int value) =>
           context.read<AppBarTabsController>().schoolScreenTabIndex(value),
     );

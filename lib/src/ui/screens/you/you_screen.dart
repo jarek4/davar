@@ -1,4 +1,3 @@
-import 'package:davar/src/authentication/auth_provider.dart';
 import 'package:davar/src/ui/screens/you/you.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +19,8 @@ class YouScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int initIndex =
+        Provider.of<AppBarTabsController>(context, listen: false).youScreenTabInitialIndex;
     return ScreenBaseWithScaffoldAndTabBar(
       key: const Key('YouScreen-$routeName'),
       title: appBarTitle,
@@ -30,7 +31,7 @@ class YouScreen extends StatelessWidget {
         ProfileScreen(),
         BackupScreen(),
       ],
-      tabControllerInitIndex: Provider.of<AppBarTabsController>(context, listen: false).youScreenTabInitialIndex,
+      tabControllerInitIndex: initIndex,
       onTabIndexChange: (int value) =>
           context.read<AppBarTabsController>().youScreenTabIndex(value),
     );

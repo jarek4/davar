@@ -3,6 +3,16 @@ abstract class IWordsRepository<T> {
   Future<int> create(T item);
 
   Future<List<T>> readAll(int userId);
+  /// 'WHERE words_table.userId=? AND words_table.categoryId=? AND like LIKE '%likeValue%''
+  Future<List<T>> readAllPaginatedById({
+    required int userId,
+    required int offset,
+    List<String> where = const [],
+    List<dynamic> whereValues = const[],
+    String? like,
+    dynamic likeValue,
+    int limit = 10,
+  });
 
   ///Null if error
   Future<List<T>?> rawQuery(String query, List<dynamic> arguments);

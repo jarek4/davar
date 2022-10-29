@@ -4,6 +4,16 @@ abstract class IWordsLocalDb<T> {
 
   Future<List<T>> readAllWords(int userId);
 
+  Future<List<T>> readWordsPaginatedOrderedByCreated({
+    required int userId,
+    required int offset,
+    List<String> where = const [],
+    List<dynamic> whereValues = const[],
+    String? like,
+    dynamic likeValue,
+    int limit = 10,
+  });
+
   /// returns single word or null
   Future<T> readWord(int id);
 

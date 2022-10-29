@@ -11,6 +11,7 @@ class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory
   @override
 
   /// Returns created item id. -1 if already exists, 0 if conflict
+  /// not longer then 20 characters!
   Future<int> create(WordCategory category) async {
     try {
       Map<String, dynamic> asJson = category.toJson();
@@ -40,6 +41,7 @@ class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory
   @override
 
   /// Returns the number of changes made  -1 on error
+  /// not longer then 20 characters!
   Future<int> update(WordCategory category) async {
     try {
       int res = await _localDB.updateWordCategory(category.toJson());

@@ -1,6 +1,8 @@
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class AddNewWordModal extends StatefulWidget {
@@ -117,12 +119,10 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
   void _submitForm(BuildContext context) {
     widget.handleErrorMessage('The last word was not saved. Sorry! Try to restart.');
     if (_addNewWordModalFormKey.currentState == null) {
-      print('form state is null');
       widget.handleErrorMessage('The last word was not saved. Sorry! Try to restart.');
       return Navigator.of(context).pop();
     }
     if (!_addNewWordModalFormKey.currentState!.validate()) {
-      print('form state valid: ${_addNewWordModalFormKey.currentState!.validate()}');
       widget.handleErrorMessage('The last word was not saved. Sorry! Do you filled all fields?');
       return;
     }
@@ -165,6 +165,8 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
     return (input == null || input.isEmpty) ? 'This field cannot be empty!' : null;
   }
 
+  // if category name is longer then 15 characters - need to be trimmed!
+  // WordCategory.name is max. 20 characters!
   Widget _buildSelectCategory(String hint, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
@@ -172,6 +174,7 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
         key: const Key('DropDownSelect-Category'),
         hintText: hint,
         options: widget.categories,
+        // options: context.read<CategoriesProvider>().categories,
         value: _selectedCategory,
         onChanged: (WordCategory? newValue) {
           setState(() {

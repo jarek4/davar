@@ -40,6 +40,7 @@ class CategoriesProvider with ChangeNotifier {
     }
   }
 
+  // not longer then 20 characters!
   Future<void> create() async {
     // final WordCategory created = WordCategory(id: -1, userId: _user.id, name: _newCategoryName);
     // print('CategoriesProvider create(): $created');
@@ -65,10 +66,12 @@ class CategoriesProvider with ChangeNotifier {
     }
   }
 
+  // not longer then 20 characters!
   Future<void> update(WordCategory category) async {
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
-    final WordCategory created = WordCategory(id: category.id, userId: _user.id, name: _newCategoryName);
+    final WordCategory created =
+        WordCategory(id: category.id, userId: _user.id, name: _newCategoryName);
     try {
       final int res = await _categoriesRepository.update(created);
       if (res == -1) {
@@ -77,7 +80,19 @@ class CategoriesProvider with ChangeNotifier {
         notifyListeners();
         return;
       }
-      await _fetchCategories();
+      final WordCategory? updated = await _categoriesRepository.read(category.id);
+      if (updated != null) {
+        final List<WordCategory> newState =[updated, ..._categories];
+        _categories = newState;
+        _status = CategoriesProviderStatus.success;
+        _errorMsg = '';
+        notifyListeners();
+        return;
+      }
+      _status = CategoriesProviderStatus.success;
+      _errorMsg = 'It looks like the last changes was not saved.';
+      notifyListeners();
+      // await _fetchCategories();
     } catch (e) {
       _errorMsg = 'The last category change was not saved!';
       _status = CategoriesProviderStatus.error;

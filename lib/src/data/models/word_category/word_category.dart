@@ -9,7 +9,7 @@ class WordCategory  with _$WordCategory {
   const factory WordCategory({
     required  int id,
     required int userId,
-    @Default('no category') String name,// ?
+    @Default('no category') String name,// ? not longer then 20 characters!
 
   }) = _WordCategory;
 

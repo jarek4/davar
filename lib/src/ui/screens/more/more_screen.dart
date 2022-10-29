@@ -20,18 +20,15 @@ class MoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int initIndex =
+        Provider.of<AppBarTabsController>(context, listen: false).moreScreenTabInitialIndex;
     return ScreenBaseWithScaffoldAndTabBar(
       key: const Key('MoreScreen-$routeName'),
       title: appBarTitle,
       appBarGradientColors: appBarGradientColors,
       appBarBottomTabs: appBarBottomTabs,
-      bodyWidgets: const [
-        SettingsScreen(),
-        HelpScreen(),
-        AboutScreen()
-      ],
-      tabControllerInitIndex:
-          Provider.of<AppBarTabsController>(context, listen: false).moreScreenTabInitialIndex,
+      bodyWidgets: const [SettingsScreen(), HelpScreen(), AboutScreen()],
+      tabControllerInitIndex: initIndex,
       onTabIndexChange: (int value) =>
           context.read<AppBarTabsController>().moreScreenTabIndex(value),
     );
