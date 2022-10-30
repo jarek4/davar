@@ -29,7 +29,7 @@ class _PaginatedItemsListState extends State<PaginatedItemsList> {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasData = Provider.of<FilteredWordsProvider>(context, listen: false).isMoreItems;
+    // final bool hasData = Provider.of<FilteredWordsProvider>(context, listen: false).isMoreItems;
     return StreamBuilder<List<Word>?>(
         stream: stream,
         initialData: const [],

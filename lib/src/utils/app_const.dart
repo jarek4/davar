@@ -22,4 +22,6 @@ class AppConst {
       email: 'unknown',
       id: -1,
       name: 'unknown');
+
+  static const WordCategory allCategoriesFilter = WordCategory(id: 0, name: 'all', userId: 1);
 }

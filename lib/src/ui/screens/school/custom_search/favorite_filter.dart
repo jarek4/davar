@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class FavoriteFilter extends StatelessWidget {
-  const FavoriteFilter({Key? key}) : super(key: key);
+  const FavoriteFilter({Key? key, required this.isChecked, required this.onChangeHandle}) : super(key: key);
+
+  final bool isChecked;
+  final Function onChangeHandle;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +26,9 @@ class FavoriteFilter extends StatelessWidget {
               Icon(Icons.favorite, color: Colors.red.withOpacity(0.5), size: 16.0),
               Checkbox(
                 activeColor: Colors.green.shade400,
-                value: false,
-                onChanged: (bool? value) {},
+                value: isChecked,
+               onChanged: (v) => onChangeHandle(),
+                // onChanged: onChangeHandle,
               ),
             ],
           ),

@@ -5,9 +5,8 @@ import 'dart:async';
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_words_repository.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/foundation.dart';
-
-// enum FilterWordProviderStatus { error, loading, success }
 
 class FilteredWordsProvider with ChangeNotifier {
   FilteredWordsProvider(this._user);
@@ -16,8 +15,9 @@ class FilteredWordsProvider with ChangeNotifier {
 
   final IWordsRepository<Word> _wordsRepository = locator<IWordsRepository<Word>>();
 
-  // FilterWordProviderStatus _status = FilterWordProviderStatus.success;
   String _errorMsg = '';
+
+  String get errorMsg => _errorMsg;
 
   set errorMsg(String value) {
     if (_errorMsg != value) {
@@ -26,25 +26,28 @@ class FilteredWordsProvider with ChangeNotifier {
     }
   }
 
-  List<Word> _paginatedList = [];
+  // AppConst.allCategoriesFilter id:0, name: 'all'
+  WordCategory _selectedCategory = utils.AppConst.allCategoriesFilter;
 
-  //
-  int _selectedCategoryId = -1;
+  WordCategory get selected => _selectedCategory;
 
-  void onCategoryChange(int id) {
-    if (id != _selectedCategoryId) {
-      _selectedCategoryId = id;
+  void onCategoryChange(WordCategory? c) {
+    if (c == null) _selectedCategory = utils.AppConst.allCategoriesFilter;
+    if (c != _selectedCategory) {
+      _selectedCategory = c!;
+      print('onCategoryChange($c)');
       notifyListeners();
     }
   }
 
-  int _selectedOnlyFavorite = 0;
+  bool _selectedOnlyFavorite = false;
 
-  void onOnlyFavoriteChange(int val) {
-    if (val != _selectedOnlyFavorite) {
-      _selectedOnlyFavorite = val;
-      notifyListeners();
-    }
+  bool get selectedOnlyFavorite => _selectedOnlyFavorite;
+
+  void onOnlyFavoriteChange() {
+    _selectedOnlyFavorite = !_selectedOnlyFavorite;
+    print('selectedOnlyFavorite: ($_selectedOnlyFavorite)');
+    notifyListeners();
   }
 
   String _searchQueryString = '';
@@ -85,16 +88,18 @@ class FilteredWordsProvider with ChangeNotifier {
   /// it means that all was already loaded. There is no need to try to load more
   bool get isMoreItems => (_queryLimit <= _prevFetchedItems);
 
-  String get errorMsg => _errorMsg;
-
   // unsuccessful attempts to load more data. For diagnostic purpose!
   int _attemptsToLoadMore = 0;
+
+  List<Word> _paginatedList = [];
 
   Stream<List<Word>?> filteredWordsStream() async* {
     await filter();
     yield _paginatedList;
   }
 
+  // AppConst.allCategoriesFilter id:0, name: 'all'
+  // if _selectedCategory == AppConst.allCategoriesFilter not add category filter to search query!
   Future<List<Word>?> filter() async {
     print('FILTERED WORDS PROVIDER=>filter _listOffset= $_listOffset;');
     print('FILTERED WORDS PROVIDER=>filter _prevFetchedItems= $_prevFetchedItems');
@@ -115,6 +120,9 @@ class FilteredWordsProvider with ChangeNotifier {
       if (words.length >= _queryLimit) {
         _listOffset = _listOffset + _queryLimit;
       } else {
+        // if it wal last response with data it may not be max query limit count
+        // for eg data.length=2 and queryLimit=10, if then user will add new words (2 or 3),
+        //the last added words may not be displayed because of listOffset!
         _listOffset = _listOffset + words.length;
       }
       if (words.isEmpty) return null;

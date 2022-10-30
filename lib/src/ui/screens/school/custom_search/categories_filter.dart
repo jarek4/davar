@@ -4,9 +4,10 @@ import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 
 class CategoriesFilter extends StatelessWidget {
-  const CategoriesFilter(this.categories, this.handleOnChange, {Key? key}) : super(key: key);
+  const CategoriesFilter(this.categories, this.selected, this.handleOnChange, {Key? key}) : super(key: key);
 
   final List<WordCategory> categories;
+  final WordCategory selected;
   final ValueChanged<WordCategory?> handleOnChange;
 
   @override
@@ -29,7 +30,7 @@ class CategoriesFilter extends StatelessWidget {
                   'all',
                   style: TextStyle(fontSize: 13.0),
                 ),
-                value: null,
+                value: selected,
                 isDense: true,
                 onChanged: (WordCategory? v) => handleOnChange(v),
                 items: _buildMenuItems(),

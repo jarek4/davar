@@ -116,6 +116,7 @@ class WordsRepository implements IWordsRepository<Word> {
     }
   }
 
+  // AppConst.allCategoriesFilter id:0, name: 'all'
   @override
   Future<List<Word>> readAllPaginatedById({
     required int userId,
