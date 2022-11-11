@@ -49,32 +49,32 @@ class WordsListScreen extends StatelessWidget {
   Row _buildFilters(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       const Expanded(child: SizedBox()),
-      Consumer2<CategoriesProvider, FilteredWordsProvider>(
-          builder: (BuildContext context, CategoriesProvider cp, FilteredWordsProvider fwp, _) {
-        _handleErrors(context, cp, fwp);
+      Consumer2<CategoriesProvider, SearchWordsProvider>(
+          builder: (BuildContext context, CategoriesProvider cp, SearchWordsProvider search, _) {
+        _handleErrors(context, cp, search);
         final CategoriesProviderStatus cpStatus = cp.status;
         if (cpStatus == CategoriesProviderStatus.loading) {
           return const SizedBox();
         }
         return CategoriesFilter(
           cp.filterCategories,
-          fwp.selectedCategory,
-          (WordCategory? c) => context.read<FilteredWordsProvider>().onCategoryChange(c),
+          search.selectedCategory,
+          (WordCategory? c) => context.read<SearchWordsProvider>().onCategoryChange(c),
         );
       }),
       const SizedBox(width: 4.0),
-      Consumer<FilteredWordsProvider>(
-          builder: (BuildContext context, FilteredWordsProvider fwp, _) {
+      Consumer<SearchWordsProvider>(
+          builder: (BuildContext context, SearchWordsProvider search, _) {
         return FavoriteFilter(
-          isChecked: fwp.selectedOnlyFavorite,
-          onChangeHandle: () => fwp.onOnlyFavoriteChange(),
+          isChecked: search.selectedOnlyFavorite,
+          onChangeHandle: () => search.onOnlyFavoriteChange(),
         );
       }),
       const SizedBox(width: 4.0),
-      Consumer<FilteredWordsProvider>(builder: (BuildContext context, FilteredWordsProvider wp, _) {
-        final bool hasErrorMsg = wp.errorMsg.isNotEmpty;
-        if (hasErrorMsg) utils.showSnackBarInfo(context, msg: wp.errorMsg);
-        return SearchFilter(() => _showSearch(context, wp));
+      Consumer<SearchWordsProvider>(builder: (BuildContext context, SearchWordsProvider search, _) {
+        final bool hasErrorMsg = search.errorMsg.isNotEmpty;
+        if (hasErrorMsg) utils.showSnackBarInfo(context, msg: search.errorMsg);
+        return SearchFilter(() => _showSearch(context, search));
       }),
       Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider wp, _) {
         final bool hasErrorMsg = wp.wordsErrorMsg.isNotEmpty;
@@ -85,16 +85,16 @@ class WordsListScreen extends StatelessWidget {
     ]);
   }
 
-  Future<void> _showSearch(BuildContext context, FilteredWordsProvider wp) async {
-    Word? result = await showSearch<Word?>(context: context, delegate: WordSearchDelegate(wp));
+  Future<void> _showSearch(BuildContext context, SearchWordsProvider search) async {
+    Word? result = await showSearch<Word?>(context: context, delegate: WordSearchDelegate(search));
     if (result == null) return;
-    wp.insertItemAtTheTop(result);
+    search.insertItemAtTheTop(result);
   }
 
-  void _handleErrors(BuildContext context, CategoriesProvider cp, FilteredWordsProvider fwp) {
+  void _handleErrors(BuildContext context, CategoriesProvider cp, SearchWordsProvider search) {
     final bool isCategoriesProviderErrorMsg = cp.categoriesErrorMsg.isNotEmpty;
     if (isCategoriesProviderErrorMsg) utils.showSnackBarInfo(context, msg: cp.categoriesErrorMsg);
-    final bool isFilteredWordsProviderErrorMsg = fwp.errorMsg.isNotEmpty;
-    if (isFilteredWordsProviderErrorMsg) utils.showSnackBarInfo(context, msg: fwp.errorMsg);
+    final bool isFilteredWordsProviderErrorMsg = search.errorMsg.isNotEmpty;
+    if (isFilteredWordsProviderErrorMsg) utils.showSnackBarInfo(context, msg: search.errorMsg);
   }
 }

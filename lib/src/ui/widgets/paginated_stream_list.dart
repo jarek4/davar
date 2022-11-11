@@ -22,30 +22,30 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      Provider.of<FilteredWordsProvider>(context, listen: false).updateStream();
+      Provider.of<SearchWordsProvider>(context, listen: false).updateStream();
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    Provider.of<FilteredWordsProvider>(context, listen: false).dispose();
+    Provider.of<SearchWordsProvider>(context, listen: false).dispose();
   }
 
   void loadMore({isUpdate = false}) {
-    Provider.of<FilteredWordsProvider>(context, listen: false).filter();
+    Provider.of<SearchWordsProvider>(context, listen: false).filter();
   }
 
   @override
   Widget build(BuildContext context) {
     bool hasErrorMsg =
-        Provider.of<FilteredWordsProvider>(context, listen: false).errorMsg.isNotEmpty;
+        Provider.of<SearchWordsProvider>(context, listen: false).errorMsg.isNotEmpty;
     if (hasErrorMsg) {
       utils.showSnackBarInfo(context,
-          msg: Provider.of<FilteredWordsProvider>(context, listen: false).errorMsg);
+          msg: Provider.of<SearchWordsProvider>(context, listen: false).errorMsg);
     }
     return StreamBuilder<List<Word>?>(
-      stream: Provider.of<FilteredWordsProvider>(context, listen: false).filteredWords,
+      stream: Provider.of<SearchWordsProvider>(context, listen: false).filteredWords,
       initialData: const [],
       builder: (BuildContext context, AsyncSnapshot<List<Word>?> snapshot) {
         print('StreamBuilder state ${snapshot.connectionState}');
@@ -77,11 +77,11 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
   }
 
   Future<void> _onDelete(int id) async {
-    await Provider.of<FilteredWordsProvider>(context, listen: false).delete(id);
+    await Provider.of<SearchWordsProvider>(context, listen: false).delete(id);
   }
 
   Future<void> _onFavoriteChange(Word word) async {
-    await Provider.of<FilteredWordsProvider>(context, listen: false).toggleFavorite(word);
+    await Provider.of<SearchWordsProvider>(context, listen: false).toggleFavorite(word);
   }
 
   Future<void> _onItemTap(Word editing) async {
@@ -89,7 +89,7 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
     if (!mounted) return;
     // word was not changed (result == editing)
     if (result == null || result == editing) return;
-    Provider.of<FilteredWordsProvider>(context, listen: false).updateState(result);
+    Provider.of<SearchWordsProvider>(context, listen: false).updateState(result);
   }
 
   Future<Word?> _navigateToEditPage(Word editing) async {

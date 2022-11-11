@@ -9,8 +9,8 @@ import 'package:davar/src/domain/i_words_repository.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/foundation.dart';
 
-class FilteredWordsProvider with ChangeNotifier {
-  FilteredWordsProvider(this._user);
+class SearchWordsProvider with ChangeNotifier {
+  SearchWordsProvider(this._user);
 
   final User _user;
 

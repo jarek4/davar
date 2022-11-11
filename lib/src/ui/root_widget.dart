@@ -27,8 +27,8 @@ class RootWidget extends StatelessWidget {
             create: (_) => CategoriesProvider(u),
             update: (_, auth, __) => CategoriesProvider(auth.user),
           ),
-          ChangeNotifierProvider<FilteredWordsProvider>(
-            create: (context) => FilteredWordsProvider(u),
+          ChangeNotifierProvider<SearchWordsProvider>(
+            create: (context) => SearchWordsProvider(u),
           ),
         ],
         child: Scaffold(
