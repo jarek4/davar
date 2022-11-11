@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class ScreenBaseWithScaffoldAndTabBar extends StatefulWidget {
   const ScreenBaseWithScaffoldAndTabBar(
       {Key? key,
-      required this.title,
       required this.appBarGradientColors,
       required this.appBarBottomTabs,
       required this.bodyWidgets,
@@ -12,7 +11,6 @@ class ScreenBaseWithScaffoldAndTabBar extends StatefulWidget {
       required this.onTabIndexChange})
       : super(key: key);
 
-  final String title;
   final List<Color> appBarGradientColors;
   final List<AppBarBottomTabModel> appBarBottomTabs;
   final List<Widget> bodyWidgets;
@@ -52,15 +50,13 @@ class _ScreenBaseWithScaffoldAndTabBarState extends State<ScreenBaseWithScaffold
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Key('ScreenBaseWithScaffoldAndTabBarState-${widget.title}'),
+      key: Key('ScreenBaseWithScaffoldAndTabBarState-${widget.tabControllerInitIndex}'),
       appBar: buildAppBar(),
       body: _buildBody(context),
     );
   }
 
   AppBar buildAppBar() => AppBar(
-        title: Text(widget.title),
-        centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -69,7 +65,7 @@ class _ScreenBaseWithScaffoldAndTabBarState extends State<ScreenBaseWithScaffold
             end: Alignment.topLeft,
           )),
         ),
-        toolbarHeight: 27.0,
+        toolbarHeight: 18.0,
         toolbarOpacity: 0.7,
         bottomOpacity: 0.8,
         elevation: 4,
@@ -87,7 +83,11 @@ class _ScreenBaseWithScaffoldAndTabBarState extends State<ScreenBaseWithScaffold
       onTap: _tabBatOnTap,
       indicatorColor: Colors.white,
       indicatorWeight: 4,
-      tabs: bottomBarTabs.map((e) => Tab(icon: Icon(e.icon), text: e.title)).toList(),
+      tabs: bottomBarTabs.map((e) => Tab(
+          height: 63,
+          iconMargin: const EdgeInsets.only(bottom: 2.0),
+          icon: Icon(e.icon),
+          text: e.title)).toList(),
     );
   }
 

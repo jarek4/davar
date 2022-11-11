@@ -58,7 +58,9 @@ class WordsRepository implements IWordsRepository<Word> {
     try {
       final List<Map<String, dynamic>> res =
           await _localDB.rawQueryWords(query, arguments) as List<Map<String, dynamic>>;
-      if (res.isNotEmpty) return [];
+      //  print('rawQuery query: $query');
+      print('WordsRepository rawQuery res: ${res.length}');
+      if (res.isEmpty) return [];
       return res.map((element) => Word.fromJson(element)).toList();
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
@@ -108,8 +110,12 @@ class WordsRepository implements IWordsRepository<Word> {
   /// returns the number of changes made. -1 on error
   Future<int> update(Word item) async {
     try {
-      final int res = await _localDB.updateWord(item);
+      final int res = await _localDB.updateWord(item.toJson());
       return res;
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(), Exception('FormatException. WordsRepository update(Word $item)'));
+      return -1;
     } catch (e) {
       print('WordsRepository update Error: $e');
       return -1;
@@ -118,9 +124,9 @@ class WordsRepository implements IWordsRepository<Word> {
 
   // AppConst.allCategoriesFilter id:0, name: 'all'
   @override
-  Future<List<Word>> readAllPaginatedById({
+  Future<List<Word>> readAllPaginated({
     required int userId,
-    required int offset,
+    int offset = 0,
     List<String> where = const [],
     List<dynamic> whereValues = const [],
     String? like,
@@ -136,7 +142,7 @@ class WordsRepository implements IWordsRepository<Word> {
           whereValues: whereValues,
           like: like,
           likeValue: likeValue) as List<Map<String, dynamic>>;
-      print('readAllPaginatedById returned items no. ${resp.length}');
+      // print('readAllPaginatedById returned items no. ${resp.length}');
       if (resp.isEmpty) return [];
 
       return resp.map((element) => Word.fromJson(element)).toList();
@@ -150,6 +156,22 @@ class WordsRepository implements IWordsRepository<Word> {
       print(
           'WordsRepository WordsRepository readAllPaginatedById(userId:$userId, offset: $offset , like: $like) Error: $e');
       return [];
+    }
+  }
+
+  @override
+  Future<Word?> readSingle(int id) async {
+    try {
+      final Map<String, dynamic> res = await _localDB.readWord(id);
+      if (res.isEmpty) return null;
+      return Word.fromJson(res);
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(), Exception('FormatException. WordsRepository readSingle(id:$id)'));
+      return null;
+    } catch (e) {
+      print('WordsRepository readSingle(id:$id) Error: $e');
+      return null;
     }
   }
 }

@@ -9,7 +9,6 @@ import '../screen_base_with_scaffold_and_tab_bar.dart';
 class SchoolScreen extends StatelessWidget {
   const SchoolScreen({Key? key}) : super(key: key);
   static const routeName = '/school';
-  static const String appBarTitle = 'School';
   static const List<Color> appBarGradientColors = [Colors.purple, Colors.red];
   static const List<AppBarBottomTabModel> appBarBottomTabs = [
     AppBarBottomTabModel(Icons.list_alt, 'All words'),
@@ -28,7 +27,6 @@ class SchoolScreen extends StatelessWidget {
         Provider.of<AppBarTabsController>(context, listen: false).schoolScreenTabInitialIndex;
     return ScreenBaseWithScaffoldAndTabBar(
       key: const Key('SchoolScreen-$routeName'),
-      title: appBarTitle,
       appBarGradientColors: appBarGradientColors,
       appBarBottomTabs: appBarBottomTabs,
       bodyWidgets: bodyWidgets,

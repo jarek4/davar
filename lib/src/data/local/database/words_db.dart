@@ -63,15 +63,18 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       {required List<String> columns, required List values, required int wordId}) async {
     String updateQuery = 'UPDATE ${DbConsts.tableWords}';
     final String set =
-        'SET ${instance.prepareRawComaFilterFromArray(DbConsts.tableWords, columns)} ';
-    const String whereWordId = 'WHERE ${DbConsts.colId} = ?';
+        'SET ${instance.prepareRawComaFilterFromArray(DbConsts.tableWords, columns)}';
+    const String whereWordId = 'WHERE ${DbConsts.colId} =?';
     updateQuery = '$updateQuery $set $whereWordId';
+    print('updateQuery = $updateQuery');
+    print('values = $values. ID= $wordId');
 
     try {
       final Database db = await instance.database;
       final int count = await db.rawUpdate(updateQuery, [...values, wordId]);
       return count;
     } on DatabaseException catch (e) {
+      print(e);
       await ErrorsReporter.genericThrow(
           e.toString(),
           Exception(
@@ -114,7 +117,7 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
           ${DbConsts.tableWords}.${DbConsts.colWCategoryId} = ${DbConsts.tableWordCategories}.${DbConsts.colId} 
       WHERE
           ${DbConsts.tableWords}.${DbConsts.colWUserId}=?     
-      ORDER BY ${DbConsts.tableWords}.${DbConsts.colCreated}''';
+      ORDER BY ${DbConsts.tableWords}.${DbConsts.colCreated} DESC''';
 
       final List<Map<String, dynamic>> resJoin = await db.rawQuery(sql, [userId]);
       return resJoin;
@@ -138,7 +141,7 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       final List<Map<String, dynamic>> res = await db.query(
         DbConsts.tableWords,
         columns: DbConsts.allWordsColumns,
-        where: 'DbConsts.colId = ?',
+        where: '${DbConsts.colId} =?',
         whereArgs: [id],
         limit: 1,
       );
@@ -161,10 +164,14 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
 
   /// returns the number of changes made.
   Future<int> updateWord(Map<String, dynamic> word) async {
+    final int? id = word[DbConsts.colId];
+    if (id == null || id < 1) return 0;
     try {
       final Database db = await instance.database;
-      final int res =
-          await db.update(DbConsts.tableWords, word, conflictAlgorithm: ConflictAlgorithm.replace);
+      final int res = await db.update(DbConsts.tableWords, word,
+          where: '${DbConsts.colId} =?',
+          whereArgs: [id],
+          conflictAlgorithm: ConflictAlgorithm.replace);
       return res;
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
@@ -234,7 +241,7 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
       LEFT JOIN ${DbConsts.tableWordCategories} ON
           ${DbConsts.tableWords}.${DbConsts.colWCategoryId} = ${DbConsts.tableWordCategories}.${DbConsts.colId} 
       WHERE $whereString  
-      ORDER BY ${DbConsts.tableWords}.${DbConsts.colCreated} 
+      ORDER BY ${DbConsts.tableWords}.${DbConsts.colCreated} DESC
       LIMIT $limit OFFSET $offset''';
 
     try {

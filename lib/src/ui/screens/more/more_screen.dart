@@ -10,7 +10,6 @@ import '../screen_base_with_scaffold_and_tab_bar.dart';
 class MoreScreen extends StatelessWidget {
   const MoreScreen({Key? key}) : super(key: key);
   static const routeName = '/more';
-  static const String appBarTitle = 'More';
   static const List<Color> appBarGradientColors = [Colors.yellow, Colors.red];
   static const List<AppBarBottomTabModel> appBarBottomTabs = [
     AppBarBottomTabModel(Icons.settings_applications_outlined, 'Settings'),
@@ -24,7 +23,6 @@ class MoreScreen extends StatelessWidget {
         Provider.of<AppBarTabsController>(context, listen: false).moreScreenTabInitialIndex;
     return ScreenBaseWithScaffoldAndTabBar(
       key: const Key('MoreScreen-$routeName'),
-      title: appBarTitle,
       appBarGradientColors: appBarGradientColors,
       appBarBottomTabs: appBarBottomTabs,
       bodyWidgets: const [SettingsScreen(), HelpScreen(), AboutScreen()],
@@ -32,17 +30,5 @@ class MoreScreen extends StatelessWidget {
       onTabIndexChange: (int value) =>
           context.read<AppBarTabsController>().moreScreenTabIndex(value),
     );
-  }
-
-  Future<void> _makeExcept() async {
-    try {
-      throw Exception('test exception');
-    } catch (exception, stackTrace) {
-      await ErrorsReporter.genericThrow(
-        exception.toString(),
-        Exception('makeExcept'),
-        stackTrace: stackTrace,
-      );
-    }
   }
 }

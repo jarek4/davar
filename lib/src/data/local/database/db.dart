@@ -143,14 +143,15 @@ class DB {
     return statement;
   }
 
-  /// statement = 'tableName.name = ?, tableName.email = ?'
+  /// statement = 'tableName.name=?, tableName.email=?'
   String prepareRawComaFilterFromArray(String tableName, List<String> array) {
     // array = ['email', 'name']; => statement = 'name = ?, email = ?'
     String statement = '';
     const String append = ', ';
     for (int i = 0; i < array.length; i++) {
       String param = array[i];
-      String temp = '$tableName.$param = ?';
+      // String temp = '$tableName.$param =?';
+      String temp = '$param =?';
       if (i < array.length - 1) {
         statement = '$statement$temp$append';
       } else {

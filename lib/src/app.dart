@@ -79,16 +79,6 @@ class DavarApp extends StatelessWidget {
               switch (provider.status) {
                 case AuthenticationStatus.authenticated:
                   return const RootWidget();
-                  /*return MultiProvider(providers: [
-                    ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
-                      create: (_) => WordsProvider(provider.user),
-                      update: (_, auth, __) => WordsProvider(auth.user),
-                    ),
-                    ChangeNotifierProxyProvider<AuthProvider, CategoriesProvider>(
-                      create: (_) => CategoriesProvider(provider.user),
-                      update: (_, auth, __) => CategoriesProvider(auth.user),
-                    ),
-                  ], child: const RootWidget());*/
                 case AuthenticationStatus.error:
                   return _onAuthenticationError(provider.authenticationError, context);
                 case AuthenticationStatus.unauthenticated:

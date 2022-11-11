@@ -28,6 +28,7 @@ class WordItem extends StatelessWidget {
             }
           },
           leading: Hero(
+            key: Key('WordItem-hero_${item.catchword}_${item.id}'),
             tag: item,
             child: _buildHeroChild(),
           ),
@@ -47,7 +48,7 @@ class WordItem extends StatelessWidget {
         width: 35,
         child: Align(
           alignment: Alignment.center,
-          child: Text(item.userTranslation[0].toUpperCase(),
+          child: Text(item.catchword[0].toUpperCase(),
               style: const TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.w800,
@@ -63,25 +64,25 @@ class WordItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-              flex: 2,
               child: IconButton(
+                  iconSize: isFavorite ? 19 : 16,
                   onPressed: () {
                     if (favHandle != null) {
                       favHandle!();
                     }
                   },
                   icon: isFavorite
-                      ? const Icon(Icons.favorite)
-                      : const Icon(Icons.favorite_border_outlined))),
+                      ? Icon(Icons.favorite, color: Colors.red.shade300)
+                      : Icon(Icons.favorite_border_outlined, color: Colors.red.shade300))),
           Expanded(
-              flex: 1,
               child: IconButton(
                   onPressed: () => _onDeleteDialog(context, item.userTranslation),
                   icon: const Icon(Icons.delete_forever),
-                  iconSize: 17))
+                  iconSize: 18))
         ],
       ),
     );

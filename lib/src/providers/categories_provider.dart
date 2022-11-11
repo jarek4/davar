@@ -134,6 +134,7 @@ class CategoriesProvider with ChangeNotifier {
       _categories = await _categoriesRepository.readAll(_user.id);
       _status = CategoriesProviderStatus.success;
       notifyListeners();
+      // print('CategoriesProvider _fetchCategories:\n $_categories');
     } catch (e) {
       _errorMsg = 'Some thing bad has happened 🥴\n Try to restart the application';
       _status = CategoriesProviderStatus.error;

@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:davar/locator.dart';
+import 'package:davar/src/data/local/database/db_consts.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_words_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -81,7 +82,7 @@ class WordsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> triggerFavorite(int id) async {
+  Future<void> reverseIsFavorite(int id) async {
     // if word is favored isFavorite=1, if it is NOT isFavorite=0
     _errorMsg = '';
     _status = WordsProviderStatus.loading;
@@ -93,8 +94,28 @@ class WordsProvider with ChangeNotifier {
         _words.take(_words.length).map((Word i) => i.id == id ? updated : i).toList();
     _words = newState;
     try {
-      final int? res = await _wordsRepository.rawUpdate(['isFavorite'], [newFavValue], id);
+      final int? res = await _wordsRepository.rawUpdate([DbConsts.colWIsFavorite], [newFavValue], id);
       if (res == null) _errorMsg = 'The last change is not saved!';
+    } catch (e) {
+      _errorMsg = 'The last change is not saved! Try to restart the application';
+      print(e);
+    }
+    notifyListeners();
+  }
+
+  Future<void> update(Word item) async {
+    // if word is favored isFavorite=1, if it is NOT isFavorite=0
+    _errorMsg = '';
+    _status = WordsProviderStatus.loading;
+    notifyListeners();
+    try {
+      final int res = await _wordsRepository.update(item);
+      if (res == -1) _errorMsg = 'The last change is not saved!';
+      if(res > 0) {
+        final List<Word> newState =
+        _words.take(_words.length).map((Word element) => element.id == item.id ? item : element).toList();
+        _words = newState;
+      }
     } catch (e) {
       _errorMsg = 'The last change is not saved! Try to restart the application';
       print(e);

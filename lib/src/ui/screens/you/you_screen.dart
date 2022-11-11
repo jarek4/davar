@@ -9,7 +9,6 @@ import '../screen_base_with_scaffold_and_tab_bar.dart';
 class YouScreen extends StatelessWidget {
   const YouScreen({Key? key}) : super(key: key);
   static const routeName = '/you';
-  static const String appBarTitle = 'You';
   static const List<Color> appBarGradientColors = [Colors.orange, Colors.purple];
   static const List<AppBarBottomTabModel> appBarBottomTabs = [
     AppBarBottomTabModel(Icons.dashboard_customize_outlined, 'Customize'),
@@ -23,7 +22,6 @@ class YouScreen extends StatelessWidget {
         Provider.of<AppBarTabsController>(context, listen: false).youScreenTabInitialIndex;
     return ScreenBaseWithScaffoldAndTabBar(
       key: const Key('YouScreen-$routeName'),
-      title: appBarTitle,
       appBarGradientColors: appBarGradientColors,
       appBarBottomTabs: appBarBottomTabs,
       bodyWidgets: const [

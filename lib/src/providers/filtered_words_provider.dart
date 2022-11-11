@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:davar/locator.dart';
+import 'package:davar/src/data/local/database/db_consts.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_words_repository.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
@@ -29,14 +30,17 @@ class FilteredWordsProvider with ChangeNotifier {
   // AppConst.allCategoriesFilter id:0, name: 'all'
   WordCategory _selectedCategory = utils.AppConst.allCategoriesFilter;
 
-  WordCategory get selected => _selectedCategory;
+  WordCategory get selectedCategory => _selectedCategory;
 
-  void onCategoryChange(WordCategory? c) {
+  Future<void> onCategoryChange(WordCategory? c) async {
     if (c == null) _selectedCategory = utils.AppConst.allCategoriesFilter;
     if (c != _selectedCategory) {
+      final limit = _paginatedList.length < _queryLimit ? _queryLimit : _paginatedList.length;
       _selectedCategory = c!;
-      print('onCategoryChange($c)');
+      _listOffset = 0;
       notifyListeners();
+      await updateStream(limit: limit);
+      // await refreshStream();
     }
   }
 
@@ -44,19 +48,13 @@ class FilteredWordsProvider with ChangeNotifier {
 
   bool get selectedOnlyFavorite => _selectedOnlyFavorite;
 
-  void onOnlyFavoriteChange() {
+  Future<void> onOnlyFavoriteChange() async {
     _selectedOnlyFavorite = !_selectedOnlyFavorite;
-    print('selectedOnlyFavorite: ($_selectedOnlyFavorite)');
+    final limit = _paginatedList.length < _queryLimit ? _queryLimit : _paginatedList.length;
+    _listOffset = 0;
     notifyListeners();
-  }
-
-  String _searchQueryString = '';
-
-  void onSearchQueryStringChange(String val) {
-    if (val != _searchQueryString) {
-      _searchQueryString = val;
-      notifyListeners();
-    }
+    // read from database with current filters. Limit is actual number of items in list.
+    await updateStream(limit: limit);
   }
 
   // pagination
@@ -69,8 +67,8 @@ class FilteredWordsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // items per page (pagination)
-  int _queryLimit = 2;
+  // items per single fetch query (pagination)
+  int _queryLimit = 3;
 
   int get queryLimit => _queryLimit;
 
@@ -79,63 +77,217 @@ class FilteredWordsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // count of items fetched at previews query
   int _prevFetchedItems = 0;
 
+  /// Count of items fetched at previews query. Helps to to determine if there are still items to fetch
   int get prevFetchedItems => _prevFetchedItems;
 
   /// if previews query has less items (prevFetchedItems) then the limit (per page items count - queryLimit)
   /// it means that all was already loaded. There is no need to try to load more
   bool get isMoreItems => (_queryLimit <= _prevFetchedItems);
 
-  // unsuccessful attempts to load more data. For diagnostic purpose!
-  int _attemptsToLoadMore = 0;
-
+  // Stores the currently displayed items
   List<Word> _paginatedList = [];
 
-  Stream<List<Word>?> filteredWordsStream() async* {
-    await filter();
+  final _controller = StreamController<List<Word>>.broadcast();
+
+  Stream<List<Word>> get filteredWords async* {
     yield _paginatedList;
+    yield* _controller.stream;
   }
 
-  // AppConst.allCategoriesFilter id:0, name: 'all'
-  // if _selectedCategory == AppConst.allCategoriesFilter not add category filter to search query!
-  Future<List<Word>?> filter() async {
-    print('FILTERED WORDS PROVIDER=>filter _listOffset= $_listOffset;');
-    print('FILTERED WORDS PROVIDER=>filter _prevFetchedItems= $_prevFetchedItems');
-    print('FILTERED WORDS PROVIDER=>filter isMoreItems= $isMoreItems;');
-    print('FILTERED WORDS PROVIDER=>filter _attemptsToLoadMore= $_attemptsToLoadMore;');
+  /// Retrieves from DB without offset and regard to the filters set. Mainly due to a change in list item.
+  Future<void> updateStream({int? limit}) async {
+    _clearErrorMsg();
+    List<Word> res = await _fetch(offset: 0, limit: limit ?? _queryLimit);
+    _prevFetchedItems = res.length;
+    // increment offset!
+    _incrementListOffset(res.length);
+    _paginatedList = res;
+    _controller.add(_paginatedList);
+  }
 
-    _attemptsToLoadMore++;
-    notifyListeners();
+  /// Mainly due to a change in list item, updates the list, without query to database.
+  void updateState(Word item) {
+    print('Provider updateState(Word:\n ${item.catchword})');
     try {
-      final List<Word> words = await _wordsRepository.readAllPaginatedById(
-        userId: _user.id,
-        offset: _listOffset,
-        limit: _queryLimit,
-      );
-      // set the _prevFetchedItems and increment offset!
-      _prevFetchedItems = words.length;
-      // increment offset!
-      if (words.length >= _queryLimit) {
-        _listOffset = _listOffset + _queryLimit;
-      } else {
-        // if it wal last response with data it may not be max query limit count
-        // for eg data.length=2 and queryLimit=10, if then user will add new words (2 or 3),
-        //the last added words may not be displayed because of listOffset!
-        _listOffset = _listOffset + words.length;
-      }
-      if (words.isEmpty) return null;
-      final List<Word> updatedState = [..._paginatedList, ...words];
-      _attemptsToLoadMore = 0;
-      _paginatedList = updatedState;
+      _paginatedList = _paginatedList
+          .take(_paginatedList.length)
+          .map((Word e) => e.id == item.id ? item : e)
+          .toList();
       notifyListeners();
-      return _paginatedList;
+      _controller.add(_paginatedList);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  /// insert items at the top of the list of current displaying items
+  void insertItemAtTheTop(Word item) {
+      print('updateWithFound 1 element: ${item.catchword}');
+      // if _paginatedList already contains the item - move it at the beginning
+      // else add found item at the beginning
+      _paginatedList.removeWhere((e) => e.id == item.id);
+      _paginatedList.insert(0, item);
+    _controller.add(_paginatedList);
+  }
+
+  /// Handle Search Delegate
+  Stream<List<Word>> querySearch(String query) async* {
+    List<Word> res = await searchQuery(query);
+    yield res;
+  }
+
+  Future<List<Word>> searchQuery(String queryValue) async {
+    _clearErrorMsg();
+    final String likeString = prepareLikeSql(queryValue);
+    try {
+      final String sql = '${DbConsts.selectAllFromTableWords} $likeString';
+      final List<Word>? words = await _wordsRepository.rawQuery(sql, [_user.id]);
+      if (words != null) return words;
+      _errorMsg = 'Data is unavailable. Some error has happened, sorry!';
+      notifyListeners();
+      return [];
+    } catch (e) {
+      print('FilteredWordsProvider searchQuery ERROR:\n $e');
+      _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
+      notifyListeners();
+      return [];
+    }
+  }
+
+  String prepareLikeSql(String like) {
+    String likeString = " AND ${DbConsts.colWCatchword} LIKE '%$like%'";
+    if (like.isEmpty) {
+      likeString = " AND ${DbConsts.colWCatchword} LIKE '%'";
+    }
+    return likeString;
+  }
+
+  Future<void> filter({int offset = 0}) async {
+    _clearErrorMsg();
+    List<Word> tempList = [];
+    try {
+      final List<Word> res = await _fetch(offset: _listOffset, limit: _queryLimit);
+      _prevFetchedItems = res.length;
+      _incrementListOffset(res.length);
+      if (res.isEmpty) return;
+      tempList = [..._paginatedList, ...res];
+
+      _paginatedList = _removeDuplicates(tempList);
+      notifyListeners();
+      _controller.add(_paginatedList);
     } catch (e) {
       _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
       notifyListeners();
       print(e);
-      return null;
     }
+  }
+
+  // AppConst.allCategoriesFilter id:0, name: 'all'
+  // if _selectedCategory == AppConst.allCategoriesFilter don't add category filter to search query!
+  // if any filter has changed first need to empty _paginatedList!
+  Future<List<Word>> _fetch({int offset = 0, int limit = 2}) async {
+    List<String> where = [];
+    List<dynamic> args = [];
+    // id=0 for 'all categories';
+    if (_selectedCategory.id > 0) {
+      // onCategoryChange will set _listOffset = 0.
+      where.add(DbConsts.colWCategoryId);
+      args.add(_selectedCategory.id);
+    }
+    if (_selectedOnlyFavorite) {
+      // onOnlyFavoriteChange will set _listOffset = 0.
+      where.add(DbConsts.colWIsFavorite);
+      args.add(1);
+    }
+    try {
+      final List<Word> words = await _wordsRepository.readAllPaginated(
+        userId: _user.id,
+        offset: offset,
+        limit: limit,
+        where: where,
+        whereValues: args,
+      );
+      return words;
+    } catch (e) {
+      print('FilteredWordsProvider fetch ERROR:\n $e');
+      _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
+      notifyListeners();
+      return [];
+    }
+  }
+
+  List<Word> _removeDuplicates(List<Word> items) {
+    List<Word> uniqueItems = [];
+    final Set<int> uniqueIDs = items.map((e) => e.id).toSet(); //remove duplicates
+    for (int uID in uniqueIDs) {
+      uniqueItems.add(items.firstWhere((i) => i.id == uID));
+    } // populate uniqueItems with equivalent from original items
+    return uniqueItems; //the unique items list
+  }
+
+  void _incrementListOffset(int fetchedItemsCount) {
+    if (fetchedItemsCount >= _queryLimit) {
+      _listOffset = _listOffset + _queryLimit;
+    } else {
+      // if it was last response with data it may not be max query limit count
+      // for eg data.length=2 and queryLimit=10, if then user will add new words (2 or 3),
+      //the last added words may not be fetched and displayed because of listOffset!
+      _listOffset = _listOffset + fetchedItemsCount;
+    }
+  }
+
+  Future<void> delete(int id) async {
+    _clearErrorMsg();
+    try {
+      final int res = await _wordsRepository.delete(id);
+      if (res < 1) {
+        _errorMsg = 'The word was not deleted';
+        notifyListeners();
+        return;
+      }
+      _paginatedList.removeWhere((element) => element.id == id);
+      _listOffset = _listOffset - 1;
+      notifyListeners();
+      _controller.add(_paginatedList);
+    } catch (e) {
+      _errorMsg = 'Some thing has happened 🥴\n The word was not deleted';
+      notifyListeners();
+      print(e);
+    }
+  }
+
+  Future<void> toggleFavorite(Word i) async {
+    final int value = i.isFavorite == 1 ? 0 : 1;
+    try {
+      final int? res = await _wordsRepository.rawUpdate([DbConsts.colWIsFavorite], [value], i.id);
+      if (res == null || res < 1) {
+        _errorMsg = 'The word was not deleted';
+        notifyListeners();
+        return;
+      }
+      _paginatedList =
+          _paginatedList.map((e) => e.id == i.id ? e.copyWith(isFavorite: value) : e).toList();
+      notifyListeners();
+      _controller.add(_paginatedList);
+    } catch (e) {
+      _errorMsg = 'Some thing has happened 🥴\n The word was not deleted';
+      notifyListeners();
+      print(e);
+    }
+  }
+
+  void _clearErrorMsg() {
+    if (_errorMsg.isNotEmpty) {
+      _errorMsg = '';
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.close();
   }
 }

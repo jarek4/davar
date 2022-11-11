@@ -140,4 +140,27 @@ class DbConsts {
     colCUserId: 1,
     colCName: 'no category',
   };
+
+  /// Select * From words Left Join Where words.userId=?
+  static const String selectAllFromTableWords = '''
+      SELECT
+          ${DbConsts.colWCatchword}, 
+          ${DbConsts.tableWords}.${DbConsts.colId},
+          ${DbConsts.tableWords}.${DbConsts.colWUserId},
+          ${DbConsts.colWUserTransl},
+          ${DbConsts.colCName} AS ${DbConsts.colWCategory},
+          ${DbConsts.colWCategoryId},
+          ${DbConsts.colWIsFavorite},
+          ${DbConsts.colWIsSentence},
+          ${DbConsts.colWPoints},
+          ${DbConsts.colWUserLearn},
+          ${DbConsts.colWUserNative},
+          ${DbConsts.colWClue},
+          ${DbConsts.colCreated}
+      FROM
+          ${DbConsts.tableWords}
+      LEFT JOIN ${DbConsts.tableWordCategories} ON
+          ${DbConsts.tableWords}.${DbConsts.colWCategoryId} = ${DbConsts.tableWordCategories}.${DbConsts.colId} 
+      WHERE
+          ${DbConsts.tableWords}.${DbConsts.colWUserId}=?''';
 }

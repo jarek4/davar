@@ -1,17 +1,19 @@
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../../../authentication/authentication.dart';
+class WordSearchDelegate extends SearchDelegate<Word?> {
+  WordSearchDelegate(this.provider);
 
-class WordSearchDelegate extends SearchDelegate {
+  final FilteredWordsProvider provider;
+
   @override
   ThemeData appBarTheme(BuildContext context) {
     // assert(context != null);
     final ThemeData theme = Theme.of(context);
-    // theme.copyWith(backgroundColor: Colors.amber);
+    // theme.copyWith(inputDecorationTheme: InputDecorationTheme());
     // assert(theme != null);
     return theme;
   }
@@ -22,7 +24,7 @@ class WordSearchDelegate extends SearchDelegate {
       // to clear the query - input (right end of the search bar)
       IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () {
+          onPressed: () async {
             if (query.isEmpty) {
               // close and leave search bar
               close(context, null);
@@ -42,97 +44,119 @@ class WordSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    //Add the search term to the searchBloc.
-    //The Bloc will then handle the searching and add the results to the searchResults stream.
-    //This is the equivalent of submitting the search term to whatever search service you are using
-
-    return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
-      switch (provider.status) {
-        case WordsProviderStatus.loading:
-          return Center(
-            child: Column(children: const <Widget>[CircularProgressIndicator(color: Colors.green)]),
-          );
-        case WordsProviderStatus.success:
-          final List<Word> list = provider.words;
-          final results =
-              list.where((w) => w.userNative.toLowerCase().contains(query.toLowerCase())).toList();
-          return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              key: const Key('WordsListScreen-wordsList_builder'),
-              itemCount: results.length,
-              itemBuilder: (BuildContext context, int index) {
-                if (results.isEmpty) {
-                  return const Text('You have no words yet', textAlign: TextAlign.center);
-                } else {
-                  final Word word = results[index];
-                  return WordItem(
-                      key: Key('WordsListScreen-wordsListItem-${word.id}'),
-                      favHandle: () => context.read<WordsProvider>().triggerFavorite(word.id),
-                      deleteHandle: () => context.read<WordsProvider>().delete(word.id),
-                      item: word);
-                }
-              });
-        case WordsProviderStatus.error:
-          return Center(
-            child: Column(children: const <Widget>[
-              CircularProgressIndicator(
-                color: Colors.green,
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 8.0),
+          child: Text(
+            'Which element you want to add\n at the beginning of the main list?',
+            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const Divider(
+          height: 13.0,
+          thickness: 1.4,
+        ),
+        Expanded(
+          child: LayoutBuilder(builder: (context, constraint) {
+            final bool isOrientationPortrait =
+                MediaQuery.of(context).orientation == Orientation.portrait;
+            final double maxWidth = constraint.maxWidth;
+            final double landscapeMaxW = (maxWidth * 3) / 4;
+            return SizedBox(
+              width: isOrientationPortrait ? maxWidth - 30 : landscapeMaxW,
+              child: StreamBuilder<List<Word>?>(
+                stream: provider.querySearch(query),
+                initialData: const [],
+                builder: (BuildContext context, AsyncSnapshot<List<Word>?> snapshot) {
+                  final bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
+                  if (isWaiting) return buildLoadingIndicator();
+                  if (snapshot.hasError)
+                    utils.showSnackBarInfo(context, msg: snapshot.error.toString());
+                  if (!snapshot.hasData) return const Text('Maybe your word\'s list is empty 😯');
+                  final List<Word> data = snapshot.data ?? [];
+                  if (data.isEmpty) return const Text('Nothing was found.');
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      // if (data.isEmpty) return _buildNoData();
+                      return WordItem(
+                          item: data[index],
+                          favHandle: () => print('favHandle'),
+                          deleteHandle: () => print('deleteHandle'),
+                          onTapHandle: () async {
+                            print('onTapHandle');
+                            close(context, data[index]);
+                            // await provider.streamDispose();
+                          });
+                    },
+                  );
+                },
               ),
-              Text('Please, try again. 🙄 😮'),
-              Text('Error: ___'),
-            ]),
-          );
-        default:
-          return Center(
-            child: Column(children: const <Widget>[
-              CircularProgressIndicator(color: Colors.red),
-              Text('Please, try again. Something go wrong 🙄 😮'),
-            ]),
-          );
-      }
-    });
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget buildLoadingIndicator() {
+    return Center(
+      child: Column(
+        children: const [CircularProgressIndicator.adaptive(), Text('Loading...')],
+      ),
+    );
+  }
+
+  ListView _buildItemsList(List<Word> data, bool isWaiting) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        // if (data.isEmpty) return _buildNoData();
+        return WordItem(
+            item: data[index],
+            favHandle: () => print('favHandle'),
+            deleteHandle: () => print('deleteHandle'),
+            onTapHandle: () async {
+              print('onTapHandle');
+              query = data[index].catchword;
+              showResults(context);
+            });
+      },
+    );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    //called everytime the search term (query) changes.
-    return ChangeNotifierProvider<WordsProvider>(
-      create: (_) => WordsProvider(context.read<AuthProvider>().user),
-      child: CustomScrollView(slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate([
-            Column(children: [
-              Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
-                if (provider.words.isEmpty) {
-                  return const Center(child: Text('No words, add some'));
-                }
-                final suggestions = provider.words
-                    .where((w) => w.catchword.toLowerCase().contains(query.toLowerCase()))
-                    .toList();
-                return ListView(
-                    shrinkWrap: true,
-                    children: suggestions
-                        .map<Widget>((e) => WordItem(
-                            key: Key('WordsListScreen-wordsListItem-${e.id}'),
-                            onTapHandle: () {
-                              /*'context.router.push(EditWordRoute(word: e, id: e.id))'*/
-                            },
-                            // onTapHandle: () {
-                            //   // when click one suggestion it will put it into the input
-                            //   query = e.inNative;
-                            //   showResults(context);
-                            //   context.router
-                            //       .push(EditWordRoute(word: e, id: e.id));
-                            // },
-                            favHandle: () => context.read<WordsProvider>().triggerFavorite(e.id),
-                            deleteHandle: () => context.read<WordsProvider>().delete(e.id),
-                            item: e))
-                        .toList());
-              }),
-            ])
-          ]),
-        ),
-      ]),
+    bool hasErrorMsg = provider.errorMsg.isNotEmpty;
+    if (hasErrorMsg) utils.showSnackBarInfo(context, msg: provider.errorMsg);
+    return StreamBuilder<List<Word>?>(
+      stream: provider.querySearch(query),
+      initialData: const [],
+      builder: (BuildContext context, AsyncSnapshot<List<Word>?> snapshot) {
+        final bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
+        if (snapshot.hasError) utils.showSnackBarInfo(context, msg: snapshot.error.toString());
+        if (!snapshot.hasData) return const Text('Maybe your word\'s list is empty 😯');
+        final List<Word> data = snapshot.data ?? [];
+        if (data.isEmpty) {
+          return _buildEmptyData();
+        }
+        return _buildItemsList(data, isWaiting);
+      },
+    );
+  }
+
+  Widget _buildEmptyData() {
+    return Center(
+      child: Column(
+        children: [
+          const Text('Nothing was found.'),
+          TextButton(onPressed: () => provider.searchQuery(query), child: const Text('Try Again'))
+        ],
+      ),
     );
   }
 }

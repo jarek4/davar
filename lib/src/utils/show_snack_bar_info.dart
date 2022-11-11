@@ -5,12 +5,14 @@ import 'package:flutter/scheduler.dart';
 void showSnackBarInfo(BuildContext context, {required String msg, bool isError = false}) {
   final String info = utils.trimTextIfLong(msg, maxCharacters: 100);
   SchedulerBinding.instance.addPostFrameCallback((_) {
-    ScaffoldMessenger.of(context).showSnackBar(!isError
-        ? SnackBar(
-            key: Key('${context.hashCode}_$msg'),
-            content: Text(info, textAlign: TextAlign.center),
-          )
-        : _errorSnack(context, info));
+    Future.delayed(const Duration(milliseconds: 70), () {
+      ScaffoldMessenger.of(context).showSnackBar(!isError
+          ? SnackBar(
+              key: Key('${context.hashCode}_$msg'),
+              content: Text(info, textAlign: TextAlign.center),
+            )
+          : _errorSnack(context, info));
+    });
   });
 }
 

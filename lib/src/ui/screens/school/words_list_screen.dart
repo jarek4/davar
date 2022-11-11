@@ -15,73 +15,86 @@ class WordsListScreen extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(height: 12.0),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          const Expanded(child: SizedBox()),
-          Consumer2<CategoriesProvider, FilteredWordsProvider>(
-              builder: (BuildContext context, CategoriesProvider cp, FilteredWordsProvider fwp, _) {
-            final bool hasErrorMsg = cp.categoriesErrorMsg.isNotEmpty;
-            if (hasErrorMsg) utils.showSnackBarInfo(context, msg: cp.categoriesErrorMsg);
-            return CategoriesFilter(
-              cp.filterCategories,
-              fwp.selected,
-              (WordCategory? c) =>
-                  context.read<FilteredWordsProvider>().onCategoryChange(c),
-            );
-          }),
-          const SizedBox(width: 4.0),
-          Consumer<FilteredWordsProvider>(builder: (BuildContext context, FilteredWordsProvider fwp, _) {
-            // final bool hasErrorMsg = wp.wordsErrorMsg.isNotEmpty;
-            // if (hasErrorMsg) utils.showSnackBarInfo(context, msg: wp.wordsErrorMsg);
-            return FavoriteFilter(
-              isChecked: fwp.selectedOnlyFavorite,
-              onChangeHandle: () => fwp.onOnlyFavoriteChange(),
-            );
-          }),
-          const SizedBox(width: 4.0),
-          Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider wp, _) {
-            final bool hasErrorMsg = wp.wordsErrorMsg.isNotEmpty;
-            if (hasErrorMsg) utils.showSnackBarInfo(context, msg: wp.wordsErrorMsg);
-            return SearchFilter(() => showSearch(context: context, delegate: WordSearchDelegate()));
-          }),
-          const Expanded(child: SizedBox()),
-        ]),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: _buildFilters(context),
+        ),
         const Divider(),
-        const Flexible(
-          child: PaginatedItemsList(),
+        Flexible(
+          child: _buildList(),
         ),
       ],
     );
   }
 
-  Widget _buildWordsList(context, List<Word> words) {
-    List<Word> itemsToDisplay = words;
-    late List<Word> filteredItems;
-    const bool onlyFav = 1 == 8 - 4;
-    if (onlyFav) {
-      filteredItems = List.of(itemsToDisplay)..removeWhere((e) => e.isFavorite == 0);
-    } else {
-      filteredItems = itemsToDisplay;
-    }
-    if (words.isEmpty) return SliverList(delegate: SliverChildListDelegate([_emptyListInfo()]));
-    return const PaginatedItemsList();
-    /*return WordsList(
-      itemsToDisplay: filteredItems,
-      // cardOnTap: (BuildContext ctx, Word item) =>
-      //     ctx.router.push(EditWordRoute(word: item, id: item.id)),
-    );*/
+  LayoutBuilder _buildList() {
+    return LayoutBuilder(builder: (context, constraint) {
+      final bool isOrientationPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      final double maxWidth = constraint.maxWidth;
+      final double landscapeMaxW = (maxWidth * 3) / 4;
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Flexible(child: SizedBox()),
+          SizedBox(
+            width: isOrientationPortrait ? maxWidth - 30 : landscapeMaxW,
+            child: const PaginatedStreamList(),
+          ),
+          const Flexible(child: SizedBox()),
+        ],
+      );
+    });
   }
 
-  Widget _emptyListInfo() => Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 12.0),
-          child: Column(children: const [
-            Divider(indent: 60.0, endIndent: 60.0, thickness: 1.2),
-            Text('Your word\'s list is empty'),
-            SizedBox(height: 5.0),
-            Text('Add word or sentence! Use the + below.'),
-            Divider(indent: 60.0, endIndent: 60.0, thickness: 1.2),
-          ]),
-        ),
-      );
+  Row _buildFilters(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      const Expanded(child: SizedBox()),
+      Consumer2<CategoriesProvider, FilteredWordsProvider>(
+          builder: (BuildContext context, CategoriesProvider cp, FilteredWordsProvider fwp, _) {
+        _handleErrors(context, cp, fwp);
+        final CategoriesProviderStatus cpStatus = cp.status;
+        if (cpStatus == CategoriesProviderStatus.loading) {
+          return const SizedBox();
+        }
+        return CategoriesFilter(
+          cp.filterCategories,
+          fwp.selectedCategory,
+          (WordCategory? c) => context.read<FilteredWordsProvider>().onCategoryChange(c),
+        );
+      }),
+      const SizedBox(width: 4.0),
+      Consumer<FilteredWordsProvider>(
+          builder: (BuildContext context, FilteredWordsProvider fwp, _) {
+        return FavoriteFilter(
+          isChecked: fwp.selectedOnlyFavorite,
+          onChangeHandle: () => fwp.onOnlyFavoriteChange(),
+        );
+      }),
+      const SizedBox(width: 4.0),
+      Consumer<FilteredWordsProvider>(builder: (BuildContext context, FilteredWordsProvider wp, _) {
+        final bool hasErrorMsg = wp.errorMsg.isNotEmpty;
+        if (hasErrorMsg) utils.showSnackBarInfo(context, msg: wp.errorMsg);
+        return SearchFilter(() => _showSearch(context, wp));
+      }),
+      Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider wp, _) {
+        final bool hasErrorMsg = wp.wordsErrorMsg.isNotEmpty;
+        if (hasErrorMsg) utils.showSnackBarInfo(context, msg: wp.wordsErrorMsg);
+        return const Expanded(child: SizedBox());
+      }),
+      // const Expanded(child: SizedBox()),
+    ]);
+  }
+
+  Future<void> _showSearch(BuildContext context, FilteredWordsProvider wp) async {
+    Word? result = await showSearch<Word?>(context: context, delegate: WordSearchDelegate(wp));
+    if (result == null) return;
+    wp.insertItemAtTheTop(result);
+  }
+
+  void _handleErrors(BuildContext context, CategoriesProvider cp, FilteredWordsProvider fwp) {
+    final bool isCategoriesProviderErrorMsg = cp.categoriesErrorMsg.isNotEmpty;
+    if (isCategoriesProviderErrorMsg) utils.showSnackBarInfo(context, msg: cp.categoriesErrorMsg);
+    final bool isFilteredWordsProviderErrorMsg = fwp.errorMsg.isNotEmpty;
+    if (isFilteredWordsProviderErrorMsg) utils.showSnackBarInfo(context, msg: fwp.errorMsg);
+  }
 }
