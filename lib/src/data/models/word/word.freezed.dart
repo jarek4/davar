@@ -27,7 +27,8 @@ mixin _$Word {
   String get category => throw _privateConstructorUsedError;
   int get categoryId => throw _privateConstructorUsedError;
   int get isFavorite => throw _privateConstructorUsedError;
-  int get isSentence => throw _privateConstructorUsedError;
+  int get isSentence =>
+      throw _privateConstructorUsedError; //word max 25 characters, sentence 50.
   int get points => throw _privateConstructorUsedError;
   String get userLearning => throw _privateConstructorUsedError; // ?
   String get userNative => throw _privateConstructorUsedError;
@@ -283,6 +284,7 @@ class _$_Word implements _Word {
   @override
   @JsonKey()
   final int isSentence;
+//word max 25 characters, sentence 50.
   @override
   @JsonKey()
   final int points;
@@ -394,7 +396,7 @@ abstract class _Word implements Word {
   int get isFavorite;
   @override
   int get isSentence;
-  @override
+  @override //word max 25 characters, sentence 50.
   int get points;
   @override
   String get userLearning;

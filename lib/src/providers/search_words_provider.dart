@@ -33,15 +33,16 @@ class SearchWordsProvider with ChangeNotifier {
   WordCategory get selectedCategory => _selectedCategory;
 
   Future<void> onCategoryChange(WordCategory? c) async {
-    if (c == null) _selectedCategory = utils.AppConst.allCategoriesFilter;
-    if (c != _selectedCategory) {
-      final limit = _paginatedList.length < _queryLimit ? _queryLimit : _paginatedList.length;
-      _selectedCategory = c!;
-      _listOffset = 0;
-      notifyListeners();
-      await updateStream(limit: limit);
-      // await refreshStream();
+    if(c == _selectedCategory) return;
+    if (c == null) {
+      _selectedCategory = utils.AppConst.allCategoriesFilter;
+    } else {
+      _selectedCategory = c;
     }
+    final limit = _paginatedList.length < _queryLimit ? _queryLimit : _paginatedList.length;
+    _listOffset = 0;
+    notifyListeners();
+    await updateStream(limit: limit);
   }
 
   bool _selectedOnlyFavorite = false;
