@@ -13,7 +13,7 @@ class OptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return  _layoutBuilderWrapper(GestureDetector(
       onTap: () => onTapedOption(option), // lock the question and set selected option
       child: Container(
         height: 50,
@@ -32,7 +32,16 @@ class OptionWidget extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
+  }
+
+  LayoutBuilder _layoutBuilderWrapper(Widget child) {
+    return LayoutBuilder(builder: (context, constraint) {
+      final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      final double maxWidth = constraint.maxWidth;
+      final double landscapeMaxW = (maxWidth * 3) / 4;
+      return SizedBox(width: isPortrait ? maxWidth - 40 : landscapeMaxW, child: child);
+    });
   }
 
   Color _getColor() {

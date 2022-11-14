@@ -13,17 +13,12 @@ class QuizScreen extends StatelessWidget {
     return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
       switch (provider.status) {
         case WordsProviderStatus.loading:
-          return const LinearLoadingWidget(
-            info: 'Loading wait...',
-          );
+          return const LinearLoadingWidget(info: 'Loading wait...');
         case WordsProviderStatus.success:
           return _buildScreenBody(context, provider);
         case WordsProviderStatus.error:
           String e = provider.wordsErrorMsg;
-          return LinearLoadingWidget(
-            isError: true,
-            info: e.isNotEmpty ? e : 'Error',
-          );
+          return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? e : 'Error');
         default:
           return const Center(child: CircularProgressIndicator.adaptive());
       }
@@ -49,40 +44,61 @@ class QuizScreen extends StatelessWidget {
   Widget _buildContent(BuildContext context, WordsProvider provider, AsyncSnapshot sp) {
     // need at least 3 words to quiz!
     final bool isMoreThen3words = (sp.data != null && sp.data!.length >= 3);
-    return SingleChildScrollView(
+    return _layoutBuilderWrapper(SingleChildScrollView(
       child: Column(
         children: [
           const SizedBox(height: 8.0),
           Padding(
               padding: const EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
-              child: Text(_manual1, style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.center,)),
+              child: Text(
+                _manual1,
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              )),
           const SizedBox(height: 8.0),
           const Padding(
               padding: EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
-              child: Text(_manual2, textAlign: TextAlign.center,)),
+              child: Text(
+                _manual2,
+                textAlign: TextAlign.center,
+              )),
           const Divider(thickness: 1.3),
           isMoreThen3words
-              ? MaterialButton(
-            // style: Theme.of(context).buttonTheme.,
-                  onPressed: () => Navigator.of(context)
-                      .push((MaterialPageRoute(builder: (context) => QuizGame(wp: provider)))),
-                  child: Text('Start'))
-              : _showLessThen3wordsNotification(context, 2),
+              ? _buildStartBtn(context, provider)
+              : _showLessThen3wordsNotification(context, sp.data.length),
         ],
       ),
-    );
+    ));
+  }
+
+  Widget _buildStartBtn(BuildContext context, WordsProvider provider) {
+    return MaterialButton(
+        // style: Theme.of(context).buttonTheme.,
+        onPressed: () => Navigator.of(context)
+            .push((MaterialPageRoute(builder: (context) => QuizGame(wp: provider)))),
+        child: const Text('Start'));
+  }
+
+  LayoutBuilder _layoutBuilderWrapper(Widget child) {
+    return LayoutBuilder(builder: (context, constraint) {
+      final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      final double maxWidth = constraint.maxWidth;
+      final double landscapeMaxW = (maxWidth * 3) / 4;
+      return SizedBox(width: isPortrait ? maxWidth - 30 : landscapeMaxW, child: child);
+    });
   }
 
   Widget _showLessThen3wordsNotification(BuildContext context, int addedWords) {
-    const String untilNow = 'Until now you have been added:';
+    const String untilNow = 'Until now you have been added:\n';
     final int haveToAdd = 3 - addedWords;
     return Center(
         child: Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 12.0),
       child: Text(
         '$untilNow $addedWords words or sentences.\nAdd at least $haveToAdd more to play.',
+        softWrap: true,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.subtitle2,
+        style: Theme.of(context).textTheme.titleMedium,
       ),
     ));
   }
