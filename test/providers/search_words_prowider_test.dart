@@ -151,8 +151,10 @@ void main() {
     tearDown(() {});
     test('data returned from Future', () async {
       // arrange
-      const List<Word> data = [Word(catchword: 'cw1', id: 1, userId: 1, userTranslation: 't')];
-      when(wordsRepo.rawQuery('', [1])).thenAnswer((_) => Future.value(data));
+      const Word item = Word(catchword: 'cw1', id: 1, userId: 1, userTranslation: 't');
+      const List<Word> data = [item];
+      List<Map<String, dynamic>>? map = [item.toJson()];
+      when(wordsRepo.rawQuery('', [1])).thenAnswer((_) => Future.value(map));
       // act  // assert
       expect(sut.querySearch(''), emits(isA<List<Word>>()));
       // sut.querySearch('').listen(expectAsync1((value) => expect(value, isA<List<Word>>()))); // OK

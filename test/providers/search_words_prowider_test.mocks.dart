@@ -82,7 +82,7 @@ class MockWordsRepo extends _i1.Mock implements _i2.IWordsRepository<_i3.Word> {
             _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
       ) as _i4.Future<List<_i3.Word>>);
   @override
-  _i4.Future<List<_i3.Word>?> rawQuery(
+  _i4.Future<List<Map<String, dynamic>>?> rawQuery(
     String? query,
     List<dynamic>? arguments,
   ) =>
@@ -94,9 +94,10 @@ class MockWordsRepo extends _i1.Mock implements _i2.IWordsRepository<_i3.Word> {
             arguments,
           ],
         ),
-        returnValue: _i4.Future<List<_i3.Word>?>.value(),
-        returnValueForMissingStub: _i4.Future<List<_i3.Word>?>.value(),
-      ) as _i4.Future<List<_i3.Word>?>);
+        returnValue: _i4.Future<List<Map<String, dynamic>>?>.value(),
+        returnValueForMissingStub:
+            _i4.Future<List<Map<String, dynamic>>?>.value(),
+      ) as _i4.Future<List<Map<String, dynamic>>?>);
   @override
   _i4.Future<int> update(_i3.Word? item) => (super.noSuchMethod(
         Invocation.method(
@@ -158,7 +159,7 @@ class MockWordsRepoImpl extends _i1.Mock implements _i5.WordsRepository {
         returnValueForMissingStub: _i4.Future<int>.value(0),
       ) as _i4.Future<int>);
   @override
-  _i4.Future<List<_i3.Word>?> rawQuery(
+  _i4.Future<List<Map<String, dynamic>>?> rawQuery(
     String? query,
     List<dynamic>? arguments,
   ) =>
@@ -170,9 +171,10 @@ class MockWordsRepoImpl extends _i1.Mock implements _i5.WordsRepository {
             arguments,
           ],
         ),
-        returnValue: _i4.Future<List<_i3.Word>?>.value(),
-        returnValueForMissingStub: _i4.Future<List<_i3.Word>?>.value(),
-      ) as _i4.Future<List<_i3.Word>?>);
+        returnValue: _i4.Future<List<Map<String, dynamic>>?>.value(),
+        returnValueForMissingStub:
+            _i4.Future<List<Map<String, dynamic>>?>.value(),
+      ) as _i4.Future<List<Map<String, dynamic>>?>);
   @override
   _i4.Future<int?> rawUpdate(
     List<String>? columns,

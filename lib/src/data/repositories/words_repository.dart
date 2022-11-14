@@ -53,15 +53,16 @@ class WordsRepository implements IWordsRepository<Word> {
 
   @override
 
-  /// Null if error
-  Future<List<Word>?> rawQuery(String query, List arguments) async {
+  ///Null if error. If not reading all columns - be aware when do Word.fromJson()!
+  Future<List<Map<String, dynamic>>?> rawQuery(String query, List arguments) async {
     try {
       final List<Map<String, dynamic>> res =
           await _localDB.rawQueryWords(query, arguments) as List<Map<String, dynamic>>;
       //  print('rawQuery query: $query');
       print('WordsRepository rawQuery res: ${res.length}');
       if (res.isEmpty) return [];
-      return res.map((element) => Word.fromJson(element)).toList();
+      // return res.map((element) => Word.fromJson(element)).toList();
+      return res;
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(),

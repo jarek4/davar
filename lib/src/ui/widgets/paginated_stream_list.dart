@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
+
 /// Need initState for updating StreamBuilder. When list item is edited then also data in
 /// Stream builder need to be updated
 class PaginatedStreamList extends StatefulWidget {
@@ -18,18 +19,42 @@ class PaginatedStreamList extends StatefulWidget {
 }
 
 class _PaginatedStreamListState extends State<PaginatedStreamList> {
+
+  // Looking up a deactivated widget's ancestor is unsafe error thrown
+  // probably the cause of it that dispose() need to bee async to close stream!
+  // or it could be a NavigatorState _navigator?
+
+  // late NavigatorState _navigator;
+
+  // Stream<List<Word>>? stream;
   @override
   void initState() {
+    print('PAGINATED LIST INIT STATE');
     super.initState();
+    // stream =Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      Provider.of<SearchWordsProvider>(context, listen: false).updateStream();
+     // stream =Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
+      // Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-    Provider.of<SearchWordsProvider>(context, listen: false).dispose();
+    // _navigator.pushAndRemoveUntil(
+    //   MaterialPageRoute (builder: (BuildContext context) => const SchoolScreen()),
+    // ModalRoute.withName('/home/school'));
+  }
+
+  @override
+  void didChangeDependencies() {
+   // _navigator = Navigator.of(context);
+    // dependOnInheritedWidgetOfExactType();
+    print('PAGINATED LIST DID CHANGE DEPENDENCIES');
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SearchWordsProvider>(context, listen: false).updateStream();
+    });
+    super.didChangeDependencies();
   }
 
   void loadMore({isUpdate = false}) {
@@ -46,6 +71,7 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
     }
     return StreamBuilder<List<Word>?>(
       stream: Provider.of<SearchWordsProvider>(context, listen: false).filteredWords,
+      // stream: stream,
       initialData: const [],
       builder: (BuildContext context, AsyncSnapshot<List<Word>?> snapshot) {
         print('StreamBuilder state ${snapshot.connectionState}');
@@ -97,6 +123,8 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
       context,
       MaterialPageRoute(builder: (context) => EditWordView(editing)),
     );
+    return result;
+    // final Word? result = await _navigator.push(MaterialPageRoute(builder: (context) => EditWordView(editing)));
     return result;
   }
 

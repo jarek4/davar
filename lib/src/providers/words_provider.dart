@@ -17,9 +17,13 @@ class WordsProvider with ChangeNotifier {
 
   final IWordsRepository<Word> _wordsRepository = locator<IWordsRepository<Word>>();
 
-  List<Word> _words = [];
   WordsProviderStatus _status = WordsProviderStatus.success;
+
+  WordsProviderStatus get status => _status;
+
   String _errorMsg = '';
+
+  String get wordsErrorMsg => _errorMsg;
 
   set errorMsg(String value) {
     if(_errorMsg != value) {
@@ -28,11 +32,59 @@ class WordsProvider with ChangeNotifier {
     }
   }
 
-  WordsProviderStatus get status => _status;
+  List<Word> _words = [];
 
   List<Word> get words => _words;
 
-  String get wordsErrorMsg => _errorMsg;
+  Future<void> _fetchWords() async {
+    _errorMsg = '';
+    _status = WordsProviderStatus.loading;
+    notifyListeners();
+    try {
+      _words = await _wordsRepository.readAll(_user.id);
+      _status = WordsProviderStatus.success;
+      notifyListeners();
+    } catch (e) {
+      _errorMsg = 'Some thing bad has happened 🥴\n Try to restart the application';
+      _status = WordsProviderStatus.error;
+      notifyListeners();
+      print(e);
+    }
+  }
+
+  Future<List<Word>> readAllWords() async {
+    try {
+      final res = await _wordsRepository.readAll(_user.id);
+      if(_words != res) {
+        _words = res;
+        notifyListeners();
+      }
+      return res;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  /// returns IDs of all words that belongs to current user
+  Future<List<int>> get wordsIds async {
+    const String sql = 'SELECT ${DbConsts.colId} FROM ${DbConsts.tableWords} WHERE ${DbConsts.colWUserId} =?';
+    try {
+      // response should be a <List<Map>> [{'id': int}]
+      final List<Map<String, dynamic>>? res = await _wordsRepository.rawQuery(sql, [_user.id]);
+      if(res == null) return [];
+      List ids = res.map((e) => e['id']).toList();
+      // clean
+      ids.removeWhere((element) => element is! int);
+      List<int> intIDs = ids.map((e) => e as int).toList();
+      return intIDs;
+    } catch (e) {
+      print('WordsProvider get wordsIds Error:\n$e');
+      return [];
+    }
+  }
+
+
 
   Future<void> create(Word word) async {
     // replace the fake user id from form!
@@ -121,21 +173,5 @@ class WordsProvider with ChangeNotifier {
       print(e);
     }
     notifyListeners();
-  }
-
-  Future<void> _fetchWords() async {
-    _errorMsg = '';
-    _status = WordsProviderStatus.loading;
-    notifyListeners();
-    try {
-      _words = await _wordsRepository.readAll(_user.id);
-      _status = WordsProviderStatus.success;
-      notifyListeners();
-    } catch (e) {
-      _errorMsg = 'Some thing bad has happened 🥴\n Try to restart the application';
-      _status = WordsProviderStatus.error;
-      notifyListeners();
-      print(e);
-    }
   }
 }

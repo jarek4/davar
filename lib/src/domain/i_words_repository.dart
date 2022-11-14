@@ -17,8 +17,8 @@ abstract class IWordsRepository<T> {
     int limit = 10,
   });
 
-  ///Null if error
-  Future<List<T>?> rawQuery(String query, List<dynamic> arguments);
+  ///Null if error. If not reading all columns - be aware when do Word.fromJson()!
+  Future<List<Map<String, dynamic>>?> rawQuery(String query, List<dynamic> arguments);
 
   /// returns the number of changes made.  -1 on error
   Future<int> update(T item);

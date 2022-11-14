@@ -188,7 +188,7 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
 
   @override
 
-  /// returns Future<List<Map<String, dynamic>>>. <String>query and <List>args cant not be empty!
+  /// returns Future<List<Map<String, dynamic>>>. <String>query and <List>args cannot be empty!
   Future<List<Map<String, dynamic>>> rawQueryWords(String query, List args) async {
     if (query.isEmpty || args.isEmpty) return [];
     try {

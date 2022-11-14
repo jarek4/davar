@@ -99,12 +99,15 @@ class SearchWordsProvider with ChangeNotifier {
 
   /// Retrieves from DB without offset and regard to the filters set. Mainly due to a change in list item.
   Future<void> updateStream({int? limit}) async {
+    final int newLimit = _paginatedList.length > _queryLimit ? _paginatedList.length : _queryLimit;
     _clearErrorMsg();
-    List<Word> res = await _fetch(offset: 0, limit: limit ?? _queryLimit);
+    List<Word> res = await _fetch(offset: 0, limit: limit ?? newLimit);
     _prevFetchedItems = res.length;
     // increment offset!
-    _incrementListOffset(res.length);
+    _listOffset = res.length;
+    // _incrementListOffset(res.length); don't do that! it will skip _queryLimit number items
     _paginatedList = res;
+    notifyListeners();
     _controller.add(_paginatedList);
   }
 
@@ -144,8 +147,9 @@ class SearchWordsProvider with ChangeNotifier {
     final String likeString = prepareLikeSql(queryValue);
     try {
       final String sql = '${DbConsts.selectAllFromTableWords} $likeString';
-      final List<Word>? words = await _wordsRepository.rawQuery(sql, [_user.id]);
-      if (words != null) return words;
+      // final List<Word>? words = await _wordsRepository.rawQuery(sql, [_user.id]);
+      final List<Map<String, dynamic>>? words = await _wordsRepository.rawQuery(sql, [_user.id]);
+      if (words != null) return words.map((element) => Word.fromJson(element)).toList();
       _errorMsg = 'Data is unavailable. Some error has happened, sorry!';
       notifyListeners();
       return [];
@@ -171,11 +175,11 @@ class SearchWordsProvider with ChangeNotifier {
     try {
       final List<Word> res = await _fetch(offset: _listOffset, limit: _queryLimit);
       _prevFetchedItems = res.length;
-      _incrementListOffset(res.length);
+      // _incrementListOffset(res.length);
       if (res.isEmpty) return;
       tempList = [..._paginatedList, ...res];
-
       _paginatedList = _removeDuplicates(tempList);
+      _incrementListOffset(res.length);
       notifyListeners();
       _controller.add(_paginatedList);
     } catch (e) {
@@ -287,8 +291,10 @@ class SearchWordsProvider with ChangeNotifier {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     super.dispose();
-    _controller.close();
+    _listOffset = 0;
+    _prevFetchedItems = 0;
+    await _controller.close().then((value) => print('_controller is closed'));
   }
 }
