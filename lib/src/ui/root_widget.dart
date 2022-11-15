@@ -5,7 +5,6 @@ import 'package:davar/src/ui/navigation/navigation.dart';
 import 'package:davar/src/ui/screens/add/add_screen.dart';
 import 'package:davar/src/ui/screens/more/more_screen.dart';
 import 'package:davar/src/ui/screens/school/school_screen.dart';
-import 'package:davar/src/ui/screens/you/you_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +34,6 @@ class RootWidget extends StatelessWidget {
           body: [
             const SchoolScreen(),
             const AddScreen(),
-            const YouScreen(),
             const MoreScreen(),
           ].elementAt(bottomTabBarSelectedIndex),
           bottomNavigationBar: const BottomNavigation(),

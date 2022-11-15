@@ -1,7 +1,6 @@
 import 'package:davar/src/ui/screens/add/add_screen.dart';
 import 'package:davar/src/ui/screens/more/more_screen.dart';
 import 'package:davar/src/ui/screens/school/school_screen.dart';
-import 'package:davar/src/ui/screens/you/you_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +16,6 @@ class BottomNavigation extends StatelessWidget {
       case (1):
         return AddScreen.routeName;
       case (2):
-        return YouScreen.routeName;
-      case (3):
         return MoreScreen.routeName;
       default:
         return SchoolScreen.routeName;
@@ -33,20 +30,18 @@ class BottomNavigation extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.school),
           label: 'School',
-        ), // BottomNavigationBarItem
+          tooltip: 'Words list, quiz, statistics',
+        ),
         BottomNavigationBarItem(
           icon: Icon(Icons.add),
           label: 'Add',
           tooltip: 'Add new word or sentence',
-        ), // BottomNavigationBarItem
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'You',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.more_horiz_rounded),
           label: 'More',
-        ), // BottomNavigationBarItem
+          tooltip: 'Profile, settings, about',
+        ),
       ],
       showUnselectedLabels: true,
       currentIndex: Provider.of<BottomNavigationController>(context).selectedIndex,

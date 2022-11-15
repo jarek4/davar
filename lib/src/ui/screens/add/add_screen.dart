@@ -66,7 +66,7 @@ class AddScreen extends StatelessWidget {
           child: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
-              colors: [Colors.deepOrange, Colors.indigo],
+              colors: [Colors.orange, Colors.purple],
               begin: Alignment.bottomRight,
               end: Alignment.topLeft,
             )),

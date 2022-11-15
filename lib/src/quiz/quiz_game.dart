@@ -14,10 +14,10 @@ class QuizGame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final WordsProvider wp = Provider.of<WordsProvider>(context);
+   //  bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
       ),
       body: ChangeNotifierProvider<QuizProvider>(
           create: (context) => QuizProvider(wp),
@@ -49,6 +49,7 @@ class QuizGame extends StatelessWidget {
   }
 
   Widget _buildScreenBody(BuildContext context, QuizProvider provider) {
+  // bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
       alignment: Alignment.center,
       child: _layoutBuilderWrapper(Padding(
@@ -65,52 +66,46 @@ class QuizGame extends StatelessWidget {
                 score: provider.state.roundPoints),
             const SizedBox(height: 2.0),
             Flexible(
-                flex: 3,
+                flex: 11,
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 5),
-                                const Text('Select the correct answer',
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
-                                const SizedBox(height: 10),
-                                QuestionWidget(question: provider.state.question.text()),
-                                ...provider.state.options
-                                    .map((option) => OptionWidget(
-                                          key: Key(option.text),
-                                          onTapedOption: (option) => provider.onSelect(option),
-                                          option: option,
-                                        ))
-                                    .toList(),
-                                const Divider(thickness: 1, color: Colors.grey),
-                                QuestionClueWidget(
-                                    // onChanged: (bool isExpending) =>
-                                    //     context.read<QuizCubit>().onClueDemand(isExpending),
-                                    onChanged: () => provider.onClueDemand(),
-                                    isExpended: provider.state.isClueOpen,
-                                    clue: provider.state.question.clue())
-                              ],
-                            ),
-                          ),
-                        ),
-                      ])),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 5),
+                          const Text('Select the correct answer',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.normal)),
+                          const SizedBox(height: 10),
+                          QuestionWidget(question: provider.state.question.text()),
+                          ...provider.state.options
+                              .map((option) => OptionWidget(
+                                    key: Key(option.text),
+                                    onTapedOption: (option) => provider.onSelect(option),
+                                    option: option,
+                                  ))
+                              .toList(),
+                          const Divider(thickness: 1, color: Colors.grey),
+                          Consumer<QuizProvider>(
+                              builder: (BuildContext context, QuizProvider qp, _) {
+                            return QuestionClueWidget(
+                                // onChanged: (bool isExpending) =>
+                                //     context.read<QuizCubit>().onClueDemand(isExpending),
+                                onChanged: () => qp.onClueDemand(),
+                                isExpended: qp.state.isClueOpen,
+                                clue: qp.state.question.clue());
+                          })
+                        ],
+                      ),
+                    ),
+                  ),
+                ])),
             Flexible(
-                flex: 1,
+                flex: 4,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildElevatedBtn(
-                      text: 'Quit',
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    _buildElevatedBtn(
-                      text: 'Next',
-                      onPressed: (provider.state.notPlayedIds.length >= 3 &&
-                              (provider.state.isLocked || provider.state.didUserGuess))
-                          ? () => provider.onNext()
-                          : null,
-                    ),
+                    _buildQuitBtn(context),
+                    _buildNextBtn(),
                   ],
                 )),
             Center(
@@ -149,18 +144,34 @@ class QuizGame extends StatelessWidget {
     ));
   }
 
-  ElevatedButton _buildElevatedBtn({
-    required String text,
-    VoidCallback? onPressed,
-  }) {
-    return ElevatedButton(
-        key: Key(text),
-        onPressed: onPressed,
-        style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.all<Color>(onPressed == null ? Colors.blueGrey : Colors.blue),
-          padding: MaterialStateProperty.all(const EdgeInsets.all(2)),
-        ),
-        child: Text(text));
+  Widget _buildQuitBtn(BuildContext context) {
+    return NeonButton(
+        gradientColor1: Colors.grey,
+        gradientColor2: Colors.blue,
+        onPressed: () => Navigator.of(context).pop(),
+        isGlowing: false,
+        child: const Text('Quit',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.center));
+  }
+
+  Widget _buildNextBtn() {
+    return Consumer<QuizProvider>(builder: (BuildContext context, QuizProvider qp, _) {
+      final bool canGoNext = (qp.state.notPlayedIds.length >= 3 &&
+          (qp.state.isLocked || qp.state.didUserGuess));
+      return NeonButton(
+          gradientColor1: Colors.pink,
+          gradientColor2: Colors.blueAccent,
+          isGlowing: canGoNext,
+          onPressed: canGoNext ? () => qp.onNext() : () {},
+          child: Text('Next',
+              style: TextStyle(
+                color: canGoNext ? Colors.white : Colors.grey,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center));
+    });
   }
 }

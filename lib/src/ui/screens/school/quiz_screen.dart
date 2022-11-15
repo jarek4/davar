@@ -46,12 +46,20 @@ class QuizScreen extends StatelessWidget {
     final bool isMoreThen3words = (sp.data != null && sp.data!.length >= 3);
     return _layoutBuilderWrapper(SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 8.0),
           Padding(
               padding: const EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
               child: Text(
-                _manual1,
+                'HOW TO PLAY',
+                style: Theme.of(context).textTheme.headlineSmall,
+              )),
+          const SizedBox(height: 8.0),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
+              child: Text(
+                _quizManual1,
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.center,
               )),
@@ -59,24 +67,45 @@ class QuizScreen extends StatelessWidget {
           const Padding(
               padding: EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
               child: Text(
-                _manual2,
+                _quizManual2,
                 textAlign: TextAlign.center,
               )),
           const Divider(thickness: 1.3),
+          const SizedBox(height: 15.0),
           isMoreThen3words
               ? _buildStartBtn(context, provider)
               : _showLessThen3wordsNotification(context, sp.data.length),
+          const SizedBox(height: 15.0),
         ],
       ),
     ));
   }
 
   Widget _buildStartBtn(BuildContext context, WordsProvider provider) {
-    return MaterialButton(
+    /*return MaterialButton(
         // style: Theme.of(context).buttonTheme.,
         onPressed: () => Navigator.of(context)
             .push((MaterialPageRoute(builder: (context) => QuizGame(wp: provider)))),
-        child: const Text('Start'));
+        child: const Text('Start'));*/
+    // return const NeonButton();
+    return NeonButton(
+        gradientColor1: Colors.pink,
+        gradientColor2: Colors.blueAccent,
+        onPressed: () => Navigator.of(context)
+            .push((MaterialPageRoute(builder: (context) => QuizGame(wp: provider)))),
+        child: Row(
+          children: const [
+            Expanded(child: Icon(Icons.play_arrow_outlined, color: Colors.white)),
+            Expanded(
+                flex: 3,
+                child: Text('PLAY',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center))
+          ],
+        ));
   }
 
   LayoutBuilder _layoutBuilderWrapper(Widget child) {
@@ -103,10 +132,57 @@ class QuizScreen extends StatelessWidget {
     ));
   }
 
-  static const String _manual1 = 'Your task is to choose the correct answer.\n'
+  static const String _quizManual1 = 'Your task is to choose the correct answer.\n'
       'You can win up to 5 points if your first choice is correct. '
       'If you guess the second time you get 3 points. ';
-  static const String _manual2 = 'If you have added a clue to the word, '
+  static const String _quizManual2 = 'If you have added a clue to the word, '
       'you will be able to use it. But it will takes 2 points.\n'
       'The number of the points of a particular word will be increased accordingly.';
 }
+
+/*class NeonButton extends StatefulWidget {
+  const NeonButton({Key? key}) : super(key: key);
+
+  @override
+  State<NeonButton> createState() => _NeonButtonState();
+}
+
+class _NeonButtonState extends State<NeonButton> {
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: 48,
+      width: 160,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40),
+          gradient: const LinearGradient(colors: [Colors.pink, Colors.blueAccent]),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.pink.withOpacity(0.3),
+                spreadRadius: 8,
+                blurRadius: 32,
+                offset: const Offset(8, 0)),
+            BoxShadow(
+                color: Colors.blueAccent.withOpacity(0.3),
+                spreadRadius: 8,
+                blurRadius: 32,
+                offset: const Offset(-8, 0)),
+
+          ]),
+      child: Row(
+        children: const [
+          Expanded(child: Icon(Icons.play_arrow_outlined, color: Colors.white)),
+          Expanded(
+              flex: 3,
+              child: Text('PLAY',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center))
+        ],
+      ),
+    );
+  }
+}*/

@@ -1,4 +1,3 @@
-import 'package:davar/src/errors_reporter/errors_reporter.dart';
 import 'package:davar/src/ui/navigation/navigation.dart';
 import 'package:davar/src/ui/screens/more/more.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
@@ -12,8 +11,8 @@ class MoreScreen extends StatelessWidget {
   static const routeName = '/more';
   static const List<Color> appBarGradientColors = [Colors.yellow, Colors.red];
   static const List<AppBarBottomTabModel> appBarBottomTabs = [
+    AppBarBottomTabModel(Icons.face_outlined, 'Profile'),
     AppBarBottomTabModel(Icons.settings_applications_outlined, 'Settings'),
-    AppBarBottomTabModel(Icons.help_center_outlined, 'Help'),
     AppBarBottomTabModel(Icons.perm_device_info, 'About'),
   ];
 
@@ -25,7 +24,7 @@ class MoreScreen extends StatelessWidget {
       key: const Key('MoreScreen-$routeName'),
       appBarGradientColors: appBarGradientColors,
       appBarBottomTabs: appBarBottomTabs,
-      bodyWidgets: const [SettingsScreen(), HelpScreen(), AboutScreen()],
+      bodyWidgets: const [ProfileScreen(), SettingsScreen(), AboutScreen()],
       tabControllerInitIndex: initIndex,
       onTabIndexChange: (int value) =>
           context.read<AppBarTabsController>().moreScreenTabIndex(value),
