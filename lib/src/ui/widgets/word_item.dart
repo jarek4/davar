@@ -11,12 +11,16 @@ class WordItem extends StatelessWidget {
   final VoidCallback? deleteHandle;
   final VoidCallback? onTapHandle;
 
+  static const List<Color> sentenceColors = [Colors.deepPurple, Colors.green];
+  static const List<Color> wordColors = [Colors.blueAccent, Colors.orangeAccent];
+
   @override
   Widget build(BuildContext context) {
     return Card(
       key: key,
+      borderOnForeground: false,
       color: Colors.grey.shade300,
-      elevation: 2,
+      elevation: 0.0,
       shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.black, width: 0.5),
           borderRadius: BorderRadius.circular(10)),
@@ -38,22 +42,46 @@ class WordItem extends StatelessWidget {
     );
   }
 
-  ClipRRect _buildHeroChild() {
-    return ClipRRect(
-      clipBehavior: Clip.hardEdge,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        color: Colors.white,
-        height: 35,
-        width: 35,
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(item.catchword[0].toUpperCase(),
-              style: const TextStyle(
+  Widget _buildHeroChild() {
+    final bool isSentence = item.isSentence == 1;
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(colors: isSentence ? sentenceColors : wordColors),
+          boxShadow: [
+            BoxShadow(
+                color: isSentence
+                    ? sentenceColors[0].withOpacity(0.5)
+                    : wordColors[0].withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(-2, 1)),
+            BoxShadow(
+                color: isSentence
+                    ? sentenceColors[1].withOpacity(0.5)
+                    : wordColors[1].withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: const Offset(3, -1)),
+          ]),
+      child: ClipRRect(
+        clipBehavior: Clip.hardEdge,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          color: Colors.white,
+          height: 35,
+          width: 35,
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(item.catchword[0].toUpperCase(),
+                style: TextStyle(
                   color: Colors.grey,
                   fontWeight: FontWeight.w800,
                   fontSize: 24,
-                  decoration: TextDecoration.underline)),
+                  decoration: TextDecoration.underline,
+                  decorationColor: isSentence ? sentenceColors[1] : wordColors[1],
+                )),
+          ),
         ),
       ),
     );

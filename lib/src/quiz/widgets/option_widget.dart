@@ -16,7 +16,7 @@ class OptionWidget extends StatelessWidget {
     return  _layoutBuilderWrapper(GestureDetector(
       onTap: () => onTapedOption(option), // lock the question and set selected option
       child: Container(
-        height: 50,
+        height: 58,
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
@@ -27,7 +27,7 @@ class OptionWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(option.text),
+            Flexible(child: Text(option.text,)),
             _getIcon(),
           ],
         ),

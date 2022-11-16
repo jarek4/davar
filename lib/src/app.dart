@@ -71,8 +71,10 @@ class DavarApp extends StatelessWidget {
             // The appTitle is defined in .arb files found in the localization
             // directory.
             onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
-            theme: ThemeData(),
-            darkTheme: ThemeData.dark(),
+            theme: ThemeData(
+                colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepOrange),
+                scaffoldBackgroundColor: const Color(0xF4ECEBEB)
+            ),
             themeMode: settingsController.themeMode,
             home: Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider provider, _) {
               print('app.dart - provider.status: ${provider.status}');

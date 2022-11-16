@@ -86,7 +86,7 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Row(children: [
-              Text(fav),
+              const Text(fav),
               Checkbox(
                 activeColor: Colors.green.shade400,
                 value: _isFavorite,
