@@ -1,4 +1,3 @@
-import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/navigation/navigation.dart';
 import 'package:davar/src/ui/onboarding/Onboarding.dart';
 import 'package:davar/src/ui/root_widget.dart';

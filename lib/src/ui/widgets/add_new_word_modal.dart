@@ -1,8 +1,6 @@
 import 'package:davar/src/data/models/models.dart';
-import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 
 class AddNewWordModal extends StatefulWidget {

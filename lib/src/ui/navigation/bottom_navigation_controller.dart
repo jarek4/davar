@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 
 class BottomNavigationController extends ChangeNotifier {
 
-  String _route = '/school';
-  int _selectedIndex = 0;
+  String _route = '/add';
+  int _selectedIndex = 1;
 
   String get route => _route;
   int get selectedIndex => _selectedIndex;
@@ -14,8 +14,8 @@ class BottomNavigationController extends ChangeNotifier {
     notifyListeners();
   }
   void resetBottomNavigation() {
-    _route = '/school';
-    _selectedIndex = 0;
+    _route = '/add';
+    _selectedIndex = 1;
   }
 
 }

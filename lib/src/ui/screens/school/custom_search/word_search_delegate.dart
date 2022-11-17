@@ -11,11 +11,15 @@ class WordSearchDelegate extends SearchDelegate<Word?> {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    // theme.copyWith(inputDecorationTheme: InputDecorationTheme());
-    // assert(theme != null);
-    return theme;
+    return ThemeData(
+      appBarTheme: const AppBarTheme().copyWith(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.blueAccent)
+      ),
+    );
   }
+
 
   @override
   List<Widget> buildActions(BuildContext context) {

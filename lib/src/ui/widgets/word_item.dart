@@ -1,4 +1,5 @@
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:flutter/material.dart';
 
 class WordItem extends StatelessWidget {
@@ -11,8 +12,10 @@ class WordItem extends StatelessWidget {
   final VoidCallback? deleteHandle;
   final VoidCallback? onTapHandle;
 
-  static const List<Color> sentenceColors = [Colors.deepPurple, Colors.green];
-  static const List<Color> wordColors = [Colors.blueAccent, Colors.orangeAccent];
+  static const List<Color> _sentenceColors = theme.DavarColors.sentenceColors2;
+  static const List<Color> _wordColors = theme.DavarColors.wordColors2;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,19 +50,19 @@ class WordItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          gradient: LinearGradient(colors: isSentence ? sentenceColors : wordColors),
+          gradient: LinearGradient(colors: isSentence ? _sentenceColors : _wordColors),
           boxShadow: [
             BoxShadow(
                 color: isSentence
-                    ? sentenceColors[0].withOpacity(0.5)
-                    : wordColors[0].withOpacity(0.5),
+                    ? _sentenceColors[0].withOpacity(0.5)
+                    : _wordColors[0].withOpacity(0.5),
                 spreadRadius: 2,
                 blurRadius: 5,
                 offset: const Offset(-2, 1)),
             BoxShadow(
                 color: isSentence
-                    ? sentenceColors[1].withOpacity(0.5)
-                    : wordColors[1].withOpacity(0.5),
+                    ? _sentenceColors[1].withOpacity(0.5)
+                    : _wordColors[1].withOpacity(0.5),
                 spreadRadius: 2,
                 blurRadius: 5,
                 offset: const Offset(3, -1)),
@@ -79,7 +82,7 @@ class WordItem extends StatelessWidget {
                   fontWeight: FontWeight.w800,
                   fontSize: 24,
                   decoration: TextDecoration.underline,
-                  decorationColor: isSentence ? sentenceColors[1] : wordColors[1],
+                  decorationColor: isSentence ? _sentenceColors[1] : _wordColors[1],
                 )),
           ),
         ),

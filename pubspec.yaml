@@ -47,12 +47,8 @@ flutter:
   assets:
     - .env
     # Add assets from the images directory to the application.
+    - assets/images/logo_m.png
+    - assets/images/logo_bg_s.jpg
     - assets/images/onboard_1.png
     - assets/images/onboard_2.png
     - assets/images/onboarding3.jpg
-    - assets/images/quiz_bg.jpg
-    - assets/images/cherry.png
-    - assets/images/orange.png
-    - assets/images/orange_melange.png
-    - assets/images/wathermel.png
-    - assets/images/flutter_logo.png
