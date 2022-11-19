@@ -18,6 +18,7 @@ class QuestionClueWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isClueAdded = clue != null && clue!.isNotEmpty;
     return ExpandableListTile(
       onExpandPressed: () => onChanged(),
       title: Row(
@@ -31,9 +32,9 @@ class QuestionClueWidget extends StatelessWidget {
               textAlign: TextAlign.start),
         ],
       ),
-      expanded: isExpended,
+      isTileExpanded: isExpended,
       child: Center(
-        child: Text(clue ?? 'The clue has not been added 🥴',
+        child: Text(isClueAdded ? clue! : 'The clue has not been added 🥴',
             style: const TextStyle(fontSize: 16, color: Colors.black), textAlign: TextAlign.center),
       ),
     );

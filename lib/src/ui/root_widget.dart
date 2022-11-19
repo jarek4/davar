@@ -14,7 +14,7 @@ class RootWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User u = Provider.of<AuthProvider>(context).user;
+    final User u = Provider.of<AuthProvider>(context).user;
     final int bottomTabBarSelectedIndex = context.watch<BottomNavigationController>().selectedIndex;
     return MultiProvider(
         providers: [

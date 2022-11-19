@@ -7,12 +7,12 @@ class ExpandableListTile extends StatelessWidget {
   const ExpandableListTile(
       {Key? key,
       required this.title,
-      required this.expanded,
+      required this.isTileExpanded,
       required this.onExpandPressed,
       required this.child})
       : super(key: key);
   final Widget title;
-  final bool expanded;
+  final bool isTileExpanded;
   final Widget child;
   final VoidCallback onExpandPressed;
 
@@ -30,7 +30,7 @@ class ExpandableListTile extends StatelessWidget {
           onPressed: onExpandPressed,
           // icon: Icon(Icons.expand_more),
           icon: RotatableSection(
-              rotated: expanded,
+              rotated: isTileExpanded,
               child: const SizedBox(
                 height: 30,
                 width: 30,
@@ -39,7 +39,7 @@ class ExpandableListTile extends StatelessWidget {
         ),
       ),
       ExpandableSection(
-        expand: expanded,
+        expand: isTileExpanded,
         child: child,
       )
     ]);

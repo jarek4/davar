@@ -8,27 +8,30 @@ import 'package:provider/provider.dart';
 import 'quiz_provider.dart';
 
 class QuizGame extends StatelessWidget {
-  const QuizGame({Key? key, required this.wp}) : super(key: key);
+  const QuizGame({Key? key, required WordsProvider wp})
+      : _wp = wp,
+        super(key: key);
 
-  final WordsProvider wp;
+  final WordsProvider _wp;
 
   @override
   Widget build(BuildContext context) {
-   //  bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         automaticallyImplyLeading: false,
+        title: const Text('Words Quiz'),
+        centerTitle: true,
       ),
       body: ChangeNotifierProvider<QuizProvider>(
-          create: (context) => QuizProvider(wp),
+          create: (context) => QuizProvider(_wp),
           builder: (context, _) {
             return Consumer<QuizProvider>(
                 builder: (BuildContext context, QuizProvider provider, _) {
               switch (provider.status) {
                 case QuizProviderStatus.loading:
-                  return const LinearLoadingWidget(
-                    info: 'Loading wait...',
-                  );
+                  return const LinearLoadingWidget(info: 'Loading wait...');
                 case QuizProviderStatus.success:
                   if (provider.state.notPlayedIds.length < 3 && provider.state.isLocked) {
                     utils.showSnackBarInfo(context, msg: 'There is no more word to play');
@@ -36,10 +39,7 @@ class QuizGame extends StatelessWidget {
                   return _buildScreenBody(context, provider);
                 case QuizProviderStatus.error:
                   String e = provider.errorMsg;
-                  return LinearLoadingWidget(
-                    isError: true,
-                    info: e.isNotEmpty ? e : 'Error',
-                  );
+                  return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? e : 'Error');
                 default:
                   return const Center(child: CircularProgressIndicator.adaptive());
               }
@@ -49,7 +49,6 @@ class QuizGame extends StatelessWidget {
   }
 
   Widget _buildScreenBody(BuildContext context, QuizProvider provider) {
-  // bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
       alignment: Alignment.center,
       child: _layoutBuilderWrapper(Padding(
@@ -59,7 +58,6 @@ class QuizGame extends StatelessWidget {
           children: [
             const SizedBox(height: 8.0),
             HeaderWidget(
-                title: 'QUIZ',
                 didUserGuess: provider.state.didUserGuess,
                 isLocked: provider.state.isLocked,
                 total: provider.state.gamePoints,
@@ -79,17 +77,14 @@ class QuizGame extends StatelessWidget {
                           QuestionWidget(question: provider.state.question.text()),
                           ...provider.state.options
                               .map((option) => OptionWidget(
-                                    key: Key(option.text),
-                                    onTapedOption: (option) => provider.onSelect(option),
-                                    option: option,
-                                  ))
+                                  key: Key(option.text),
+                                  onTapedOption: (option) => provider.onSelect(option),
+                                  option: option))
                               .toList(),
                           const Divider(thickness: 1, color: Colors.grey),
                           Consumer<QuizProvider>(
                               builder: (BuildContext context, QuizProvider qp, _) {
                             return QuestionClueWidget(
-                                // onChanged: (bool isExpending) =>
-                                //     context.read<QuizCubit>().onClueDemand(isExpending),
                                 onChanged: () => qp.onClueDemand(),
                                 isExpended: qp.state.isClueOpen,
                                 clue: qp.state.question.clue());
@@ -110,10 +105,8 @@ class QuizGame extends StatelessWidget {
                 )),
             Center(
               child: (provider.state.notPlayedIds.length < 3 && provider.state.isLocked)
-                  ? const Text(
-                      'You have played all your words',
-                      style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold),
-                    )
+                  ? const Text('No more words to play.',
+                      style: TextStyle(fontWeight: FontWeight.bold))
                   : null,
             )
           ],
@@ -131,19 +124,6 @@ class QuizGame extends StatelessWidget {
     });
   }
 
-  Center _showLessThen3wordsNotification(int addedWords) {
-    const String untilNow = 'Until now you have been added: ';
-    const String toPlay = '\nThen you can play.';
-    final int haveToAdd = 3 - addedWords;
-    return Center(
-        child: Text(
-      '$untilNow $addedWords words or sentences.\n You have to add at least $haveToAdd more $toPlay',
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-          fontSize: 16.0, fontWeight: FontWeight.bold, height: 2.0, color: Colors.red),
-    ));
-  }
-
   Widget _buildQuitBtn(BuildContext context) {
     return NeonButton(
         gradientColor1: Colors.grey,
@@ -151,16 +131,13 @@ class QuizGame extends StatelessWidget {
         onPressed: () => Navigator.of(context).pop(),
         isGlowing: false,
         child: const Text('Quit',
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center));
+            style: TextStyle(fontWeight: FontWeight.w600), textAlign: TextAlign.center));
   }
 
   Widget _buildNextBtn() {
     return Consumer<QuizProvider>(builder: (BuildContext context, QuizProvider qp, _) {
-      final bool canGoNext = (qp.state.notPlayedIds.length >= 3 &&
-          (qp.state.isLocked || qp.state.didUserGuess));
+      final bool canGoNext =
+          (qp.state.notPlayedIds.length >= 3 && (qp.state.isLocked || qp.state.didUserGuess));
       return NeonButton(
           gradientColor1: Colors.pink,
           gradientColor2: Colors.blueAccent,
@@ -168,9 +145,7 @@ class QuizGame extends StatelessWidget {
           onPressed: canGoNext ? () => qp.onNext() : () {},
           child: Text('Next',
               style: TextStyle(
-                color: canGoNext ? Colors.white : Colors.grey,
-                fontWeight: FontWeight.w600,
-              ),
+                  color: canGoNext ? Colors.white : Colors.grey, fontWeight: FontWeight.w600),
               textAlign: TextAlign.center));
     });
   }

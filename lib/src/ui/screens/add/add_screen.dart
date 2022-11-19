@@ -10,6 +10,9 @@ class AddScreen extends StatelessWidget {
   const AddScreen({Key? key}) : super(key: key);
   static const routeName = '/add';
 
+  static const _addWord = 'Word';
+  static const _addSentence = 'Sentence';
+
   @override
   Widget build(BuildContext context) {
     // new Scaffold is here! Without ChangeNotifierProvider<CategoriesProvider>.value
@@ -27,9 +30,15 @@ class AddScreen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 20.0),
               child: Column(
                 children: [
-                  Flexible(child: _buildHeaderWithLogo(isWidthMore600, isHeightLess350)),
+                  Flexible(
+                      child: _buildHeaderWithLogo(
+                    isWidthMore600,
+                    isHeightLess350,
+                  )),
                   const SizedBox(height: 20),
-                  Expanded(child: _buildMainContent(isWidthMore600, context)),
+                  Expanded(
+                    child: _buildMainContent(isWidthMore600, context),
+                  ),
                 ],
               ),
             );
@@ -37,48 +46,13 @@ class AddScreen extends StatelessWidget {
         ));
   }
 
-  Widget _buildMainContent(bool isWidthMore600, BuildContext context) {
-    return Wrap(
-        direction: isWidthMore600 ? Axis.horizontal : Axis.vertical,
-        spacing: 26.0,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        runAlignment: WrapAlignment.center,
-        children: [
-          const Text('ADD NEW:', style: TextStyle(fontSize: 20)),
-          const SizedBox(height: 30),
-          _buildButton(
-            'Word',
-            () => _addNewSentence(
-                context: context,
-                categories: context.read<CategoriesProvider>().categories,
-                onSubmit: (Word w) => context.read<WordsProvider>().create(w)),
-          ),
-          const SizedBox(height: 50),
-          _buildButton(
-              'Sentence',
-              () => _addNewSentence(
-                  context: context,
-                  isSentence: true,
-                  categories: context.read<CategoriesProvider>().categories,
-                  onSubmit: (Word w) => context.read<WordsProvider>().create(w)),
-              isSentence: true),
-          // errors:
-          Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
-            final bool hasErrorMsg = provider.wordsErrorMsg.isNotEmpty;
-            if (hasErrorMsg) {
-              utils.showSnackBarInfo(context, msg: provider.wordsErrorMsg);
-            }
-            switch (provider.status) {
-              case WordsProviderStatus.error:
-                return Text(provider.wordsErrorMsg);
-              case WordsProviderStatus.loading:
-                return const Text('Wait...');
-              default:
-                return const SizedBox.shrink();
-            }
-          })
-        ]);
-  }
+  AppBar _buildAppBar(BuildContext context) => AppBar(
+        title: Text('DAWAR',
+            style: Theme.of(context).textTheme.headline6?.copyWith(color: const Color(0XFF00695C))),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      );
 
   Widget _buildHeaderWithLogo(bool isWidthMore600, bool isHeightLess350) {
     return FractionallySizedBox(
@@ -128,15 +102,46 @@ class AddScreen extends StatelessWidget {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) => AppBar(
-        title: Text('DAWAR',
-            style: Theme.of(context).textTheme.headline6?.copyWith(color: const Color(0XFF00695C))),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      );
+  Widget _buildMainContent(bool isWidthMore600, BuildContext context) {
+    return Wrap(
+        direction: isWidthMore600 ? Axis.horizontal : Axis.vertical,
+        spacing: 26.0,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runAlignment: WrapAlignment.center,
+        children: [
+          // const Text('ADD NEW:', style: TextStyle(fontSize: 20)),
+          const SizedBox(height: 30),
+          _buildAddNewWord(context),
+          const SizedBox(height: 50),
+          _buildAddNewSentence(context),
+          // errors:
+          _handleErrorAndLoadingState()
+        ]);
+  }
 
-  void _addNewSentence({
+  Widget _buildAddNewWord(BuildContext context) {
+    return _buildAddNewButton(
+      context,
+          () => _addNewItem(
+        context: context,
+        categories: context.read<CategoriesProvider>().categories,
+        onSubmit: (Word w) => context.read<WordsProvider>().create(w),
+      ),
+    );
+  }
+
+  Widget _buildAddNewSentence(BuildContext context) {
+    return _buildAddNewButton(
+        context,
+        () => _addNewItem(
+            context: context,
+            isSentence: true,
+            categories: context.read<CategoriesProvider>().categories,
+            onSubmit: (Word w) => context.read<WordsProvider>().create(w)),
+        isSentence: true);
+  }
+
+  void _addNewItem({
     required BuildContext context,
     bool isSentence = false,
     required List<WordCategory> categories,
@@ -153,9 +158,9 @@ class AddScreen extends StatelessWidget {
         'New Sentence');
   }
 
-  Widget _buildButton(String text, VoidCallback handle, {bool isSentence = false}) {
+  Widget _buildAddNewButton(BuildContext context, VoidCallback handle, {bool isSentence = false}) {
     return Container(
-      constraints: const BoxConstraints(minWidth: 145, maxWidth: 150.0, minHeight: 70.0),
+      constraints: const BoxConstraints(minWidth: 178, maxWidth: 200.0, minHeight: 70.0),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(20),
@@ -182,7 +187,21 @@ class AddScreen extends StatelessWidget {
           color: Colors.grey[400],
           constraints: const BoxConstraints(minWidth: 145, maxWidth: 150.0, minHeight: 70.0),
           child: MaterialButton(
-              onPressed: handle, child: Text(text, style: const TextStyle(fontSize: 26))),
+            onPressed: handle,
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(text: 'Add:  ', children: [
+                TextSpan(
+                    text: isSentence ? _addSentence : _addWord,
+                    style: DefaultTextStyle.of(context).style.copyWith(
+                        color: isSentence
+                            ? theme.DavarColors.sentenceColors2[1].withRed(120)
+                            : theme.DavarColors.wordColors2[1].withRed(150),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0)),
+              ]),
+            ),
+          ),
         ),
       ),
     );
@@ -213,4 +232,21 @@ class AddScreen extends StatelessWidget {
               ));
         },
       );
+
+  Consumer<WordsProvider> _handleErrorAndLoadingState() {
+    return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
+      final bool hasErrorMsg = provider.wordsErrorMsg.isNotEmpty;
+      if (hasErrorMsg) {
+        utils.showSnackBarInfo(context, msg: provider.wordsErrorMsg);
+      }
+      switch (provider.status) {
+        case WordsProviderStatus.error:
+          return Text(provider.wordsErrorMsg);
+        case WordsProviderStatus.loading:
+          return const Text('Wait...');
+        default:
+          return const SizedBox.shrink();
+      }
+    });
+  }
 }

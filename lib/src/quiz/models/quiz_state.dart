@@ -72,7 +72,7 @@ class QuizState {
 
   @override
   String toString() {
-    return 'QuizState:\ninGameWords: $inGameWords, options: $options, attempts: $attempts, didUserGuess: $didUserGuess, gamePoints: $gamePoints';
+    return 'QuizState: isLocked $isLocked, attempts: $attempts, didUserGuess: $didUserGuess, gamePoints: $gamePoints, options: $options, inGameWords: $inGameWords';
   }
 
   @override

@@ -8,13 +8,11 @@ import 'models/models.dart';
 enum QuizProviderStatus { error, loading, success }
 
 class QuizProvider with ChangeNotifier {
-  QuizProvider(this._wordsProvider /*, this.inGameWords*/) {
+  QuizProvider(this._wordsProvider) {
     _prepare();
   }
 
   final WordsProvider _wordsProvider;
-
-  // final List<Word> inGameWords;
 
   late QuizState _state;
 
@@ -81,21 +79,26 @@ class QuizProvider with ChangeNotifier {
   }
 
   void onClueDemand() {
-    // Takes 2 points only once, regardless how many times was opened/closed, if clue is null don't subtract points!
-    if (_state.isLocked || _state.isClueShown || _state.question.clue() == null) {
-      _switchClueOpen();
+    // Takes 2 points only once, regardless how many times was opened/closed.
+    // If clue is empty don't subtract points!
+    if (_state.isLocked) return; // game is over, player won or lost
+    if (_state.isClueShown) {
+      // the clue was already shown
+      _openClue();
       return;
     }
+    // the game is not over, and the clue has not yet been shown.
     final int difference = _state.roundPoints - 2;
     _state = _state.copyWith(
         isClueShown: true,
-        roundPoints: difference > 0 ? difference : 0,
-        isClueOpen: !_state.isClueOpen);
+        roundPoints: difference > 0 ? difference : 0, // no negative points
+        isClueOpen: true);
     notifyListeners();
   }
 
-  void _switchClueOpen() {
-    _state = _state.copyWith(isClueOpen: _state.isLocked ? false : !_state.isClueOpen);
+  void _openClue() {
+    if (_state.isClueOpen) return;
+    _state = _state.copyWith(isClueOpen: true);
     notifyListeners();
   }
 

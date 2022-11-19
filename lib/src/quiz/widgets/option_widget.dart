@@ -1,7 +1,7 @@
 import 'package:davar/src/quiz/models/models.dart';
 import 'package:flutter/material.dart';
 
-class OptionWidget extends StatelessWidget {
+class OptionWidget extends StatefulWidget {
   const OptionWidget({
     Key? key,
     required this.option,
@@ -9,12 +9,27 @@ class OptionWidget extends StatelessWidget {
   }) : super(key: key);
 
   final Option option;
-  final ValueChanged<Option> onTapedOption; // id
+  final ValueChanged<Option> onTapedOption;
+  @override
+  State<OptionWidget> createState() => _OptionWidgetState();
+}
 
+class _OptionWidgetState extends State<OptionWidget> {
+  // lock after it is tapped, to prevent multiple calling onTapedOption function
+ bool _isOptionLocked = false;
+
+ void _handleTap() {
+   if(_isOptionLocked) return;
+   setState(() {
+     _isOptionLocked = true;
+   });
+   widget.onTapedOption(widget.option);
+ }
   @override
   Widget build(BuildContext context) {
     return  _layoutBuilderWrapper(GestureDetector(
-      onTap: () => onTapedOption(option), // lock the question and set selected option
+      // onTap: () => widget.onTapedOption(widget.option), // lock the question and set selected option
+      onTap: () => _handleTap(),
       child: Container(
         height: 58,
         padding: const EdgeInsets.all(12),
@@ -27,7 +42,7 @@ class OptionWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(child: Text(option.text,)),
+            Flexible(child: Text(widget.option.text,)),
             _getIcon(),
           ],
         ),
@@ -45,18 +60,18 @@ class OptionWidget extends StatelessWidget {
   }
 
   Color _getColor() {
-    if (option.isSelected) {
-      return option.isCorrect ? Colors.green : Colors.red;
+    if (widget.option.isSelected) {
+      return widget.option.isCorrect ? Colors.green : Colors.red;
     }
     // return Colors.grey;
-    return option.isCorrect ? Colors.green : Colors.red;
+    return widget.option.isCorrect ? Colors.green : Colors.red;
   }
 
   Widget _getIcon() {
     const Icon ok = Icon(Icons.check_circle, color: Colors.green);
     const Icon bad = Icon(Icons.cancel_outlined, color: Colors.red);
-    if (option.isSelected) {
-      return option.isCorrect ? ok : bad;
+    if (widget.option.isSelected) {
+      return widget.option.isCorrect ? ok : bad;
     }
     return const SizedBox.shrink();
     // return option.isCorrect ? ok : bad;

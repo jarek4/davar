@@ -2,16 +2,16 @@ import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-
 class AddNewWordModal extends StatefulWidget {
   const AddNewWordModal(
       {Key? key,
       this.isSentence = false,
+      this.themeColor = const Color(0XFFFF6D00),// DavarColors.wordColors2[1]
       required this.categories,
       required this.handleSubmit,
       required this.handleErrorMessage})
       : super(key: key);
-
+  final Color themeColor;
   final bool isSentence;
   final List<WordCategory> categories;
   final Function handleSubmit;
@@ -138,17 +138,17 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            borderSide: BorderSide(color: Color(0xff0E9447), width: 2.0),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+            borderSide: BorderSide(color: widget.themeColor, width: 2.0),
           ),
-          focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            borderSide: BorderSide(color: Color(0xff0E9447), width: 2.0),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+            borderSide: BorderSide(color: widget.themeColor, width: 2.0),
           ),
           // isCollapsed: true,
-          floatingLabelStyle: const TextStyle(
-            color: Colors.green,
+          floatingLabelStyle: TextStyle(
+            color: widget.themeColor,
           ),
           labelText: label,
           labelStyle: const TextStyle(fontSize: 12),

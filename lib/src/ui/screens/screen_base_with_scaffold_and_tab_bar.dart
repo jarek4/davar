@@ -1,3 +1,4 @@
+import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -81,7 +82,8 @@ class _ScreenBaseWithScaffoldAndTabBarState extends State<ScreenBaseWithScaffold
     return TabBar(
       controller: _ctr,
       onTap: _tabBatOnTap,
-      indicatorColor: Colors.white,
+      indicatorColor: Theme.of(context).colorScheme.secondary,
+      //indicatorColor: DavarColors.mainBackground,
       indicatorWeight: 4,
       tabs: bottomBarTabs.map((e) => Tab(
           height: 63,

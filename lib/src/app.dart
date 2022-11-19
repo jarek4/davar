@@ -1,3 +1,4 @@
+import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/ui/navigation/navigation.dart';
 import 'package:davar/src/ui/onboarding/Onboarding.dart';
 import 'package:davar/src/ui/root_widget.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:davar/src/theme/theme.dart' as theme;
 
 import 'authentication/authentication.dart';
 import 'settings/settings_controller.dart';
@@ -71,10 +73,13 @@ class DavarApp extends StatelessWidget {
             // directory.
             onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
             theme: ThemeData(
-                colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepOrange),
-                scaffoldBackgroundColor: const Color(0xF4ECEBEB)
+                colorScheme: ColorScheme.fromSwatch(
+                    primarySwatch: Colors.orange,
+                ),
+                scaffoldBackgroundColor: DavarColors.mainBackground,
             ),
             themeMode: settingsController.themeMode,
+             // themeMode: ThemeMode.dark,
             home: Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider provider, _) {
               print('app.dart - provider.status: ${provider.status}');
               switch (provider.status) {
@@ -105,7 +110,7 @@ class DavarApp extends StatelessWidget {
 
   Scaffold _authenticationStatusUnknown(BuildContext context, String text) => Scaffold(
         body: Container(
-          color: Colors.green.shade200,
+          color: theme.DavarColors.mainBackground,
           child: Center(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
