@@ -102,7 +102,7 @@ class QuizProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void onSelect(Option option) {
+  Future<void> onSelect(Option option) async {
     if (_state.isLocked) return;
     final bool isCorrect = option.isCorrect;
     final List<Option> updatedOptions = _markOptionAsSelected(option.wordId);
@@ -122,7 +122,7 @@ class QuizProvider with ChangeNotifier {
     notifyListeners();
 
     if (isCorrect) {
-      _onSuccess(option.wordId, calculatedPoints);
+      await _onSuccess(option.wordId, calculatedPoints);
     }
   }
 
@@ -142,16 +142,19 @@ class QuizProvider with ChangeNotifier {
     return currentPoints;
   }
 
-  void _onSuccess(int wordId, int scoredWordPoints) {
+  Future<void> _onSuccess(int wordId, int scoredWordPoints) async {
     // get the word by id, to find out previews words points
     final Word item = _state.inGameWords.firstWhere((element) => element.id == wordId);
     final int points = item.points + scoredWordPoints;
-    _incrementWordsPointsIntoStorage(wordId, points);
+    await _incrementWordsPointsIntoStorage(item.copyWith(points: points));
   }
 
-  void _incrementWordsPointsIntoStorage(int id, int points) {
+  Future<void> _incrementWordsPointsIntoStorage(Word word) async {
     // wordsCubit.update(id, 'points', points);
     // update word via wordProvider
+    await _wordsProvider.update(word);
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.setInt('ThemeMode', theme.index);
   }
 
   void onNext() {

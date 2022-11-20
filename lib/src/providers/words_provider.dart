@@ -53,17 +53,24 @@ class WordsProvider with ChangeNotifier {
   }
 
   Future<List<Word>> readAllWords() async {
+    _errorMsg = '';
+    _status = WordsProviderStatus.loading;
+    notifyListeners();
     try {
       final res = await _wordsRepository.readAll(_user.id);
       if(_words != res) {
         _words = res;
+        _status = WordsProviderStatus.success;
         notifyListeners();
       }
       return res;
     } catch (e) {
       print(e);
+      _status = WordsProviderStatus.success;
+      notifyListeners();
       return [];
     }
+
   }
 
   /// returns IDs of all words that belongs to current user
@@ -120,7 +127,7 @@ class WordsProvider with ChangeNotifier {
     try {
       final int res = await _wordsRepository.delete(id);
       if (res == -1) {
-        _errorMsg = 'The last change is not saved!';
+        _errorMsg = 'The word is not deleted!';
         _status = WordsProviderStatus.success;
         notifyListeners();
         return;
@@ -152,11 +159,11 @@ class WordsProvider with ChangeNotifier {
       _errorMsg = 'The last change is not saved! Try to restart the application';
       print(e);
     }
+    _status = WordsProviderStatus.success;
     notifyListeners();
   }
 
   Future<void> update(Word item) async {
-    // if word is favored isFavorite=1, if it is NOT isFavorite=0
     _errorMsg = '';
     _status = WordsProviderStatus.loading;
     notifyListeners();
@@ -172,6 +179,7 @@ class WordsProvider with ChangeNotifier {
       _errorMsg = 'The last change is not saved! Try to restart the application';
       print(e);
     }
+    _status = WordsProviderStatus.success;
     notifyListeners();
   }
 }

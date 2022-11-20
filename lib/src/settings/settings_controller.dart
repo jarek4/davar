@@ -40,8 +40,6 @@ class SettingsController with ChangeNotifier {
 
     // Otherwise, store the new ThemeMode in memory
     _themeMode = newThemeMode;
-
-    // Important! Inform listeners a change has occurred.
     notifyListeners();
 
     // Persist the changes to a local database or the internet using the

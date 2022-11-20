@@ -13,7 +13,7 @@ class QuizScreen extends StatelessWidget {
     return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
       switch (provider.status) {
         case WordsProviderStatus.loading:
-          return const LinearLoadingWidget(info: 'Loading wait...');
+          return const LinearLoadingWidget(info: 'Loading wait... WordsProvider');
         case WordsProviderStatus.success:
           return _buildScreenBody(context, provider);
         case WordsProviderStatus.error:
@@ -139,50 +139,3 @@ class QuizScreen extends StatelessWidget {
       'you will be able to use it. But it will takes 2 points.\n'
       'The number of the points of a particular word will be increased accordingly.';
 }
-
-/*class NeonButton extends StatefulWidget {
-  const NeonButton({Key? key}) : super(key: key);
-
-  @override
-  State<NeonButton> createState() => _NeonButtonState();
-}
-
-class _NeonButtonState extends State<NeonButton> {
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      height: 48,
-      width: 160,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(40),
-          gradient: const LinearGradient(colors: [Colors.pink, Colors.blueAccent]),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.pink.withOpacity(0.3),
-                spreadRadius: 8,
-                blurRadius: 32,
-                offset: const Offset(8, 0)),
-            BoxShadow(
-                color: Colors.blueAccent.withOpacity(0.3),
-                spreadRadius: 8,
-                blurRadius: 32,
-                offset: const Offset(-8, 0)),
-
-          ]),
-      child: Row(
-        children: const [
-          Expanded(child: Icon(Icons.play_arrow_outlined, color: Colors.white)),
-          Expanded(
-              flex: 3,
-              child: Text('PLAY',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  textAlign: TextAlign.center))
-        ],
-      ),
-    );
-  }
-}*/
