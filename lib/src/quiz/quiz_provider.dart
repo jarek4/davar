@@ -1,7 +1,9 @@
 // ignore_for_file: avoid_print
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
+import 'package:davar/src/utils/app_const.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/models.dart';
 
@@ -15,6 +17,9 @@ class QuizProvider with ChangeNotifier {
   final WordsProvider _wordsProvider;
 
   late QuizState _state;
+
+  // last saved quiz total points score
+ int _previewHighestScore = 0;
 
   QuizState get state => _state;
 
@@ -44,6 +49,7 @@ class QuizProvider with ChangeNotifier {
     _errorMsg = '';
     notifyListeners();
     try {
+      final int lastSavedScore = await _readLastQuizSavedScore();
       await Future.delayed(const Duration(seconds: 2), () => print('QuizProvider_prepare delayed'));
       final List<Word> words = await _wordsProvider.readAllWords();
       List<Word> inGameWords = [];
@@ -69,6 +75,7 @@ class QuizProvider with ChangeNotifier {
         successId: successId,
       );
       _status = QuizProviderStatus.success;
+      _previewHighestScore = lastSavedScore;
       notifyListeners();
     } catch (e) {
       _errorMsg = 'Some error occurred 🥴\n Try to restart the application';
@@ -113,6 +120,7 @@ class QuizProvider with ChangeNotifier {
     _state = _state.copyWith(
       attempts: currentAttempts,
       didUserGuess: isCorrect,
+      // calculate total game points
       gamePoints: isCorrect ? (_state.gamePoints + calculatedPoints) : _state.gamePoints,
       isLocked: willBeLocked,
       isClueOpen: false,
@@ -147,17 +155,23 @@ class QuizProvider with ChangeNotifier {
     final Word item = _state.inGameWords.firstWhere((element) => element.id == wordId);
     final int points = item.points + scoredWordPoints;
     await _incrementWordsPointsIntoStorage(item.copyWith(points: points));
+    // save to statistics
+    if(_state.gamePoints > _previewHighestScore) {
+      final bool isSaved = await _saveTotalGamePointsForStatistics(_state.gamePoints);
+      if(!isSaved) {
+        _errorMsg = 'Total game score not saved!';
+        notifyListeners();
+      }
+    }
   }
 
   Future<void> _incrementWordsPointsIntoStorage(Word word) async {
     // wordsCubit.update(id, 'points', points);
     // update word via wordProvider
     await _wordsProvider.update(word);
-    // final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setInt('ThemeMode', theme.index);
   }
 
-  void onNext() {
+  Future<void> onNext() async {
     // check if there are at least 3 ids in state.notPlayedIds
     List<int> notPlayedIds = _state.notPlayedIds;
     if (notPlayedIds.length < 3) return;
@@ -184,5 +198,29 @@ class QuizProvider with ChangeNotifier {
         options: _makeOptions(newInGameWords),
         successId: newInGameWords[0].id);
     notifyListeners();
+  }
+
+  Future<bool> _saveTotalGamePointsForStatistics(int totalPoints) async {
+    bool isSaved = false;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? lastSavedScore = prefs.getInt(AppConst.statisticsQuizHighestScore);
+    if(lastSavedScore == null || lastSavedScore < totalPoints) {
+      isSaved = await prefs.setInt(AppConst.statisticsQuizHighestScore, totalPoints);
+    }
+    return isSaved;
+  }
+  Future<int> _readLastQuizSavedScore() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? lastSavedScore = prefs.getInt(AppConst.statisticsQuizHighestScore);
+    return lastSavedScore ?? 0;
+
+  }
+
+  Future<void> onQuit() async {
+    final bool isSaved = await _saveTotalGamePointsForStatistics(_state.gamePoints);
+    if(!isSaved) {
+      _errorMsg = 'Total game score not saved!';
+      notifyListeners();
+    }
   }
 }

@@ -19,10 +19,12 @@ class WordItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final Brightness brightness = MediaQuery.of(context).platformBrightness;
+    // final bool isDarkMode = brightness == Brightness.dark;
     return Card(
       key: key,
       borderOnForeground: false,
-      color: Colors.grey.shade300,
+      color: Colors.grey.shade400,
       elevation: 0.0,
       shape: RoundedRectangleBorder(
           side: const BorderSide(color: Colors.black, width: 0.5),

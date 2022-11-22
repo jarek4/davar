@@ -17,6 +17,8 @@ class AddScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // new Scaffold is here! Without ChangeNotifierProvider<CategoriesProvider>.value
     // cannot find CategoriesProvider
+    // it happens one time: ChangeNotifierProvider<CategoriesProvider>.value does not help! and -
+    // error: A CategoriesProvider was used after being disposed.
     final CategoriesProvider cp = context.read<CategoriesProvider>();
     return ChangeNotifierProvider<CategoriesProvider>.value(
         value: cp,
@@ -47,7 +49,7 @@ class AddScreen extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) => AppBar(
-        title: Text('DAWAR',
+        title: Text('DAVAR',
             style: Theme.of(context).textTheme.headline6?.copyWith(color: const Color(0XFF00695C))),
         centerTitle: true,
         backgroundColor: Colors.transparent,
@@ -122,7 +124,7 @@ class AddScreen extends StatelessWidget {
   Widget _buildAddNewWord(BuildContext context) {
     return _buildAddNewButton(
       context,
-          () => _addNewItem(
+      () => _addNewItem(
         context: context,
         categories: context.read<CategoriesProvider>().categories,
         onSubmit: (Word w) => context.read<WordsProvider>().create(w),
@@ -188,19 +190,10 @@ class AddScreen extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: 145, maxWidth: 150.0, minHeight: 70.0),
           child: MaterialButton(
             onPressed: handle,
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(text: 'Add:  ', children: [
-                TextSpan(
-                    text: isSentence ? _addSentence : _addWord,
-                    style: DefaultTextStyle.of(context).style.copyWith(
-                        color: isSentence
-                            ? theme.DavarColors.sentenceColors2[1].withRed(120)
-                            : theme.DavarColors.wordColors2[1].withRed(150),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0)),
-              ]),
-            ),
+            child: Text(isSentence ? 'Sentence' : 'Word',
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 20.0)),
           ),
         ),
       ),

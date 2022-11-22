@@ -1,6 +1,8 @@
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/words_provider.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum StatisticsProviderStatus { error, loading, success }
 
@@ -19,34 +21,41 @@ class StatisticsProvider with ChangeNotifier {
 
   String get errorMsg => _errorMsg;
 
-  // DateTime.now() -> 2014-02-15 08:57:47.812 oIso8601String() -> 2014-02-15T08:57:47.812
-  // static final DateTime _now = DateTime.now();
-  // static final String _nowDate = _now.toIso8601String().split('T').first;
-
-  DavarStatistic _statistics = DavarStatistic(
-      date: DateTime.now(),
-      wordsNumber: 0,
-      sentencesNumber: 0,
-      mostPointsWords3: [],
-      leastPointsWords3: [],
-      highestQuizScore: 0);
+  DavarStatistic _statistics = const DavarStatistic();
 
   DavarStatistic get statistics => _statistics;
+
+  static String _getIsoDateString() {
+    // DateTime.now() -> 2014-02-15 08:57:47.812 oIso8601String() -> 2014-02-15T08:57:47.812
+    return DateTime.now().toIso8601String().split('T').first;
+  }
 
   Future<DavarStatistic> loadStatistics() async {
     List<Word> all = _wordsProvider.words;
     _foundItemsNumber(all);
-    if(all.length >= 2) _foundMostLeastPoints(all);
+    if (all.length >= 2) _foundMostLeastPoints(all);
+    final int quizScore = await _cashedHighestQuizScore();
+    _statistics = _statistics.copyWith(highestQuizScore: quizScore);
     return _statistics;
   }
+
+  Future<DavarStatistic> loadPreviewsStatistics() async {
+    List<Word> all = _wordsProvider.words;
+    _foundItemsNumber(all);
+    if (all.length >= 2) _foundMostLeastPoints(all);
+    final int quizScore = await _cashedHighestQuizScore();
+    _statistics = _statistics.copyWith(highestQuizScore: quizScore);
+    return _statistics;
+  }
+
   void _foundItemsNumber(List<Word> list) {
     List<Word> w = [];
     List<Word> s = [];
-    for(Word item in list) {
-      if(item.isSentence == 0) {
+    for (Word item in list) {
+      if (item.isSentence == 0) {
         w.add(item);
       }
-      if(item.isSentence == 1) {
+      if (item.isSentence == 1) {
         s.add(item);
       }
     }
@@ -55,50 +64,62 @@ class StatisticsProvider with ChangeNotifier {
 
   void _foundMostLeastPoints(List<Word> list) {
     final List<Word> nl = list;
-    nl.sort((a, b) => a.points.compareTo(b.points));
-    if(nl.length < 6) {
-      _statistics = _statistics.copyWith(mostPointsWords3: [nl[0]], leastPointsWords3: [nl[nl.length - 1]]);
-    } else {
-      _statistics = _statistics.copyWith(
-          mostPointsWords3: nl.getRange(0, 2).toList(),
-          leastPointsWords3: nl.getRange(nl.length - 3, nl.length - 1).toList());
-    }
-  }
+    nl.sort((a, b) => a.points.compareTo(b.points)); // [a, b] and a < b
+      _statistics =
+          _statistics.copyWith(mostPointsWord: nl[nl.length - 1], leastPointsWord: nl[0]);
 
   }
 
+  Future<int> _cashedHighestQuizScore() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? lastSavedScore = prefs.getInt(utils.AppConst.statisticsQuizHighestScore);
+    return lastSavedScore ?? 0;
+  }
 
+  Future<Word> _cashedItemWithHighestPoints() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String>? items =
+        prefs.getStringList(utils.AppConst.statisticsItemWithHighestPoints);
+    return const Word(catchword: 'c', id: -22, userId: -3, userTranslation: 'u');
+  }
+
+  Future<Word> _cashedItemWithLeastPoints() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final List<String>? items = prefs.getStringList(utils.AppConst.statisticsItemWithLeastPoints);
+    return const Word(catchword: 'cc', id: -25, userId: -3, userTranslation: 'u');
+  }
+}
 
 class DavarStatistic {
   const DavarStatistic({
-    required this.date,
-    required this.wordsNumber,
-    required this.sentencesNumber,
-    required this.mostPointsWords3,
-    required this.leastPointsWords3,
-    required this.highestQuizScore,
+    this.date = 'never',
+    this.wordsNumber = 0,
+    this.sentencesNumber = 0,
+    this.mostPointsWord,
+    this.leastPointsWord,
+    this.highestQuizScore = 0,
   });
 
-  final DateTime date;
+  final String date;
   final int wordsNumber;
   final int sentencesNumber;
-  final List<Word> mostPointsWords3;
-  final List<Word> leastPointsWords3;
+  final Word? mostPointsWord;
+  final Word? leastPointsWord;
   final int highestQuizScore;
 
   DavarStatistic copyWith(
-      {DateTime? date,
+      {String? date,
       int? wordsNumber,
       int? sentencesNumber,
-      List<Word>? mostPointsWords3,
-      List<Word>? leastPointsWords3,
+      Word? mostPointsWord,
+      Word? leastPointsWord,
       int? highestQuizScore}) {
     return DavarStatistic(
       date: date ?? this.date,
       wordsNumber: wordsNumber ?? this.wordsNumber,
       sentencesNumber: sentencesNumber ?? this.sentencesNumber,
-      mostPointsWords3: mostPointsWords3 ?? this.mostPointsWords3,
-      leastPointsWords3: leastPointsWords3 ?? this.leastPointsWords3,
+      mostPointsWord: mostPointsWord ?? this.mostPointsWord,
+      leastPointsWord: leastPointsWord ?? this.leastPointsWord,
       highestQuizScore: highestQuizScore ?? this.highestQuizScore,
     );
   }

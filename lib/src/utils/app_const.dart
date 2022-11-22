@@ -24,4 +24,8 @@ class AppConst {
       name: 'unknown');
 
   static const WordCategory allCategoriesFilter = WordCategory(id: 0, name: 'all', userId: 1);
+
+  static const String statisticsQuizHighestScore = 'quiz_highest_score';
+  static const String statisticsItemWithHighestPoints = 'item_highest_points';
+  static const String statisticsItemWithLeastPoints = 'items_least_points';
 }
