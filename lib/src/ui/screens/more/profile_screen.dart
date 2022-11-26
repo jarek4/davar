@@ -1,6 +1,7 @@
 import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
+import 'package:davar/src/theme/theme.dart'as theme;
 import 'package:davar/src/ui/screens/more/add_edit_word_category/add_edit_word_category.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -86,7 +87,7 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: theme.DavarColors.profileCategoriesCard[0],
         borderRadius: BorderRadius.circular(25.0),
         border: Border.all(
             width: 2.0, style: BorderStyle.solid, color: const Color.fromARGB(23, 134, 55, 3)),
@@ -169,6 +170,7 @@ class ProfileScreen extends StatelessWidget {
       margin: const EdgeInsets.only(left: 15, right: 15),
       padding: const EdgeInsets.all(5.0),
       decoration: BoxDecoration(
+        color: theme.DavarColors.profileCategoriesCard[1],
         borderRadius: BorderRadius.circular(25.0),
         border: Border.all(
             width: 2.0, style: BorderStyle.solid, color: const Color.fromARGB(23, 134, 55, 3)),

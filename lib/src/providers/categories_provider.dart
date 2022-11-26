@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_word_categories_repository.dart';
@@ -47,8 +45,6 @@ class CategoriesProvider with ChangeNotifier {
 
   // not longer then 20 characters!
   Future<void> create() async {
-    // final WordCategory created = WordCategory(id: -1, userId: _user.id, name: _newCategoryName);
-    // print('CategoriesProvider create(): $created');
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
     final WordCategory created = WordCategory(id: -1, userId: _user.id, name: _newCategoryName);
@@ -67,7 +63,7 @@ class CategoriesProvider with ChangeNotifier {
       _errorMsg = 'The word: ${created.name} was not created!';
       _status = CategoriesProviderStatus.error;
       notifyListeners();
-      print(e);
+      if (kDebugMode) print(e);
     }
   }
 
@@ -87,7 +83,7 @@ class CategoriesProvider with ChangeNotifier {
       }
       final WordCategory? updated = await _categoriesRepository.read(category.id);
       if (updated != null) {
-        final List<WordCategory> newState =[updated, ..._categories];
+        final List<WordCategory> newState = [updated, ..._categories];
         _categories = newState;
         _status = CategoriesProviderStatus.success;
         _errorMsg = '';
@@ -102,7 +98,7 @@ class CategoriesProvider with ChangeNotifier {
       _errorMsg = 'The last category change was not saved!';
       _status = CategoriesProviderStatus.error;
       notifyListeners();
-      print(e);
+      if (kDebugMode) print(e);
     }
   }
 
@@ -122,12 +118,11 @@ class CategoriesProvider with ChangeNotifier {
       _errorMsg = 'The category change was not deleted!';
       _status = CategoriesProviderStatus.error;
       notifyListeners();
-      print(e);
+      if (kDebugMode) print(e);
     }
   }
 
   Future<void> _fetchCategories() async {
-    print('_fetchCategories()');
     _errorMsg = '';
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
@@ -140,7 +135,7 @@ class CategoriesProvider with ChangeNotifier {
       _errorMsg = 'Some thing bad has happened 🥴\n Try to restart the application';
       _status = CategoriesProviderStatus.error;
       notifyListeners();
-      print(e);
+      if (kDebugMode) print(e);
     }
   }
 }

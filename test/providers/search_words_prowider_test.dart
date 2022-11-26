@@ -176,7 +176,7 @@ void main() {
      // expectLater(stream, emits([data])); // Which: emitted * []  x Stream closed.
      //  sut.querySearch('');
      //  verify(wordsRepo.rawQuery('', [1])).called(1); // No matching calls
-    })*/
-    ;
+    });*/
+
   });
 }

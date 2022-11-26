@@ -1,10 +1,10 @@
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/statistics_services/statistics_service.dart';
+import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({Key? key}) : super(key: key);
@@ -14,40 +14,41 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
-
   late Future<DavarStatistic>? _futureStatistics;
+
   @override
   void initState() {
-     _futureStatistics = Provider.of<StatisticsProvider>(context, listen: false).loadPreviewsStatistics();
+    _futureStatistics =
+        Provider.of<StatisticsProvider>(context, listen: false).loadPreviewsStatistics();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-   /* final WordsProvider wp = Provider.of<WordsProvider>(context);
+    /* final WordsProvider wp = Provider.of<WordsProvider>(context);
     return ChangeNotifierProvider<StatisticsProvider>(
         create: (context) => StatisticsProvider(wp),
         builder: (context, _) {*/
-          return Consumer<StatisticsProvider>(
-              builder: (BuildContext context, StatisticsProvider sp, _) {
-            switch (sp.status) {
-              case StatisticsProviderStatus.loading:
-                return const LinearLoadingWidget(info: 'Loading wait...');
-              case StatisticsProviderStatus.success:
-                return _buildScreenBody(context, sp);
-              case StatisticsProviderStatus.error:
-                String e = sp.errorMsg;
-                return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? e : 'Error');
-              default:
-                return const Center(child: CircularProgressIndicator.adaptive());
-            }
-          });
-       /* });*/
+    return Consumer<StatisticsProvider>(builder: (BuildContext context, StatisticsProvider sp, _) {
+      switch (sp.status) {
+        case StatisticsProviderStatus.loading:
+          return const LinearLoadingWidget(info: 'Loading wait...');
+        case StatisticsProviderStatus.success:
+          return _buildScreenBody(context, sp);
+        case StatisticsProviderStatus.error:
+          String e = sp.errorMsg;
+          return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? e : 'Error');
+        default:
+          return const Center(child: CircularProgressIndicator.adaptive());
+      }
+    });
+    /* });*/
   }
 
   Widget _buildScreenBody(BuildContext context, StatisticsProvider sp) {
     return FutureBuilder<DavarStatistic>(
         initialData: const DavarStatistic(),
-        future:  _futureStatistics,
+        future: _futureStatistics,
         builder: (context, snapshot) {
           final bool snapHasError = snapshot.hasError;
           ConnectionState connection = snapshot.connectionState;
@@ -66,27 +67,27 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     return _layoutBuilderWrapper([
       _buildUpdateCard(context, value: stats.date),
       _buildStatisticCard(context,
-          color: Colors.teal[300],
+          color: const Color(0xFFED4140),
           title: 'QUIZ SCORE',
           subtitle: 'The highest quiz score.',
           value: '${stats.highestQuizScore}'),
       _buildStatisticCard(context,
-          color: Colors.teal[100],
+          color: theme.DavarColors.wordColors2[0],
           title: 'WORDS',
           subtitle: 'The number of all your words.',
           value: '${stats.wordsNumber}'),
       _buildStatisticCard(context,
-          color: Colors.teal[200],
+          color: theme.DavarColors.sentenceColors2[0],
           title: 'SENTENCES',
           subtitle: 'The number of all your sentences.',
           value: '${stats.sentencesNumber}'),
       _buildStatisticCard(context,
-          color: Colors.teal[400],
+          color: Colors.teal[400] ?? Colors.teal,
           title: 'BEST',
           subtitle: 'Points: ${stats.mostPointsWord[1]}',
           value: stats.mostPointsWord[0]),
       _buildStatisticCard(context,
-          color: Colors.teal[500],
+          color: Colors.teal[600] ?? Colors.teal,
           title: 'WEAKEST',
           subtitle: 'Points: ${stats.leastPointsWord[1]}',
           value: '${stats.leastPointsWord[0]} stats.leastPointsWord' ?? ''),
@@ -110,7 +111,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   Widget _buildStatisticCard(
     BuildContext context, {
-    Color? color = Colors.teal,
+    Color color = Colors.teal,
     required String title,
     required String subtitle,
     String value = '-',
@@ -118,14 +119,16 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
       decoration: BoxDecoration(
-        color: color,
+        // color: color,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color),
         boxShadow: [
           BoxShadow(
-            color: Colors.teal.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
+            color: color.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 15,
             offset: const Offset(0.5, 1.2),
+            blurStyle: BlurStyle.outer,
           ),
         ],
       ),
@@ -156,7 +159,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   Widget _buildUpdateCard(BuildContext context,
       {Color? color = Colors.white70, required String value}) {
     // the value inside FittedBox(child: Text(value)) cannot be an empty String!
-    if(value.isEmpty) value = '--';
+    if (value.isEmpty) value = '--';
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -183,15 +186,26 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           FittedBox(child: Text(value)),
           Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
             const Text('Refresh:'),
-            IconButton(onPressed: () => _refresh(), icon: const Icon(Icons.refresh)),
+            IconButton(
+                onPressed: () => _refresh(),
+                icon: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white54,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(/*color: Colors.green,*/ width: 2.0),
+                  ),
+                  child: Icon(Icons.refresh, color: Colors.green[800]),
+                )),
           ]),
         ],
       ),
     );
   }
+
   void _refresh() {
     setState(() {
-      _futureStatistics = Provider.of<StatisticsProvider>(context, listen: false).refreshStatistics();
+      _futureStatistics =
+          Provider.of<StatisticsProvider>(context, listen: false).refreshStatistics();
     });
   }
 }
