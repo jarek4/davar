@@ -1,8 +1,10 @@
 import 'package:davar/src/authentication/authentication.dart';
+import 'package:davar/src/data/models/supported_languages/supported.dart';
 import 'package:davar/src/settings/settings_controller.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -87,17 +89,25 @@ class SettingsScreen extends StatelessWidget {
       title: const Text('Language'),
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [Text('Export backup copy'), Icon(Icons.cloud_upload_outlined)]),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [Text('Import backup copy'), Icon(Icons.cloud_download)]),
-        ),
+          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0, left: 18.0, right: 18.0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            const Flexible(child: Text('Application language:')),
+            Flexible(
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<DavarLanguage>(
+                  elevation: 16,
+                  hint: const Text('App language'),
+                  value: SupportedLanguages.list[2],
+                  onChanged: (d) {},
+                  items: SupportedLanguages.list.map<DropdownMenuItem<DavarLanguage>>((DavarLanguage value) {
+                    return DropdownMenuItem<DavarLanguage>(
+                        key: Key('DropdownMenuItem-$value'), value: value, child: Text(value.name));
+                  }).toList(),
+                ),
+              ),
+            )
+          ]),
+        )
       ],
     );
   }
