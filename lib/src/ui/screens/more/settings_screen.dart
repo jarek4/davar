@@ -1,4 +1,5 @@
 import 'package:davar/src/authentication/authentication.dart';
+import 'package:davar/src/settings/settings_controller.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,24 +24,61 @@ class SettingsScreen extends StatelessWidget {
       BuildContext context, String name, String email, String native, String learning) {
     return ListView(
         padding: const EdgeInsets.symmetric(horizontal: 30),
-        key: const Key('You-BackupScreen'),
+        key: const Key('More-SettingsScreen'),
         shrinkWrap: true,
         children: [_buildThemeModeTile(), _buildLanguageTile(), _buildBackupTile()]);
   }
 
   Widget _buildThemeModeTile() {
-    return ExpansionTile(
-      leading: const Icon(Icons.sunny_snowing),
-      title: const Text('Light/Dark mode'),
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [Text('Dark mode'), Icon(Icons.dark_mode_outlined)]),
-        )
-      ],
-    );
+    return Consumer<SettingsController>(
+        builder: (BuildContext context, SettingsController settings, _) {
+      final ThemeMode mode = settings.themeMode;
+      const ThemeMode a = ThemeMode.system;
+      const ThemeMode d = ThemeMode.dark;
+      const ThemeMode l = ThemeMode.light;
+      final Color inactiveColor =
+          Theme.of(context).iconTheme.color?.withOpacity(0.6) ?? Colors.black.withOpacity(0.6);
+      Color activeColor = Theme.of(context).colorScheme.primary.withOpacity(0.8);
+      return ExpansionTile(
+        leading: const Icon(Icons.sunny_snowing),
+        title: const Text('Light/Dark mode'),
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
+            child: Row(children: [
+              const Expanded(child: Text('Auto')),
+              Expanded(
+                  child: IconButton(
+                      onPressed: () => settings.updateThemeMode(a),
+                      icon: Icon(Icons.device_unknown_rounded,
+                          color: mode == a ? activeColor : inactiveColor))),
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
+            child: Row(children: [
+              const Expanded(child: Text('Light mode')),
+              Expanded(
+                  child: IconButton(
+                      onPressed: () => settings.updateThemeMode(l),
+                      icon:
+                          Icon(Icons.light_mode, color: mode == l ? activeColor : inactiveColor))),
+            ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
+            child: Row(children: [
+              const Expanded(child: Text('Dark mode')),
+              Expanded(
+                  child: IconButton(
+                      onPressed: () => settings.updateThemeMode(d),
+                      icon: Icon(Icons.dark_mode_outlined,
+                          color: mode == d ? activeColor : inactiveColor))),
+            ]),
+          )
+        ],
+      );
+    });
   }
 
   Widget _buildLanguageTile() {

@@ -33,6 +33,9 @@ class DavarApp extends StatelessWidget {
         //   create: (_) => AuthProvider(),
         //   update: (_, user, authProvider) => authProvider!..handleUserRepositoryStream(user),
         // ),
+        ChangeNotifierProvider<SettingsController>.value(
+          value: settingsController,
+        ),
         ChangeNotifierProvider<AuthProvider>(
           create: (_) => AuthProvider()..tryToAuthenticate(),
           lazy: false,
@@ -74,7 +77,7 @@ class DavarApp extends StatelessWidget {
             onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
             theme: ThemeData(
               colorScheme: ColorScheme.fromSwatch(
-                primarySwatch: Colors.orange,
+                primarySwatch: DavarColors.materialPrimarySwatch,
               ),
               scaffoldBackgroundColor: DavarColors.mainBackground,
             ),
