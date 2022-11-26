@@ -2,19 +2,16 @@
 
 import 'dart:async';
 
-import 'package:davar/locator.dart';
 import 'package:davar/src/data/local/database/db_consts.dart';
 import 'package:davar/src/data/models/models.dart';
-import 'package:davar/src/domain/i_words_repository.dart';
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/foundation.dart';
 
 class SearchWordsProvider with ChangeNotifier {
-  SearchWordsProvider(this._user);
+  SearchWordsProvider(this._wr);
 
-  final User _user;
-
-  final IWordsRepository<Word> _wordsRepository = locator<IWordsRepository<Word>>();
+  final WordsProvider _wr;
 
   String _errorMsg = '';
 
@@ -33,7 +30,7 @@ class SearchWordsProvider with ChangeNotifier {
   WordCategory get selectedCategory => _selectedCategory;
 
   Future<void> onCategoryChange(WordCategory? c) async {
-    if(c == _selectedCategory) return;
+    if (c == _selectedCategory) return;
     if (c == null) {
       _selectedCategory = utils.AppConst.allCategoriesFilter;
     } else {
@@ -113,7 +110,7 @@ class SearchWordsProvider with ChangeNotifier {
 
   /// Mainly due to a change in list item, updates the list, without query to database.
   void updateState(Word item) {
-    print('Provider updateState(Word:\n ${item.catchword})');
+    print('SearchProvider updateState(Word:\n ${item.catchword})');
     try {
       _paginatedList = _paginatedList
           .take(_paginatedList.length)
@@ -128,11 +125,11 @@ class SearchWordsProvider with ChangeNotifier {
 
   /// insert items at the top of the list of current displaying items
   void insertItemAtTheTop(Word item) {
-      print('updateWithFound 1 element: ${item.catchword}');
-      // if _paginatedList already contains the item - move it at the beginning
-      // else add found item at the beginning
-      _paginatedList.removeWhere((e) => e.id == item.id);
-      _paginatedList.insert(0, item);
+    print('updateWithFound 1 element: ${item.catchword}');
+    // if _paginatedList already contains the item - move it at the beginning
+    // else add found item at the beginning
+    _paginatedList.removeWhere((e) => e.id == item.id);
+    _paginatedList.insert(0, item);
     _controller.add(_paginatedList);
   }
 
@@ -147,14 +144,10 @@ class SearchWordsProvider with ChangeNotifier {
     final String likeString = prepareLikeSql(queryValue);
     try {
       final String sql = '${DbConsts.selectAllFromTableWords} $likeString';
-      // final List<Word>? words = await _wordsRepository.rawQuery(sql, [_user.id]);
-      final List<Map<String, dynamic>>? words = await _wordsRepository.rawQuery(sql, [_user.id]);
-      if (words != null) return words.map((element) => Word.fromJson(element)).toList();
-      _errorMsg = 'Data is unavailable. Some error has happened, sorry!';
-      notifyListeners();
-      return [];
+      final List<Word> words = await _wr.rawQuerySearch(sql);
+      return words;
     } catch (e) {
-      print('FilteredWordsProvider searchQuery ERROR:\n $e');
+      print('SearchWordsProvider searchQuery ERROR:\n $e');
       _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
       notifyListeners();
       return [];
@@ -207,8 +200,7 @@ class SearchWordsProvider with ChangeNotifier {
       args.add(1);
     }
     try {
-      final List<Word> words = await _wordsRepository.readAllPaginated(
-        userId: _user.id,
+      final List<Word> words = await _wr.readPaginated(
         offset: offset,
         limit: limit,
         where: where,
@@ -216,7 +208,7 @@ class SearchWordsProvider with ChangeNotifier {
       );
       return words;
     } catch (e) {
-      print('FilteredWordsProvider fetch ERROR:\n $e');
+      print('SearchWordsProvider fetch ERROR:\n $e');
       _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
       notifyListeners();
       return [];
@@ -246,12 +238,7 @@ class SearchWordsProvider with ChangeNotifier {
   Future<void> delete(int id) async {
     _clearErrorMsg();
     try {
-      final int res = await _wordsRepository.delete(id);
-      if (res < 1) {
-        _errorMsg = 'The word was not deleted';
-        notifyListeners();
-        return;
-      }
+      await _wr.delete(id);
       _paginatedList.removeWhere((element) => element.id == id);
       _listOffset = _listOffset - 1;
       notifyListeners();
@@ -266,12 +253,7 @@ class SearchWordsProvider with ChangeNotifier {
   Future<void> toggleFavorite(Word i) async {
     final int value = i.isFavorite == 1 ? 0 : 1;
     try {
-      final int? res = await _wordsRepository.rawUpdate([DbConsts.colWIsFavorite], [value], i.id);
-      if (res == null || res < 1) {
-        _errorMsg = 'The word was not deleted';
-        notifyListeners();
-        return;
-      }
+      await _wr.reverseIsFavorite(i);
       _paginatedList =
           _paginatedList.map((e) => e.id == i.id ? e.copyWith(isFavorite: value) : e).toList();
       notifyListeners();

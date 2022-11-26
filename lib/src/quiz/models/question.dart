@@ -7,19 +7,18 @@ class Question {
 
   static const String errorInfo = 'No words added!';
 
-
   int successOptionId() {
-    if(inGameWords.isEmpty) return -1;
+    if (inGameWords.isEmpty) return -1;
     return inGameWords[0].id;
   }
 
   String text() {
-    if(inGameWords.isEmpty) return errorInfo;
+    if (inGameWords.isEmpty) return errorInfo;
     return inGameWords[0].userTranslation;
   }
 
   String? clue() {
-    if(inGameWords.isEmpty) return errorInfo;
+    if (inGameWords.isEmpty) return errorInfo;
     return inGameWords[0].clue;
   }
 
@@ -29,7 +28,16 @@ class Question {
   }
 
   @override
-  operator ==(other) => other is Question && other.inGameWords == inGameWords;
+  bool operator ==(Object other) {
+    if (other is Question) {
+      if (inGameWords.length != other.inGameWords.length) return false;
+      for (int i = 0; i < inGameWords.length; i++) {
+        if (inGameWords[i] != other.inGameWords[i]) return false;
+      }
+      return true;
+    }
+    return false;
+  }
 
   @override
   int get hashCode => Object.hashAll(inGameWords);

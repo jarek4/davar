@@ -14,10 +14,12 @@ import 'search_words_prowider_test.mocks.dart';
 
 // flutter pub run build_runner build --delete-conflicting-outputs
 
-@GenerateNiceMocks([MockSpec<IWordsRepository<Word>>(as: #MockWordsRepo)])
+// @GenerateNiceMocks([MockSpec<IWordsRepository<Word>>(as: #MockWordsRepo)])
 @GenerateNiceMocks([MockSpec<WordsRepository>(as: #MockWordsRepoImpl)])
+@GenerateNiceMocks([MockSpec<WordsProvider>(as: #MockWordsProviderImpl)])
 void main() {
   late IWordsRepository<Word> wordsRepo;
+  late WordsProvider wp;
   late SearchWordsProvider sut;
   const User user = User(id: 1, name: 'user');
 
@@ -29,9 +31,10 @@ void main() {
   group('SearchWordsProvider should:', () {
     group('emmit default values', () {
       setUp(() {
-        wordsRepo = MockWordsRepo();
+        wordsRepo = MockWordsRepoImpl();
+        wp = MockWordsProviderImpl();
         locator.registerSingleton<IWordsRepository<Word>>(wordsRepo);
-        sut = SearchWordsProvider(user);
+        sut = SearchWordsProvider(wp);
       });
 
       test('errorMsg is empty ', () async {
@@ -51,9 +54,10 @@ void main() {
     });
     group('properly handle setter: ', () {
       setUp(() {
-        wordsRepo = MockWordsRepo();
+        wordsRepo = MockWordsRepoImpl();
+        wp = MockWordsProviderImpl();
         locator.registerSingleton<IWordsRepository<Word>>(wordsRepo);
-        sut = SearchWordsProvider(user);
+        sut = SearchWordsProvider(wp);
       });
 
       test('sut.errorMsg = e', () {
@@ -99,9 +103,10 @@ void main() {
   group('Stream<List<Word>> get filteredWords emits', () {
     late StreamController<List<Word>> controller;
     setUp(() {
-      wordsRepo = MockWordsRepo();
+      wordsRepo = MockWordsRepoImpl();
+      wp = MockWordsProviderImpl();
       locator.registerSingleton<IWordsRepository<Word>>(wordsRepo);
-      sut = SearchWordsProvider(user);
+      sut = SearchWordsProvider(wp);
       controller = StreamController<List<Word>>.broadcast(sync: false);
     });
     tearDown(() {
@@ -144,9 +149,10 @@ void main() {
   });
   group('Stream<List<Word>> querySearch(String query) emits', () {
     setUp(() {
-      wordsRepo = MockWordsRepo();
+      wordsRepo = MockWordsRepoImpl();
+      wp = MockWordsProviderImpl();
       locator.registerSingleton<IWordsRepository<Word>>(wordsRepo);
-      sut = SearchWordsProvider(user);
+      sut = SearchWordsProvider(wp);
     });
     tearDown(() {});
     test('data returned from Future', () async {

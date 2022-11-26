@@ -27,7 +27,7 @@ class QuestionClueWidget extends StatelessWidget {
           Text('Clue',
               style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w600),
               textAlign: TextAlign.start),
-          Text('takes 2 points',
+          Text('takes 1 point',
               style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.w600),
               textAlign: TextAlign.start),
         ],

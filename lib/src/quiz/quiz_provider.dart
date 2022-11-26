@@ -1,15 +1,14 @@
 // ignore_for_file: avoid_print
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
-import 'package:davar/src/utils/app_const.dart';
+import 'package:davar/src/statistics_services/quiz_statistics_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/models.dart';
 
 enum QuizProviderStatus { error, loading, success }
 
-class QuizProvider with ChangeNotifier {
+class QuizProvider with ChangeNotifier, QuizStatisticsService {
   QuizProvider(this._wordsProvider) {
     _prepare();
   }
@@ -18,8 +17,8 @@ class QuizProvider with ChangeNotifier {
 
   late QuizState _state;
 
-  // last saved quiz total points score
- int _previewHighestScore = 0;
+  // last saved quiz highest score
+  int _previewHighestScore = 0;
 
   QuizState get state => _state;
 
@@ -50,12 +49,26 @@ class QuizProvider with ChangeNotifier {
     notifyListeners();
     try {
       final int lastSavedScore = await _readLastQuizSavedScore();
-      await Future.delayed(const Duration(seconds: 2), () => print('QuizProvider_prepare delayed'));
-      final List<Word> words = await _wordsProvider.readAllWords();
+      //  -- -- TEST:
+      final List<Word> wordsTest = await _timer2().catchError((e) {
+        print('prepare _timer1 Error');
+        return <Word>[];
+      }).timeout(const Duration(seconds: 4), onTimeout: () => <Word>[]);
+      //  -- --
+      final List<Word> words = await _wordsProvider.readAllWords().catchError((e) {
+        print('readLastQuizSavedScore Error');
+        return <Word>[];
+      }).timeout(const Duration(seconds: 7), onTimeout: () => <Word>[]);
       List<Word> inGameWords = [];
       if (words.isNotEmpty && words.length >= 3) {
         // .getRange(0, 3) need to have at least 3 items in list for quiz!
         inGameWords = (words.toList()..shuffle()).getRange(0, 3).toList();
+      }
+
+      if (words.isEmpty || inGameWords.isEmpty) {
+        // no words fetched from database, show error and return
+        _onPrepareStateError();
+        return;
       }
       final List<int> currentUserWordsIds = words.map((e) => e.id).toList();
       final List<int> notPlayedIds =
@@ -85,8 +98,24 @@ class QuizProvider with ChangeNotifier {
     }
   }
 
+  void _onPrepareStateError() {
+    _state = const QuizState(
+      words: [],
+      currentUserWordsIds: [],
+      inGameWords: [],
+      guessingWordPoints: 0,
+      notPlayedIds: [],
+      question: Question(inGameWords: []),
+      options: [Option(text: '-', wordId: 0)],
+      successId: 0,
+    );
+    _errorMsg = 'Still is loading! Please restart application!';
+    _status = QuizProviderStatus.error;
+    notifyListeners();
+  }
+
   void onClueDemand() {
-    // Takes 2 points only once, regardless how many times was opened/closed.
+    // Takes 1 point only once, regardless how many times was opened/closed.
     // If clue is empty don't subtract points!
     if (_state.isLocked) return; // game is over, player won or lost
     if (_state.isClueShown) {
@@ -95,7 +124,7 @@ class QuizProvider with ChangeNotifier {
       return;
     }
     // the game is not over, and the clue has not yet been shown.
-    final int difference = _state.roundPoints - 2;
+    final int difference = _state.roundPoints - 1;
     _state = _state.copyWith(
         isClueShown: true,
         roundPoints: difference > 0 ? difference : 0, // no negative points
@@ -110,7 +139,10 @@ class QuizProvider with ChangeNotifier {
   }
 
   Future<void> onSelect(Option option) async {
-    if (_state.isLocked) return;
+    // check is the selected option locked already - prevents to select multiple times
+    final bool isOptionAlreadySelected =
+        _state.options.firstWhere((e) => e.wordId == option.wordId).isSelected;
+    if (isOptionAlreadySelected || _state.isLocked) return;
     final bool isCorrect = option.isCorrect;
     final List<Option> updatedOptions = _markOptionAsSelected(option.wordId);
     final int currentAttempts = _state.attempts + 1;
@@ -134,6 +166,7 @@ class QuizProvider with ChangeNotifier {
     }
   }
 
+  // prevent to select more then one
   List<Option> _markOptionAsSelected(int id) {
     return _state.options.map((e) => e.wordId == id ? e.copyWith(isSelected: true) : e).toList();
   }
@@ -144,21 +177,21 @@ class QuizProvider with ChangeNotifier {
     if (isCorrect) return currentPoints;
     if (isToLock) return 0;
 
-    // subtract 2 points (no negative points):
-    currentPoints = (currentPoints - 2) > 0 ? (currentPoints - 2) : 0;
+    // subtract 1 point (no negative points):
+    currentPoints = (currentPoints - 1) > 0 ? (currentPoints - 1) : 0;
 
     return currentPoints;
   }
 
   Future<void> _onSuccess(int wordId, int scoredWordPoints) async {
-    // get the word by id, to find out previews words points
+    // find out previews words points
     final Word item = _state.inGameWords.firstWhere((element) => element.id == wordId);
     final int points = item.points + scoredWordPoints;
     await _incrementWordsPointsIntoStorage(item.copyWith(points: points));
     // save to statistics
-    if(_state.gamePoints > _previewHighestScore) {
+    if (_state.gamePoints > _previewHighestScore) {
       final bool isSaved = await _saveTotalGamePointsForStatistics(_state.gamePoints);
-      if(!isSaved) {
+      if (!isSaved) {
         _errorMsg = 'Total game score not saved!';
         notifyListeners();
       }
@@ -166,9 +199,11 @@ class QuizProvider with ChangeNotifier {
   }
 
   Future<void> _incrementWordsPointsIntoStorage(Word word) async {
-    // wordsCubit.update(id, 'points', points);
-    // update word via wordProvider
-    await _wordsProvider.update(word);
+    // update word's points
+    await _wordsProvider.update(word).catchError((e) {
+      print('incrementWordsPointsIntoStorage(Word.id: ${word.id}) Error');
+    }).timeout(const Duration(seconds: 5),
+        onTimeout: () => print('incrementWordsPointsIntoStorage(Word.id: ${word.id}) onTimeout'));
   }
 
   Future<void> onNext() async {
@@ -193,7 +228,7 @@ class QuizProvider with ChangeNotifier {
         isClueShown: false,
         isLocked: false,
         notPlayedIds: newNotPlayedIds,
-        roundPoints: 5,
+        roundPoints: 3,
         question: Question(inGameWords: newInGameWords),
         options: _makeOptions(newInGameWords),
         successId: newInGameWords[0].id);
@@ -201,26 +236,35 @@ class QuizProvider with ChangeNotifier {
   }
 
   Future<bool> _saveTotalGamePointsForStatistics(int totalPoints) async {
-    bool isSaved = false;
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? lastSavedScore = prefs.getInt(AppConst.statisticsQuizHighestScore);
-    if(lastSavedScore == null || lastSavedScore < totalPoints) {
-      isSaved = await prefs.setInt(AppConst.statisticsQuizHighestScore, totalPoints);
-    }
-    return isSaved;
+    // IQuizStatistics
+    return await saveHighestQuizScore(totalPoints).catchError((e) {
+      print('saveTotalGamePointsForStatistics Error');
+      return false;
+    }).timeout(const Duration(seconds: 5), onTimeout: () => false);
   }
-  Future<int> _readLastQuizSavedScore() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? lastSavedScore = prefs.getInt(AppConst.statisticsQuizHighestScore);
-    return lastSavedScore ?? 0;
 
+  Future<int> _readLastQuizSavedScore() async {
+    // IQuizStatistics
+    final int points = await readHighestQuizScore().catchError((e) {
+      print('readLastQuizSavedScore Error');
+      return 0;
+    }).timeout(const Duration(seconds: 5), onTimeout: () => 0);
+    final int lastSavedScore = points;
+    return lastSavedScore;
   }
 
   Future<void> onQuit() async {
     final bool isSaved = await _saveTotalGamePointsForStatistics(_state.gamePoints);
-    if(!isSaved) {
+    if (!isSaved) {
       _errorMsg = 'Total game score not saved!';
       notifyListeners();
     }
+  }
+
+  Future<List<Word>> _timer2() async {
+    await Future.delayed(const Duration(seconds: 2), () => print(' _timer2')).catchError((e) {
+      print(' _timer2 Error: \n$e');
+    });
+    return <Word>[];
   }
 }

@@ -25,7 +25,10 @@ class AppConst {
 
   static const WordCategory allCategoriesFilter = WordCategory(id: 0, name: 'all', userId: 1);
 
-  static const String statisticsQuizHighestScore = 'quiz_highest_score';
-  static const String statisticsItemWithHighestPoints = 'item_highest_points';
-  static const String statisticsItemWithLeastPoints = 'items_least_points';
+  static const String statisticsQuizHighestScore = 'statistics_quiz_highest_score';
+  static const String statisticsItemWithHighestPoints = 'statistics_item_highest_points';
+  static const String statisticsItemWithLeastPoints = 'statistics_items_least_points';
+  static const String statisticsSentencesQuantity = 'statistics_sentences_quantity';
+  static const String statisticsWordsQuantity = 'statistics_words_quantity';
+  static const String statisticsLastUpdateDate = 'statistics_last_update_date';
 }

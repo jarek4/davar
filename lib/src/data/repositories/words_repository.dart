@@ -155,7 +155,7 @@ class WordsRepository implements IWordsRepository<Word> {
       return [];
     } catch (e) {
       print(
-          'WordsRepository WordsRepository readAllPaginatedById(userId:$userId, offset: $offset , like: $like) Error: $e');
+          'WordsRepository readAllPaginatedById(userId:$userId, offset: $offset , like: $like) Error: $e');
       return [];
     }
   }

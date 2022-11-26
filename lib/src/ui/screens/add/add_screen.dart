@@ -10,42 +10,35 @@ class AddScreen extends StatelessWidget {
   const AddScreen({Key? key}) : super(key: key);
   static const routeName = '/add';
 
-  static const _addWord = 'Word';
-  static const _addSentence = 'Sentence';
+  static const _word = 'Word';
+  static const _sentence = 'Sentence';
 
   @override
   Widget build(BuildContext context) {
-    // new Scaffold is here! Without ChangeNotifierProvider<CategoriesProvider>.value
-    // cannot find CategoriesProvider
-    // it happens one time: ChangeNotifierProvider<CategoriesProvider>.value does not help! and -
-    // error: A CategoriesProvider was used after being disposed.
-    final CategoriesProvider cp = context.read<CategoriesProvider>();
-    return ChangeNotifierProvider<CategoriesProvider>.value(
-        value: cp,
-        child: Scaffold(
-          extendBodyBehindAppBar: true,
-          appBar: _buildAppBar(context),
-          body: LayoutBuilder(builder: (context, constraints) {
-            final bool isWidthMore600 = constraints.maxWidth > 600;
-            final bool isHeightLess350 = constraints.maxHeight < 350;
-            return Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Column(
-                children: [
-                  Flexible(
-                      child: _buildHeaderWithLogo(
-                    isWidthMore600,
-                    isHeightLess350,
-                  )),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    child: _buildMainContent(isWidthMore600, context),
-                  ),
-                ],
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: _buildAppBar(context),
+      body: LayoutBuilder(builder: (context, constraints) {
+        final bool isWidthMore600 = constraints.maxWidth > 600;
+        final bool isHeightLess350 = constraints.maxHeight < 350;
+        return Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Column(
+            children: [
+              Flexible(
+                  child: _buildHeaderWithLogo(
+                isWidthMore600,
+                isHeightLess350,
+              )),
+              const SizedBox(height: 20),
+              Expanded(
+                child: _buildMainContent(isWidthMore600, context),
               ),
-            );
-          }),
-        ));
+            ],
+          ),
+        );
+      }),
+    );
   }
 
   AppBar _buildAppBar(BuildContext context) => AppBar(
@@ -190,7 +183,7 @@ class AddScreen extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: 145, maxWidth: 150.0, minHeight: 70.0),
           child: MaterialButton(
             onPressed: handle,
-            child: Text(isSentence ? 'Sentence' : 'Word',
+            child: Text(isSentence ? _sentence : _word,
                 style: DefaultTextStyle.of(context)
                     .style
                     .copyWith(fontWeight: FontWeight.bold, fontSize: 20.0)),

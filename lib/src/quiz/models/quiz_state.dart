@@ -17,7 +17,7 @@ class QuizState {
       this.isClueOpen = false,
       this.isClueShown = false,
       this.isLocked = false,
-      this.roundPoints = 5});
+      this.roundPoints = 3});
 
   final List<Word> words;
   final List<int> currentUserWordsIds;

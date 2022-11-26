@@ -127,6 +127,7 @@ class CategoriesProvider with ChangeNotifier {
   }
 
   Future<void> _fetchCategories() async {
+    print('_fetchCategories()');
     _errorMsg = '';
     _status = CategoriesProviderStatus.loading;
     notifyListeners();

@@ -25,7 +25,7 @@ class LinearLoadingWidget extends StatelessWidget {
             height: 5.0,
             width: width,
             child: LinearProgressIndicator(
-              key: Key('LinearIndicator_$info-$width'),
+              key: Key('LinearIndicator_$info-$width-isError:$isError'),
               color: isError ? Colors.red : Colors.green,
             ),
           ),

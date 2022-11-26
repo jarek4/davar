@@ -24,9 +24,11 @@ class HeaderWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Total: $total',
-                style: const TextStyle(
-                    fontSize: 13, fontWeight: FontWeight.normal, color: Colors.blue)),
-            buildScoreNotification(didUserGuess, isLocked)
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.blue.shade800, fontWeight: FontWeight.w600)),
+            buildScoreNotification(context, didUserGuess, isLocked)
           ],
         ),
         const Divider(thickness: 1, color: Colors.grey),
@@ -34,7 +36,7 @@ class HeaderWidget extends StatelessWidget {
     );
   }
 
-  Text buildScoreNotification(bool isGuess, bool isLocked) {
+  Text buildScoreNotification(BuildContext context, bool isGuess, bool isLocked) {
     if (isLocked && !isGuess) {
       return const Text(
         'Not this time 🥴',
@@ -42,12 +44,10 @@ class HeaderWidget extends StatelessWidget {
       );
     }
     final String txt = isGuess ? '🎉 You win $score points!' : 'You can score: $score';
-    return Text(
-      txt,
-      style: TextStyle(
-          fontSize: 12,
-          fontWeight: isGuess ? FontWeight.bold : FontWeight.normal,
-          color: Colors.green),
-    );
+    return Text(txt,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.green.shade700,
+              fontWeight: isGuess ? FontWeight.w700 : FontWeight.w500,
+            ));
   }
 }

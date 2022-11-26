@@ -9,7 +9,6 @@ class QuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final WordsProvider wp = Provider.of<WordsProvider>(context);
     return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
       switch (provider.status) {
         case WordsProviderStatus.loading:
@@ -82,12 +81,6 @@ class QuizScreen extends StatelessWidget {
   }
 
   Widget _buildStartBtn(BuildContext context, WordsProvider provider) {
-    /*return MaterialButton(
-        // style: Theme.of(context).buttonTheme.,
-        onPressed: () => Navigator.of(context)
-            .push((MaterialPageRoute(builder: (context) => QuizGame(wp: provider)))),
-        child: const Text('Start'));*/
-    // return const NeonButton();
     return NeonButton(
         gradientColor1: Colors.pink,
         gradientColor2: Colors.blueAccent,
@@ -133,9 +126,9 @@ class QuizScreen extends StatelessWidget {
   }
 
   static const String _quizManual1 = 'Your task is to choose the correct answer.\n'
-      'You can win up to 5 points if your first choice is correct. '
-      'If you guess the second time you get 3 points. ';
+      'You can win up to 3 points if your first choice is correct. '
+      'If you guess the second time you get 2 points. ';
   static const String _quizManual2 = 'If you have added a clue to the word, '
-      'you will be able to use it. But it will takes 2 points.\n'
+      'you will be able to use it. But it will takes 1 point.\n'
       'The number of the points of a particular word will be increased accordingly.';
 }

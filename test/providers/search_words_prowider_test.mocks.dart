@@ -3,11 +3,12 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i4;
+import 'dart:async' as _i3;
+import 'dart:ui' as _i6;
 
-import 'package:davar/src/data/models/models.dart' as _i3;
-import 'package:davar/src/data/repositories/words_repository.dart' as _i5;
-import 'package:davar/src/domain/i_words_repository.dart' as _i2;
+import 'package:davar/src/data/models/models.dart' as _i4;
+import 'package:davar/src/data/repositories/words_repository.dart' as _i2;
+import 'package:davar/src/providers/words_provider.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -21,145 +22,30 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-/// A class which mocks [IWordsRepository].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockWordsRepo extends _i1.Mock implements _i2.IWordsRepository<_i3.Word> {
-  @override
-  _i4.Future<int> create(_i3.Word? item) => (super.noSuchMethod(
-        Invocation.method(
-          #create,
-          [item],
-        ),
-        returnValue: _i4.Future<int>.value(0),
-        returnValueForMissingStub: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
-  @override
-  _i4.Future<List<_i3.Word>> readAll(int? userId) => (super.noSuchMethod(
-        Invocation.method(
-          #readAll,
-          [userId],
-        ),
-        returnValue: _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
-        returnValueForMissingStub:
-            _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
-      ) as _i4.Future<List<_i3.Word>>);
-  @override
-  _i4.Future<_i3.Word?> readSingle(int? id) => (super.noSuchMethod(
-        Invocation.method(
-          #readSingle,
-          [id],
-        ),
-        returnValue: _i4.Future<_i3.Word?>.value(),
-        returnValueForMissingStub: _i4.Future<_i3.Word?>.value(),
-      ) as _i4.Future<_i3.Word?>);
-  @override
-  _i4.Future<List<_i3.Word>> readAllPaginated({
-    required int? userId,
-    required int? offset,
-    List<String>? where = const [],
-    List<dynamic>? whereValues = const [],
-    String? like,
-    dynamic likeValue,
-    int? limit = 10,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #readAllPaginated,
-          [],
-          {
-            #userId: userId,
-            #offset: offset,
-            #where: where,
-            #whereValues: whereValues,
-            #like: like,
-            #likeValue: likeValue,
-            #limit: limit,
-          },
-        ),
-        returnValue: _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
-        returnValueForMissingStub:
-            _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
-      ) as _i4.Future<List<_i3.Word>>);
-  @override
-  _i4.Future<List<Map<String, dynamic>>?> rawQuery(
-    String? query,
-    List<dynamic>? arguments,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #rawQuery,
-          [
-            query,
-            arguments,
-          ],
-        ),
-        returnValue: _i4.Future<List<Map<String, dynamic>>?>.value(),
-        returnValueForMissingStub:
-            _i4.Future<List<Map<String, dynamic>>?>.value(),
-      ) as _i4.Future<List<Map<String, dynamic>>?>);
-  @override
-  _i4.Future<int> update(_i3.Word? item) => (super.noSuchMethod(
-        Invocation.method(
-          #update,
-          [item],
-        ),
-        returnValue: _i4.Future<int>.value(0),
-        returnValueForMissingStub: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
-  @override
-  _i4.Future<int?> rawUpdate(
-    List<String>? columns,
-    List<dynamic>? arguments,
-    int? wordId,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #rawUpdate,
-          [
-            columns,
-            arguments,
-            wordId,
-          ],
-        ),
-        returnValue: _i4.Future<int?>.value(),
-        returnValueForMissingStub: _i4.Future<int?>.value(),
-      ) as _i4.Future<int?>);
-  @override
-  _i4.Future<int> delete(int? itemId) => (super.noSuchMethod(
-        Invocation.method(
-          #delete,
-          [itemId],
-        ),
-        returnValue: _i4.Future<int>.value(0),
-        returnValueForMissingStub: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
-}
-
 /// A class which mocks [WordsRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWordsRepoImpl extends _i1.Mock implements _i5.WordsRepository {
+class MockWordsRepoImpl extends _i1.Mock implements _i2.WordsRepository {
   @override
-  _i4.Future<int> create(_i3.Word? item) => (super.noSuchMethod(
+  _i3.Future<int> create(_i4.Word? item) => (super.noSuchMethod(
         Invocation.method(
           #create,
           [item],
         ),
-        returnValue: _i4.Future<int>.value(0),
-        returnValueForMissingStub: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+        returnValue: _i3.Future<int>.value(0),
+        returnValueForMissingStub: _i3.Future<int>.value(0),
+      ) as _i3.Future<int>);
   @override
-  _i4.Future<int> delete(int? itemId) => (super.noSuchMethod(
+  _i3.Future<int> delete(int? itemId) => (super.noSuchMethod(
         Invocation.method(
           #delete,
           [itemId],
         ),
-        returnValue: _i4.Future<int>.value(0),
-        returnValueForMissingStub: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+        returnValue: _i3.Future<int>.value(0),
+        returnValueForMissingStub: _i3.Future<int>.value(0),
+      ) as _i3.Future<int>);
   @override
-  _i4.Future<List<Map<String, dynamic>>?> rawQuery(
+  _i3.Future<List<Map<String, dynamic>>?> rawQuery(
     String? query,
     List<dynamic>? arguments,
   ) =>
@@ -171,12 +57,12 @@ class MockWordsRepoImpl extends _i1.Mock implements _i5.WordsRepository {
             arguments,
           ],
         ),
-        returnValue: _i4.Future<List<Map<String, dynamic>>?>.value(),
+        returnValue: _i3.Future<List<Map<String, dynamic>>?>.value(),
         returnValueForMissingStub:
-            _i4.Future<List<Map<String, dynamic>>?>.value(),
-      ) as _i4.Future<List<Map<String, dynamic>>?>);
+            _i3.Future<List<Map<String, dynamic>>?>.value(),
+      ) as _i3.Future<List<Map<String, dynamic>>?>);
   @override
-  _i4.Future<int?> rawUpdate(
+  _i3.Future<int?> rawUpdate(
     List<String>? columns,
     List<dynamic>? arguments,
     int? wordId,
@@ -190,30 +76,30 @@ class MockWordsRepoImpl extends _i1.Mock implements _i5.WordsRepository {
             wordId,
           ],
         ),
-        returnValue: _i4.Future<int?>.value(),
-        returnValueForMissingStub: _i4.Future<int?>.value(),
-      ) as _i4.Future<int?>);
+        returnValue: _i3.Future<int?>.value(),
+        returnValueForMissingStub: _i3.Future<int?>.value(),
+      ) as _i3.Future<int?>);
   @override
-  _i4.Future<List<_i3.Word>> readAll(int? userId) => (super.noSuchMethod(
+  _i3.Future<List<_i4.Word>> readAll(int? userId) => (super.noSuchMethod(
         Invocation.method(
           #readAll,
           [userId],
         ),
-        returnValue: _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
+        returnValue: _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
         returnValueForMissingStub:
-            _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
-      ) as _i4.Future<List<_i3.Word>>);
+            _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+      ) as _i3.Future<List<_i4.Word>>);
   @override
-  _i4.Future<int> update(_i3.Word? item) => (super.noSuchMethod(
+  _i3.Future<int> update(_i4.Word? item) => (super.noSuchMethod(
         Invocation.method(
           #update,
           [item],
         ),
-        returnValue: _i4.Future<int>.value(0),
-        returnValueForMissingStub: _i4.Future<int>.value(0),
-      ) as _i4.Future<int>);
+        returnValue: _i3.Future<int>.value(0),
+        returnValueForMissingStub: _i3.Future<int>.value(0),
+      ) as _i3.Future<int>);
   @override
-  _i4.Future<List<_i3.Word>> readAllPaginated({
+  _i3.Future<List<_i4.Word>> readAllPaginated({
     required int? userId,
     int? offset = 0,
     List<String>? where = const [],
@@ -236,17 +122,166 @@ class MockWordsRepoImpl extends _i1.Mock implements _i5.WordsRepository {
             #limit: limit,
           },
         ),
-        returnValue: _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
+        returnValue: _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
         returnValueForMissingStub:
-            _i4.Future<List<_i3.Word>>.value(<_i3.Word>[]),
-      ) as _i4.Future<List<_i3.Word>>);
+            _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+      ) as _i3.Future<List<_i4.Word>>);
   @override
-  _i4.Future<_i3.Word?> readSingle(int? id) => (super.noSuchMethod(
+  _i3.Future<_i4.Word?> readSingle(int? id) => (super.noSuchMethod(
         Invocation.method(
           #readSingle,
           [id],
         ),
-        returnValue: _i4.Future<_i3.Word?>.value(),
-        returnValueForMissingStub: _i4.Future<_i3.Word?>.value(),
-      ) as _i4.Future<_i3.Word?>);
+        returnValue: _i3.Future<_i4.Word?>.value(),
+        returnValueForMissingStub: _i3.Future<_i4.Word?>.value(),
+      ) as _i3.Future<_i4.Word?>);
+}
+
+/// A class which mocks [WordsProvider].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockWordsProviderImpl extends _i1.Mock implements _i5.WordsProvider {
+  @override
+  _i5.WordsProviderStatus get status => (super.noSuchMethod(
+        Invocation.getter(#status),
+        returnValue: _i5.WordsProviderStatus.error,
+        returnValueForMissingStub: _i5.WordsProviderStatus.error,
+      ) as _i5.WordsProviderStatus);
+  @override
+  String get wordsErrorMsg => (super.noSuchMethod(
+        Invocation.getter(#wordsErrorMsg),
+        returnValue: '',
+        returnValueForMissingStub: '',
+      ) as String);
+  @override
+  set errorMsg(String? value) => super.noSuchMethod(
+        Invocation.setter(
+          #errorMsg,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  _i3.Future<List<int>> get wordsIds => (super.noSuchMethod(
+        Invocation.getter(#wordsIds),
+        returnValue: _i3.Future<List<int>>.value(<int>[]),
+        returnValueForMissingStub: _i3.Future<List<int>>.value(<int>[]),
+      ) as _i3.Future<List<int>>);
+  @override
+  bool get hasListeners => (super.noSuchMethod(
+        Invocation.getter(#hasListeners),
+        returnValue: false,
+        returnValueForMissingStub: false,
+      ) as bool);
+  @override
+  _i3.Future<List<_i4.Word>> readAllWords() => (super.noSuchMethod(
+        Invocation.method(
+          #readAllWords,
+          [],
+        ),
+        returnValue: _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+        returnValueForMissingStub:
+            _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+      ) as _i3.Future<List<_i4.Word>>);
+  @override
+  _i3.Future<List<_i4.Word>> readPaginated({
+    int? offset = 0,
+    List<String>? where = const [],
+    List<dynamic>? whereValues = const [],
+    int? limit = 10,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readPaginated,
+          [],
+          {
+            #offset: offset,
+            #where: where,
+            #whereValues: whereValues,
+            #limit: limit,
+          },
+        ),
+        returnValue: _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+        returnValueForMissingStub:
+            _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+      ) as _i3.Future<List<_i4.Word>>);
+  @override
+  _i3.Future<List<_i4.Word>> rawQuerySearch(String? queryString) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #rawQuerySearch,
+          [queryString],
+        ),
+        returnValue: _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+        returnValueForMissingStub:
+            _i3.Future<List<_i4.Word>>.value(<_i4.Word>[]),
+      ) as _i3.Future<List<_i4.Word>>);
+  @override
+  _i3.Future<void> create(_i4.Word? word) => (super.noSuchMethod(
+        Invocation.method(
+          #create,
+          [word],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> delete(int? id) => (super.noSuchMethod(
+        Invocation.method(
+          #delete,
+          [id],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> reverseIsFavorite(_i4.Word? item) => (super.noSuchMethod(
+        Invocation.method(
+          #reverseIsFavorite,
+          [item],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> update(_i4.Word? item) => (super.noSuchMethod(
+        Invocation.method(
+          #update,
+          [item],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  void dispose() => super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void addListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+        Invocation.method(
+          #addListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void removeListener(_i6.VoidCallback? listener) => super.noSuchMethod(
+        Invocation.method(
+          #removeListener,
+          [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void notifyListeners() => super.noSuchMethod(
+        Invocation.method(
+          #notifyListeners,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
 }

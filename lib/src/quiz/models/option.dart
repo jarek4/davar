@@ -1,5 +1,6 @@
 class Option {
-  const Option({required this.text, required this.wordId, this.isCorrect = false, this.isSelected = false});
+  const Option(
+      {required this.text, required this.wordId, this.isCorrect = false, this.isSelected = false});
 
   final String text;
   final int wordId;
@@ -20,13 +21,20 @@ class Option {
   }
 
   @override
-  operator ==(other) =>
-      other is Option &&
-          other.text == text &&
-          other.isCorrect == isCorrect &&
-          other.wordId == wordId &&
-          other.isSelected == isSelected;
+  bool operator ==(Object other) {
+    if (other is Option) {
+      if (other.text != text ||
+          other.isCorrect != isCorrect ||
+          other.wordId != wordId ||
+          other.isSelected != isSelected) {
+        return false;
+      }
+
+      return true;
+    }
+    return false;
+  }
 
   @override
-  int get hashCode => Object.hashAll([text, isCorrect, isSelected, wordId]);
+  int get hashCode => Object.hash(text, isCorrect, isSelected, wordId);
 }

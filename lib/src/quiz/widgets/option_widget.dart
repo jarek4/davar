@@ -1,6 +1,8 @@
 import 'package:davar/src/quiz/models/models.dart';
 import 'package:flutter/material.dart';
 
+// every single OptionWidget key have to be different! If previews question contains option with the same key
+// and this option was tapped, in new questions this option will be locked at start!
 class OptionWidget extends StatefulWidget {
   const OptionWidget({
     Key? key,
@@ -10,26 +12,27 @@ class OptionWidget extends StatefulWidget {
 
   final Option option;
   final ValueChanged<Option> onTapedOption;
+
   @override
   State<OptionWidget> createState() => _OptionWidgetState();
 }
 
 class _OptionWidgetState extends State<OptionWidget> {
   // lock after it is tapped, to prevent multiple calling onTapedOption function
- bool _isOptionLocked = false;
+  bool _isOptionLocked = false;
 
- void _handleTap() {
-   if(_isOptionLocked) return;
-   setState(() {
-     _isOptionLocked = true;
-   });
-   widget.onTapedOption(widget.option);
- }
+  void _handleTap() {
+    if (_isOptionLocked) return;
+    setState(() {
+      _isOptionLocked = true;
+    });
+    widget.onTapedOption(widget.option);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  _layoutBuilderWrapper(GestureDetector(
-      // onTap: () => widget.onTapedOption(widget.option), // lock the question and set selected option
-      onTap: () => _handleTap(),
+    return _layoutBuilderWrapper(GestureDetector(
+      onTap: () => _handleTap(), // lock the question and set selected option
       child: Container(
         height: 58,
         padding: const EdgeInsets.all(12),
@@ -42,7 +45,10 @@ class _OptionWidgetState extends State<OptionWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Flexible(child: Text(widget.option.text,)),
+            Flexible(
+                child: Text(
+              widget.option.text,
+            )),
             _getIcon(),
           ],
         ),

@@ -12,19 +12,11 @@ class WordsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: _buildFilters(context),
-        ),
-        const Divider(),
-        Flexible(
-          child: _buildList(),
-        ),
-      ],
-    );
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Padding(padding: const EdgeInsets.only(top: 8.0), child: _buildFilters(context)),
+      const Divider(),
+      Flexible(child: _buildList()),
+    ]);
   }
 
   LayoutBuilder _buildList() {
@@ -63,8 +55,7 @@ class WordsListScreen extends StatelessWidget {
         );
       }),
       const SizedBox(width: 4.0),
-      Consumer<SearchWordsProvider>(
-          builder: (BuildContext context, SearchWordsProvider search, _) {
+      Consumer<SearchWordsProvider>(builder: (BuildContext context, SearchWordsProvider search, _) {
         return FavoriteFilter(
           isChecked: search.selectedOnlyFavorite,
           onChangeHandle: () => search.onOnlyFavoriteChange(),

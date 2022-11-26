@@ -1,15 +1,13 @@
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/providers/words_provider.dart';
-import 'package:davar/src/utils/utils.dart' as utils;
+import 'package:davar/src/statistics_services/statistics_service.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum StatisticsProviderStatus { error, loading, success }
 
-class StatisticsProvider with ChangeNotifier {
-  StatisticsProvider(this._wordsProvider) {
-    // _prepare();
-  }
+class StatisticsProvider with ChangeNotifier, QuizStatisticsService, WordsStatisticsService {
+  StatisticsProvider(this._wordsProvider);
 
   final WordsProvider _wordsProvider;
 
@@ -25,102 +23,79 @@ class StatisticsProvider with ChangeNotifier {
 
   DavarStatistic get statistics => _statistics;
 
-  static String _getIsoDateString() {
-    // DateTime.now() -> 2014-02-15 08:57:47.812 oIso8601String() -> 2014-02-15T08:57:47.812
-    return DateTime.now().toIso8601String().split('T').first;
-  }
-
-  Future<DavarStatistic> loadStatistics() async {
-    List<Word> all = _wordsProvider.words;
-    _foundItemsNumber(all);
-    if (all.length >= 2) _foundMostLeastPoints(all);
-    final int quizScore = await _cashedHighestQuizScore();
-    _statistics = _statistics.copyWith(highestQuizScore: quizScore);
-    return _statistics;
-  }
-
+  // loads data stored in SharedPreferences
+  // fired when statistics screen is shown
   Future<DavarStatistic> loadPreviewsStatistics() async {
-    List<Word> all = _wordsProvider.words;
-    _foundItemsNumber(all);
-    if (all.length >= 2) _foundMostLeastPoints(all);
-    final int quizScore = await _cashedHighestQuizScore();
-    _statistics = _statistics.copyWith(highestQuizScore: quizScore);
-    return _statistics;
-  }
+    final int quizScore = await readHighestQuizScore();
+    final List<String> mostPoints = await readItemWithHighestPoints();
+    final List<String> leastPoints = await readItemWithLowestPoints();
+    final int words = await readWordsQuantity();
+    final int sentences = await readSentencesQuantity();
+    final String updateDate = await readUpdateDate();
 
-  void _foundItemsNumber(List<Word> list) {
-    List<Word> w = [];
-    List<Word> s = [];
-    for (Word item in list) {
-      if (item.isSentence == 0) {
-        w.add(item);
-      }
-      if (item.isSentence == 1) {
-        s.add(item);
-      }
-    }
-    _statistics = _statistics.copyWith(wordsNumber: w.length, sentencesNumber: s.length);
-  }
-
-  void _foundMostLeastPoints(List<Word> list) {
-    final List<Word> nl = list;
-    nl.sort((a, b) => a.points.compareTo(b.points)); // [a, b] and a < b
-      _statistics =
-          _statistics.copyWith(mostPointsWord: nl[nl.length - 1], leastPointsWord: nl[0]);
-
-  }
-
-  Future<int> _cashedHighestQuizScore() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? lastSavedScore = prefs.getInt(utils.AppConst.statisticsQuizHighestScore);
-    return lastSavedScore ?? 0;
-  }
-
-  Future<Word> _cashedItemWithHighestPoints() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String>? items =
-        prefs.getStringList(utils.AppConst.statisticsItemWithHighestPoints);
-    return const Word(catchword: 'c', id: -22, userId: -3, userTranslation: 'u');
-  }
-
-  Future<Word> _cashedItemWithLeastPoints() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<String>? items = prefs.getStringList(utils.AppConst.statisticsItemWithLeastPoints);
-    return const Word(catchword: 'cc', id: -25, userId: -3, userTranslation: 'u');
-  }
-}
-
-class DavarStatistic {
-  const DavarStatistic({
-    this.date = 'never',
-    this.wordsNumber = 0,
-    this.sentencesNumber = 0,
-    this.mostPointsWord,
-    this.leastPointsWord,
-    this.highestQuizScore = 0,
-  });
-
-  final String date;
-  final int wordsNumber;
-  final int sentencesNumber;
-  final Word? mostPointsWord;
-  final Word? leastPointsWord;
-  final int highestQuizScore;
-
-  DavarStatistic copyWith(
-      {String? date,
-      int? wordsNumber,
-      int? sentencesNumber,
-      Word? mostPointsWord,
-      Word? leastPointsWord,
-      int? highestQuizScore}) {
-    return DavarStatistic(
-      date: date ?? this.date,
-      wordsNumber: wordsNumber ?? this.wordsNumber,
-      sentencesNumber: sentencesNumber ?? this.sentencesNumber,
-      mostPointsWord: mostPointsWord ?? this.mostPointsWord,
-      leastPointsWord: leastPointsWord ?? this.leastPointsWord,
-      highestQuizScore: highestQuizScore ?? this.highestQuizScore,
+    return _statistics = DavarStatistic(
+      date: updateDate.isNotEmpty ? updateDate : '-',
+      wordsNumber: words,
+      sentencesNumber: sentences,
+      mostPointsWord: mostPoints,
+      leastPointsWord: leastPoints,
+      highestQuizScore: quizScore,
     );
+  }
+
+  // when refresh button is pressed
+  // collects data to save new DavarStatistic object in SharedPreferences.
+  // Don't replace highestQuizScore!
+  // updates _statistics field.
+  Future<DavarStatistic> refreshStatistics() async {
+    final String newDate = _getIsoDateString();
+    final DavarStatistic ds =
+        DavarStatistic(date: newDate, highestQuizScore: _statistics.highestQuizScore);
+    final DavarStatistic updated = await _setWordsRepositoryStatistics(ds);
+    // save fresh statistics
+    await _recordStatistics(updated)
+        .catchError((e) => false)
+        .timeout(const Duration(seconds: 3), onTimeout: () => false);
+    return _statistics = updated;
+  }
+
+  Future<DavarStatistic> _setWordsRepositoryStatistics(DavarStatistic st) async {
+    final List<Word> allFromDb = await _wordsProvider.readAllWords();
+    final int allFromDbQuantity = allFromDb.length;
+    DavarStatistic tempStats = st;
+    // found highest and least points
+    if (allFromDbQuantity < 2) {
+      const List<String> unavailable = ['unavailable', '0', '0'];
+      tempStats = tempStats.copyWith(mostPointsWord: unavailable, leastPointsWord: unavailable);
+    } else {
+      allFromDb.sort((a, b) => a.points.compareTo(b.points)); // [a, b] where a < b
+      final int lastIndex = allFromDbQuantity - 1;
+      final List<String> mostPoints = [
+        allFromDb[lastIndex].catchword,
+        '${allFromDb[lastIndex].points}',
+        '${allFromDb[lastIndex].id}'
+      ];
+      final List<String> leastPoints = [allFromDb[0].catchword, '${allFromDb[0].points}', '${allFromDb[0].id}'];
+      tempStats = tempStats.copyWith(mostPointsWord: mostPoints, leastPointsWord: leastPoints);
+    }
+    // founding words and sentences quantity
+    final int wq = allFromDb.where((e) => e.isSentence == 0).toList().length;
+    final int sq = allFromDbQuantity - wq;
+    tempStats = tempStats.copyWith(wordsNumber: wq, sentencesNumber: sq);
+    return tempStats;
+  }
+
+  Future<bool> _recordStatistics(DavarStatistic st) async {
+    final bool sd = await saveUpdateDate(st.date);
+    final bool shp = await saveItemWithHighestPoints(st.mostPointsWord);
+    final bool slp = await saveItemWithLowestPoints(st.leastPointsWord);
+    final bool swq = await saveWordsQuantity(st.wordsNumber);
+    final bool ssq = await saveSentencesQuantity(st.sentencesNumber);
+    return sd && shp && slp && swq && ssq;
+  }
+
+  static String _getIsoDateString() {
+    // oIso8601String() -> 2014-02-15T08:57:47.812
+    return DateTime.now().toIso8601String().split('T').first;
   }
 }

@@ -1,18 +1,32 @@
 import 'package:davar/src/providers/providers.dart';
+import 'package:davar/src/statistics_services/statistics_service.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class StatisticsScreen extends StatelessWidget {
+
+class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({Key? key}) : super(key: key);
 
   @override
+  State<StatisticsScreen> createState() => _StatisticsScreenState();
+}
+
+class _StatisticsScreenState extends State<StatisticsScreen> {
+
+  late Future<DavarStatistic>? _futureStatistics;
+  @override
+  void initState() {
+     _futureStatistics = Provider.of<StatisticsProvider>(context, listen: false).loadPreviewsStatistics();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    final WordsProvider wp = Provider.of<WordsProvider>(context);
+   /* final WordsProvider wp = Provider.of<WordsProvider>(context);
     return ChangeNotifierProvider<StatisticsProvider>(
         create: (context) => StatisticsProvider(wp),
-        builder: (context, _) {
+        builder: (context, _) {*/
           return Consumer<StatisticsProvider>(
               builder: (BuildContext context, StatisticsProvider sp, _) {
             switch (sp.status) {
@@ -27,13 +41,13 @@ class StatisticsScreen extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator.adaptive());
             }
           });
-        });
+       /* });*/
   }
 
   Widget _buildScreenBody(BuildContext context, StatisticsProvider sp) {
     return FutureBuilder<DavarStatistic>(
         initialData: const DavarStatistic(),
-        future: sp.loadStatistics(),
+        future:  _futureStatistics,
         builder: (context, snapshot) {
           final bool snapHasError = snapshot.hasError;
           ConnectionState connection = snapshot.connectionState;
@@ -52,30 +66,30 @@ class StatisticsScreen extends StatelessWidget {
     return _layoutBuilderWrapper([
       _buildUpdateCard(context, value: stats.date),
       _buildStatisticCard(context,
+          color: Colors.teal[300],
+          title: 'QUIZ SCORE',
+          subtitle: 'The highest quiz score.',
+          value: '${stats.highestQuizScore}'),
+      _buildStatisticCard(context,
           color: Colors.teal[100],
           title: 'WORDS',
           subtitle: 'The number of all your words.',
-          value: stats.wordsNumber.toString()),
+          value: '${stats.wordsNumber}'),
       _buildStatisticCard(context,
           color: Colors.teal[200],
           title: 'SENTENCES',
           subtitle: 'The number of all your sentences.',
-          value: stats.sentencesNumber.toString()),
-      _buildStatisticCard(context,
-          color: Colors.teal[300],
-          title: 'QUIZ SCORE',
-          subtitle: 'The highest quiz score.',
-          value: stats.highestQuizScore.toString()),
+          value: '${stats.sentencesNumber}'),
       _buildStatisticCard(context,
           color: Colors.teal[400],
-          title: 'THE BEST',
-          subtitle: 'The word or sentence with the highest number of points.',
-          value: stats.mostPointsWord?.catchword ?? ''),
+          title: 'BEST',
+          subtitle: 'Points: ${stats.mostPointsWord[1]}',
+          value: stats.mostPointsWord[0]),
       _buildStatisticCard(context,
           color: Colors.teal[500],
-          title: 'THE WEAKEST',
-          subtitle: 'The word or sentence with the lowest number of points.',
-          value: '${stats.leastPointsWord?.catchword} stats.leastPointsWord' ?? ''),
+          title: 'WEAKEST',
+          subtitle: 'Points: ${stats.leastPointsWord[1]}',
+          value: '${stats.leastPointsWord[0]} stats.leastPointsWord' ?? ''),
     ]);
   }
 
@@ -141,6 +155,8 @@ class StatisticsScreen extends StatelessWidget {
 
   Widget _buildUpdateCard(BuildContext context,
       {Color? color = Colors.white70, required String value}) {
+    // the value inside FittedBox(child: Text(value)) cannot be an empty String!
+    if(value.isEmpty) value = '--';
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -167,10 +183,15 @@ class StatisticsScreen extends StatelessWidget {
           FittedBox(child: Text(value)),
           Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
             const Text('Refresh:'),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.refresh)),
+            IconButton(onPressed: () => _refresh(), icon: const Icon(Icons.refresh)),
           ]),
         ],
       ),
     );
+  }
+  void _refresh() {
+    setState(() {
+      _futureStatistics = Provider.of<StatisticsProvider>(context, listen: false).refreshStatistics();
+    });
   }
 }
