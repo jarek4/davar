@@ -4,6 +4,7 @@ import 'package:davar/src/ui/navigation/navigation.dart';
 import 'package:davar/src/ui/onboarding/Onboarding.dart';
 import 'package:davar/src/ui/root_widget.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
+
 import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';

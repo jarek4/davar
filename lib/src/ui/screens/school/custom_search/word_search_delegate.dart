@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
@@ -59,7 +61,7 @@ class WordSearchDelegate extends SearchDelegate<Word?> {
     });
   }
 
-  ListView _buildItemsList(List<Word> data, Function onItemTap, bool isWaiting) {
+  ListView _buildItemsList(UnmodifiableListView<Word> data, Function onItemTap, bool isWaiting) {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: data.length,
@@ -87,17 +89,18 @@ class WordSearchDelegate extends SearchDelegate<Word?> {
         ),
         const Divider(height: 13.0, thickness: 1.4),
         Expanded(
-          child: _layoutBuilderWrapper(StreamBuilder<List<Word>?>(
+          child: _layoutBuilderWrapper(StreamBuilder<UnmodifiableListView<Word>?>(
             stream: provider.querySearch(query),
-            initialData: const [],
-            builder: (BuildContext context, AsyncSnapshot<List<Word>?> snapshot) {
+            initialData: UnmodifiableListView<Word>([]),
+            builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<Word>?> snapshot) {
               final bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
               if (isWaiting) return buildLoadingIndicator();
               if (snapshot.hasError) {
                 utils.showSnackBarInfo(context, msg: snapshot.error.toString());
               }
               if (!snapshot.hasData) return const Text('Maybe your word\'s list is empty 😯');
-              final List<Word> data = snapshot.data ?? [];
+              final UnmodifiableListView<Word> data =
+                  snapshot.data ?? UnmodifiableListView<Word>([]);
               if (data.isEmpty) return const Text('Nothing was found.');
               return _buildItemsList(data, _onResultTap, isWaiting);
             },
@@ -117,14 +120,14 @@ class WordSearchDelegate extends SearchDelegate<Word?> {
     if (hasErrorMsg) utils.showSnackBarInfo(context, msg: provider.errorMsg);
     return Container(
       alignment: Alignment.center,
-      child: _layoutBuilderWrapper(StreamBuilder<List<Word>?>(
+      child: _layoutBuilderWrapper(StreamBuilder<UnmodifiableListView<Word>?>(
         stream: provider.querySearch(query),
-        initialData: const [],
-        builder: (BuildContext context, AsyncSnapshot<List<Word>?> snapshot) {
+        initialData: UnmodifiableListView<Word>([]),
+        builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<Word>?> snapshot) {
           final bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
           if (snapshot.hasError) utils.showSnackBarInfo(context, msg: snapshot.error.toString());
           if (!snapshot.hasData) return const Text('Maybe your word\'s list is empty 😯');
-          final List<Word> data = snapshot.data ?? [];
+          final UnmodifiableListView<Word> data = snapshot.data ?? UnmodifiableListView<Word>([]);
           if (data.isEmpty) return _buildEmptyData();
           return _buildItemsList(data, _onSuggestionTap, isWaiting);
         },

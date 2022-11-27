@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:davar/src/data/local/database/db_consts.dart';
 import 'package:davar/src/data/models/models.dart';
@@ -87,10 +88,10 @@ class SearchWordsProvider with ChangeNotifier {
   // Stores the currently displayed items
   List<Word> _paginatedList = [];
 
-  final _controller = StreamController<List<Word>>.broadcast();
+  final _controller = StreamController<UnmodifiableListView<Word>>.broadcast();
 
-  Stream<List<Word>> get filteredWords async* {
-    yield _paginatedList;
+  Stream<UnmodifiableListView<Word>> get filteredWords async* {
+    yield UnmodifiableListView<Word>(_paginatedList);
     yield* _controller.stream;
   }
 
@@ -105,7 +106,7 @@ class SearchWordsProvider with ChangeNotifier {
     // _incrementListOffset(res.length); don't do that! it will skip _queryLimit number items
     _paginatedList = res;
     notifyListeners();
-    _controller.add(_paginatedList);
+    _controller.add(UnmodifiableListView<Word>(_paginatedList));
   }
 
   /// Mainly due to a change in list item, updates the list, without query to database.
@@ -117,7 +118,7 @@ class SearchWordsProvider with ChangeNotifier {
           .map((Word e) => e.id == item.id ? item : e)
           .toList();
       notifyListeners();
-      _controller.add(_paginatedList);
+      _controller.add(UnmodifiableListView<Word>(_paginatedList));
     } catch (e) {
       print(e);
     }
@@ -130,13 +131,13 @@ class SearchWordsProvider with ChangeNotifier {
     // else add found item at the beginning
     _paginatedList.removeWhere((e) => e.id == item.id);
     _paginatedList.insert(0, item);
-    _controller.add(_paginatedList);
+    _controller.add(UnmodifiableListView<Word>(_paginatedList));
   }
 
   /// Handle Search Delegate
-  Stream<List<Word>> querySearch(String query) async* {
+  Stream<UnmodifiableListView<Word>> querySearch(String query) async* {
     List<Word> res = await searchQuery(query);
-    yield res;
+    yield UnmodifiableListView<Word>(res);
   }
 
   Future<List<Word>> searchQuery(String queryValue) async {
@@ -174,7 +175,7 @@ class SearchWordsProvider with ChangeNotifier {
       _paginatedList = _removeDuplicates(tempList);
       _incrementListOffset(res.length);
       notifyListeners();
-      _controller.add(_paginatedList);
+      _controller.add(UnmodifiableListView<Word>(_paginatedList));
     } catch (e) {
       _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
       notifyListeners();
@@ -242,7 +243,7 @@ class SearchWordsProvider with ChangeNotifier {
       _paginatedList.removeWhere((element) => element.id == id);
       _listOffset = _listOffset - 1;
       notifyListeners();
-      _controller.add(_paginatedList);
+      _controller.add(UnmodifiableListView<Word>(_paginatedList));
     } catch (e) {
       _errorMsg = 'Some thing has happened 🥴\n The word was not deleted';
       notifyListeners();
@@ -257,7 +258,7 @@ class SearchWordsProvider with ChangeNotifier {
       _paginatedList =
           _paginatedList.map((e) => e.id == i.id ? e.copyWith(isFavorite: value) : e).toList();
       notifyListeners();
-      _controller.add(_paginatedList);
+      _controller.add(UnmodifiableListView<Word>(_paginatedList));
     } catch (e) {
       _errorMsg = 'Some thing has happened 🥴\n The word was not deleted';
       notifyListeners();

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_word_categories_repository.dart';
@@ -22,7 +24,8 @@ class CategoriesProvider with ChangeNotifier {
   List<WordCategory> _categories = [];
 
   /// do not use this to create search by WordCategories! Use filterCategories.
-  List<WordCategory> get categories => _categories;
+  // List<WordCategory> get categories => _categories;
+  UnmodifiableListView<WordCategory> get categories => UnmodifiableListView(_categories);
 
   /// use this to create search by WordCategories. Contains AppConst.allCategoriesFilter id:0, name: 'all'.
   List<WordCategory> get filterCategories => [utils.AppConst.allCategoriesFilter, ..._categories];
