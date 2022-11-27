@@ -28,9 +28,9 @@ class CategoriesProvider with ChangeNotifier {
   UnmodifiableListView<WordCategory> get categories => UnmodifiableListView(_categories);
 
   /// use this to create search by WordCategories. Contains AppConst.allCategoriesFilter id:0, name: 'all'.
-  List<WordCategory> get filterCategories => [utils.AppConst.allCategoriesFilter, ..._categories];
+  UnmodifiableListView<WordCategory> get filterCategories => UnmodifiableListView([utils.AppConst.allCategoriesFilter, ..._categories]);
 
-  List<String> get categoriesNames => _categories.map((e) => e.name).toList();
+  UnmodifiableListView<String> get categoriesNames => UnmodifiableListView(_categories.map((e) => e.name).toList());
 
   String _errorMsg = '';
 
