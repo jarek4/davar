@@ -89,52 +89,44 @@ class _OnboardingState extends State<Onboarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PageView.builder(
-            controller: _pageController,
-            onPageChanged: (index) => onPageChangeHandler(index),
-            itemCount: Onboarding.onBoardingSlides.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Onboarding.onBoardingSlides[index];
-            },
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                if (_isSlideIndicatorVisible)
-                  TextButton(
-                      onPressed: () =>
-                          _pageController.jumpToPage(Onboarding.onBoardingSlides.length - 1),
-                      child: const Text('Skip')),
-                if (_isSlideIndicatorVisible)
-                  SlidesIndicator(
-                    // slidesNumber: Onboarding.onBoardingSlides.length,
-                    slidesNumber: 3,
-                    currentPage: currentPageIndex.toDouble(),
-                  ),
-                if (_isSlideIndicatorVisible)
-                  TextButton(
-                    onPressed: () => _pageController.nextPage(
-                        duration: const Duration(microseconds: 700), curve: Curves.easeInOut),
-                    child: const Text('Next'),
-                  ),
-                if (currentPageIndex >= 2)
-                  Expanded(
-                    child: OnboardingBottomBar(
-                      leftBtnText: 'Register',
-                      rightBtnText: 'Login',
-                      leftBtnOnPressed: () => context.read<AuthProvider>().onRegisterRequest(),
-                      rightBtnOnPressed: () => context.read<AuthProvider>().onLoginRequest(),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      body: Stack(children: [
+        PageView.builder(
+          controller: _pageController,
+          onPageChanged: (index) => onPageChangeHandler(index),
+          itemCount: Onboarding.onBoardingSlides.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Onboarding.onBoardingSlides[index];
+          },
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            if (_isSlideIndicatorVisible)
+              TextButton(
+                  onPressed: () =>
+                      _pageController.jumpToPage(Onboarding.onBoardingSlides.length - 1),
+                  child: const Text('Skip')),
+            if (_isSlideIndicatorVisible)
+              SlidesIndicator(
+                slidesNumber: Onboarding.onBoardingSlides.length,
+                currentPage: currentPageIndex.toDouble(),
+              ),
+            if (_isSlideIndicatorVisible)
+              TextButton(
+                  onPressed: () => _pageController.nextPage(
+                      duration: const Duration(microseconds: 700), curve: Curves.easeInOut),
+                  child: const Text('Next')),
+            if (currentPageIndex >= 2)
+              Expanded(
+                  child: OnboardingBottomBar(
+                leftBtnText: 'Register',
+                rightBtnText: 'Login',
+                leftBtnOnPressed: () => context.read<AuthProvider>().onRegisterRequest(),
+                rightBtnOnPressed: () => context.read<AuthProvider>().onLoginRequest(),
+              )),
+          ]),
+        ),
+      ]),
     );
   }
 }

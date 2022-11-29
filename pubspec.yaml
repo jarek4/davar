@@ -46,6 +46,8 @@ flutter:
 
   assets:
     - .env
+    - assets/text/privacy_statement.txt
+    - assets/text/terms_of_use.txt
     # Add assets from the images directory to the application.
     - assets/images/logo_m.png
     - assets/images/logo_bg_s.jpg

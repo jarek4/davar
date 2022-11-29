@@ -4,4 +4,6 @@ class AssetsPath {
   static const onBoard3 = 'assets/images/onboarding3.jpg';
   static const davarLogoBackground = 'assets/images/logo_bg_s.jpg';
   static const davarLogo = 'assets/images/logo_m.png';
+  static const txtPrivacyStatement = 'assets/text/privacy_statement.txt';
+  static const txtTermsOfUse = 'assets/text/terms_of_use.txt';
 }

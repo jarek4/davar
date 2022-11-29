@@ -1,4 +1,5 @@
 import 'package:davar/src/data/models/models.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConst {
   static const int appVersionMajor = 0;
@@ -9,6 +10,8 @@ class AppConst {
   /// major.minor.tiny.build number
   static const String appVersionAsString =
       '$appVersionMajor.$appVersionMinor.$appVersionTiny.$appVersionBuildNumber';
+
+  static final String developerEmail = dotenv.env['DEV_EMAIL_FOR_CONTACT'] ?? '@';
 
   ///User emptyUser = User(email: 'empty', id: 1, authToken: null);
   ///When user is unauthenticated.
