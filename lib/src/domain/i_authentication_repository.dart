@@ -22,6 +22,10 @@ abstract class IAuthenticationRepository<T> {
 
   /// authenticate user with credentials stored in application. Throws Exception!
   Future<void> tryToAuthenticate();
+  /// Generally for forgot password. Throws Exception!
+  Future<T?> findUserByEmail(String email);
+  /// Throws Exception! Returns the number of changes made
+  Future<int> updateUser(T user);
 
   void dispose();
 }

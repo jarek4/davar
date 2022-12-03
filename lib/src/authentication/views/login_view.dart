@@ -1,4 +1,5 @@
 import 'package:davar/src/authentication/authentication.dart';
+import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -37,36 +38,36 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
         key: const Key('Login scaffold'),
         body: CustomScrollView(
-          key: const Key('Login CustomScrollView'),
-          controller: _controller,
-          slivers: [
-            SliverList(
-              delegate: SliverChildListDelegate([
-                Form(
-                  key: _loginFormKey,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 35.0, right: 35.0, top: 30.0),
-                    child: Center(
-                      child: Column(children: <Widget>[
-                        const Text('Welcome back',
-                            textAlign: TextAlign.center, style: TextStyle(fontSize: 18.0)),
-                        const SizedBox(height: 40.0),
-                        _emailField(context, 'Email'),
-                        const SizedBox(height: 8.0),
-                        _passwordField(context, 'Password'),
-                        const SizedBox(height: 20.0),
-                        _buildSubmitButton(),
-                        _buildForgotPasswordBtn(context),
-                        _buildSignUpBtn(context),
-                        _buildErrorInformation(),
-                      ]),
+            key: const Key('Login CustomScrollView'),
+            controller: _controller,
+            slivers: [
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  Form(
+                    key: _loginFormKey,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 35.0, right: 35.0, top: 30.0),
+                      child: Center(
+                        child: Column(children: <Widget>[
+                          const Text('Welcome back',
+                              textAlign: TextAlign.center, style: TextStyle(fontSize: 18.0)),
+                          const SizedBox(height: 40.0),
+                          _emailField(context, 'Email'),
+                          const SizedBox(height: 8.0),
+                          _passwordField(context, 'Password'),
+                          const SizedBox(height: 20.0),
+                          _buildSubmitButton(),
+                          _buildForgotPasswordBtn(context),
+                          _buildSignUpBtn(context),
+                          _buildErrorInformation(),
+                        ]),
+                      ),
                     ),
-                  ),
-                )
-              ]),
-            )
-          ],
-        ));
+                  )
+                ]),
+              )
+            ],
+          ));
   }
 
   Widget _passwordField(BuildContext context, String label) {
@@ -106,16 +107,34 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Padding _buildForgotPasswordBtn(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.symmetric(
-            // horizontal: MediaQuery.of(context).size.width * 28.0 / 100
-            horizontal: 2.0),
-        child: TextButton(
-          child: const Text('Forgot password?',
-              style: TextStyle(color: Colors.black54, fontSize: 10, fontStyle: FontStyle.italic)),
-          onPressed: () => context.read<LoginProvider>().onForgotPassword(),
-        ));
+  Widget _buildForgotPasswordBtn(BuildContext context) {
+    return Consumer<LoginProvider>(builder: (BuildContext context, LoginProvider lp, _) {
+      bool isLoading = lp.status == LoginStatus.submitting;
+      return Padding(
+          padding: const EdgeInsets.symmetric(
+              // horizontal: MediaQuery.of(context).size.width * 28.0 / 100
+              horizontal: 2.0),
+          child: TextButton(
+              onPressed: isLoading ?  null : () => _forgotPasswordRequest(lp),
+              child: isLoading ? const CircularProgressIndicator() : const Text('Forgot password?',
+                  style: TextStyle(
+                      color: Colors.black54, fontSize: 10, fontStyle: FontStyle.italic))));
+    });
+  }
+
+  Future<void> _forgotPasswordRequest(LoginProvider lp) async {
+    lp.onForgotPassword().then((User? user) => _navigateToReset(user));
+  }
+
+  void _navigateToReset(User? u) {
+    if (u != null && u.id > 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ForgotPwdView(user: u)),
+      );
+    }
   }
 
   Padding _buildSignUpBtn(BuildContext context) {

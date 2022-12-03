@@ -169,6 +169,33 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       rethrow;
     }
   }
+  @override
+  Future<User?> findUserByEmail(String email) async {
+    try {
+      final List<Map<String, dynamic>?> res = await _localDB.selectUser(where: ['email'], values: [email]) as List<Map<String, dynamic>?>;
+      if (res.isEmpty) return null;
+      if(res.first == null || res.first!.isEmpty) return null;
+      final Map<String, dynamic> found = res.first!;
+      return User.fromJson(found);
+    } catch (e) {
+      print('AuthRepository-findUserByEmail($email). Exception: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<int> updateUser(User user) async {
+    try {
+      final List<dynamic> u = await _localDB.selectUser(where: ['id'], values: [user.id]);
+      print('AuthRepository-updateUser(.selectUser(where: [id:${user.id}] => $u');
+      if(u.isEmpty || u[0] == null) return 0;
+      final int res = await _localDB.updateUser(user.toJson(), user.id);
+     return res;
+    } catch (e) {
+      print('AuthRepository-updateUser($user). Exception: $e');
+      rethrow;
+    }
+  }
 
   @override
   Stream<User> get user async* {
@@ -178,4 +205,6 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
 
   @override
   void dispose() => _controller.close();
+
+
 }

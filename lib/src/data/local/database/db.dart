@@ -160,6 +160,8 @@ class DB {
     }
     return statement;
   }
+  Future<bool> databaseExists(String path) =>
+      databaseFactory.databaseExists(path);
  /* /// statement = 'name = ?, email = ?'
   String prepareRawLikeFilterFromArray(List<String> array, List<dynamic> args) {
     // array = ['email', 'name']; => statement = 'name = ?, email = ?'

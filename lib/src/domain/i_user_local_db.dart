@@ -12,10 +12,8 @@ abstract class IUserLocalDb<T> {
     required int id,
   });
 
-  // Future<int> update(T user);
+  /// Returns the number of changes made
+  Future<int> updateUser(T u, int userId);
 
   Future<int> deleteUser(int userId);
 }
-
-// Future<T> getByEmail(String userEmail);
-// Future<String> hasUser(String userEmail, String userPassword);

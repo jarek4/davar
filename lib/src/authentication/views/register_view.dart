@@ -17,7 +17,7 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _registerFormKye =
-      GlobalKey<FormState>(debugLabel: 'Register form narrow');
+      GlobalKey<FormState>(debugLabel: 'Register form');
   bool _isHidden = true;
   static const _passPattern2 = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{5,}$';
   static const _emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
@@ -147,28 +147,34 @@ class _RegisterViewState extends State<RegisterView> {
   Widget _buildMyLanguageDropdown(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 35),
-      child: LanguageDropdown<String>(
-          hintText: 'My language',
-          options: [...SupportedLanguages.names],
-          value: 'Türkçe',
-          onChanged: (String? newValue) =>
-              context.read<RegistrationProvider>().onNativeChange(newValue ?? 'English'),
-          getLabel: (String value) => value,
-          key: const Key('LanguageDropdown-My language')),
+      child: Consumer<RegistrationProvider>(
+          builder: (BuildContext context, RegistrationProvider provider, _) {
+          return LanguageDropdown<String>(
+              hintText: 'My language',
+              options: [...SupportedLanguages.names],
+              value: provider.native,
+              onChanged: (String? newValue) => provider.onNativeChange(newValue ?? 'English'),
+              getLabel: (String value) => value,
+              key: const Key('LanguageDropdown-My-language'));
+        }
+      ),
     );
   }
 
   Widget _buildWantLearnDropdown(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 35),
-      child: LanguageDropdown<String>(
-          hintText: 'I want to learn',
-          options: [...SupportedLanguages.names],
-          value: 'романи',
-          onChanged: (String? newValue) =>
-              context.read<RegistrationProvider>().onLearningChange(newValue ?? 'English'),
-          getLabel: (String value) => value,
-          key: const Key('LanguageDropdown-I want to learn')),
+      child: Consumer<RegistrationProvider>(
+    builder: (BuildContext context, RegistrationProvider provider, _) {
+          return LanguageDropdown<String>(
+              hintText: 'I want to learn',
+              options: [...SupportedLanguages.names],
+              value: provider.learning,
+              onChanged: (String? newValue) => provider.onLearningChange(newValue ?? 'English'),
+              getLabel: (String value) => value,
+              key: const Key('LanguageDropdown-I-want-to-learn'));
+        }
+      ),
     );
   }
 

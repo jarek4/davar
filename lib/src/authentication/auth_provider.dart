@@ -16,7 +16,6 @@ import '../data/models/models.dart';
 enum AuthenticationStatus {
   authenticated,
   error,
-  forgotPassword,
   loggedOut,
   login,
   register,
@@ -42,6 +41,8 @@ class AuthProvider with ChangeNotifier {
   User get user => _user;
 
   String get authenticationError => _errorMsg;
+
+  User? _forgotPasswordUserFound;
 
   void _onUserChange(User user) {
     final String m = 'AuthProvider _onUserChange [user.id: ${user.id}, user.name: ${user.name}]';
@@ -72,11 +73,6 @@ class AuthProvider with ChangeNotifier {
 
   void onRegisterRequest() {
     _status = AuthenticationStatus.register;
-    notifyListeners();
-  }
-
-  void onForgotPasswordRequest() {
-    _status = AuthenticationStatus.forgotPassword;
     notifyListeners();
   }
 
@@ -126,6 +122,29 @@ class AuthProvider with ChangeNotifier {
       _errorMsg = msg;
       _status = AuthenticationStatus.error;
       notifyListeners();
+    }
+  }
+
+  Future<int> updateUser(User u) async {
+    if (_errorMsg.isNotEmpty) {
+      _errorMsg = '';
+      notifyListeners();
+    }
+    try {
+      final int res = await _authRepository.updateUser(u);
+
+      /// TODO: delete delay
+      await Future.delayed(const Duration(seconds: 2), () {
+        print('delay 2 sec');
+      });
+      return res;
+    } catch (e) {
+      final String err = e.toString();
+      final String msg = 'User data was not updated.\n$err';
+      _errorMsg = msg;
+      _status = AuthenticationStatus.error;
+      notifyListeners();
+      return 0;
     }
   }
 

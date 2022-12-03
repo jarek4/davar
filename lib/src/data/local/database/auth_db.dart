@@ -100,6 +100,30 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
     }
   }
 
+  /// Returns the number of changes made
+  @override
+  Future<int> updateUser(Map<String, dynamic> u, int userId) async {
+    try {
+      final Database db = await instance.database;
+      final int res = await db.update(DbConsts.tableUsers, u, where: '${DbConsts.colId} = ?', whereArgs: [userId]);
+      return res;
+    } on DatabaseException catch (e, stackTrace) {
+      await ErrorsReporter.genericThrow(
+          e.toString(),
+          Exception(
+              'DatabaseException. DB class updateUser. userId $userId || values = $u'),
+          stackTrace: stackTrace);
+      throw Exception('User is not updated. Sorry!');
+    } catch (e, stackTrace) {
+      await ErrorsReporter.genericThrow(
+        e.toString(),
+        Exception('DB class rawUpdateUser()'),
+        stackTrace: stackTrace,
+      );
+      throw Exception('User is not updated. Sorry!');
+    }
+  }
+
   @override
 
   /// returns List of records as List<Map<String, dynamic>?>

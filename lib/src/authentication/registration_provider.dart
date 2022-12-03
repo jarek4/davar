@@ -19,9 +19,9 @@ class RegistrationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  String _learning = '';
+  String _learning = 'Türkçe';
   String _name = '';
-  String _native = '';
+  String _native = 'English';
   String _password = '';
   RegistrationStatus _status = RegistrationStatus.success;
 
@@ -46,12 +46,14 @@ class RegistrationProvider with ChangeNotifier {
   void onLearningChange(String learning) {
     if (_learning != learning) {
       _learning = learning;
+      notifyListeners();
     }
   }
 
   void onNameChange(String name) {
     if (_name != name) {
       _name = name;
+      notifyListeners();
     }
 
   }
@@ -59,12 +61,14 @@ class RegistrationProvider with ChangeNotifier {
   void onNativeChange(String native) {
     if (_native != native) {
       _native = native;
+      notifyListeners();
     }
   }
 
   void onPasswordChange(String password) {
     if (_password != password) {
       _password = password;
+      notifyListeners();
     }
   }
 
