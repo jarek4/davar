@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:davar/src/errors_reporter/errors_reporter.dart';
 import 'package:davar/src/utils/utils.dart';
@@ -18,8 +19,8 @@ class DB {
 
   Future<Database> get database async {
     if (_db != null) return _db!;
-    const String filePath = '${DbConsts.dbName}.db';
-    _db = await _initDB(filePath);
+    const String dbFileName = '${DbConsts.dbName}.db';
+    _db = await _initDB(dbFileName);
     return _db!;
   }
 
@@ -160,9 +161,76 @@ class DB {
     }
     return statement;
   }
-  Future<bool> databaseExists(String path) =>
-      databaseFactory.databaseExists(path);
- /* /// statement = 'name = ?, email = ?'
+
+  Future<bool> databaseExists(String path) => databaseFactory.databaseExists(path);
+
+  Future<String> restoreDatabaseFromFile(File source) async {
+    const String dbFileName = '${DbConsts.dbName}.db';
+    final String dbPath = await getDatabasesPath();
+    final String path = join(dbPath, dbFileName);
+    print('DB-restoreDatabaseFromFile(File:  ${source.path})');
+    try {
+      File copied = await source.copy(path);
+      final String copiedPath = copied.path;
+      return copiedPath;
+    } on DatabaseException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(),
+          Exception(
+              'DatabaseException. DB class restoreDatabaseFromFile(source.path: ${source.path})'));
+      throw Exception('It is not possible to copy file: ${source.path} to database');
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(),
+          Exception(
+              'FormatException. DB class restoreDatabaseFromFile(source.path: ${source.path})'));
+      throw Exception('The file: ${source.path} is a bad format');
+    } catch (e) {
+      print(e);
+      return 'not restored';
+    }
+  }
+
+  Future<String> copyDatabaseFileTo(Directory copyTo) async {
+    const String dbFileName = '${DbConsts.dbName}.db';
+    final String dbPath = await getDatabasesPath();
+    final String path = join(dbPath, dbFileName);
+    File databaseFile = File(path);
+    bool e = await databaseFile.exists();
+    print('source1 if exists: $e');
+    print('DB-copyDatabaseFileTo(File:  ${copyTo.path})');
+    try {
+      Directory newDirectory = await copyTo.create();
+      print('copyDatabaseFileTo newDirectory: ${newDirectory.toString()}');
+      String newPath = '${copyTo.path}/blaa.db';
+      await databaseFile.copy(newPath);
+      return 'copyDatabaseFileTo: ${copyTo.path} success';
+    } on DatabaseException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(),
+          Exception(
+              'DatabaseException. DB class copyDatabaseFileTo(Directory.path: ${copyTo.path})'));
+      throw Exception('It is not possible to copy to Directory: ${copyTo.path}');
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(),
+          Exception(
+              'FormatException. DB class copyDatabaseFileTo(Directory.path: ${copyTo.path})'));
+      throw Exception('It is not possible to copy to the Directory: ${copyTo.path}');
+    } catch (e) {
+      print(e);
+      return 'database copy not created!';
+    }
+  }
+
+  Future<String> getDatabasePathWithFileName() async {
+    const String dbFileName = '${DbConsts.dbName}.db';
+    final String dbPath = await getDatabasesPath();
+    final String path = join(dbPath, dbFileName);
+    return path;
+  }
+
+/* /// statement = 'name = ?, email = ?'
   String prepareRawLikeFilterFromArray(List<String> array, List<dynamic> args) {
     // array = ['email', 'name']; => statement = 'name = ?, email = ?'
     String statement = '';

@@ -10,8 +10,7 @@ environment:
   sdk: '>=2.18.0 <3.0.0'
 
 dependencies:
-  crypto: ^3.0.2
-  file_picker: ^5.0.1
+  file_picker: ^5.2.3
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.0.2
@@ -22,10 +21,10 @@ dependencies:
   json_annotation: ^4.6.0
   get_it: ^7.2.0
   path_provider: ^2.0.11
-  permission_handler: 9.2.0
+  permission_handler: ^10.2.0
   provider: ^6.0.3
   sentry_flutter: ^6.10.0
-  share_plus: ^4.0.10+1
+  share_plus: ^6.3.0
   shared_preferences: ^2.0.15
   sqflite: ^2.0.3+1
 

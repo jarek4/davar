@@ -1,10 +1,10 @@
 import 'package:davar/src/authentication/authentication.dart';
+import 'package:davar/src/backup/backup.dart';
 import 'package:davar/src/data/models/supported_languages/supported.dart';
 import 'package:davar/src/settings/settings_controller.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 30),
         key: const Key('More-SettingsScreen'),
         shrinkWrap: true,
-        children: [_buildThemeModeTile(), _buildLanguageTile(), _buildBackupTile()]);
+        children: [_buildThemeModeTile(), _buildLanguageTile(), _buildBackupTile(context)]);
   }
 
   Widget _buildThemeModeTile() {
@@ -99,7 +99,8 @@ class SettingsScreen extends StatelessWidget {
                   hint: const Text('App language'),
                   value: SupportedLanguages.list[2],
                   onChanged: (d) {},
-                  items: SupportedLanguages.list.map<DropdownMenuItem<DavarLanguage>>((DavarLanguage value) {
+                  items: SupportedLanguages.list
+                      .map<DropdownMenuItem<DavarLanguage>>((DavarLanguage value) {
                     return DropdownMenuItem<DavarLanguage>(
                         key: Key('DropdownMenuItem-$value'), value: value, child: Text(value.name));
                   }).toList(),
@@ -112,7 +113,7 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBackupTile() {
+  Widget _buildBackupTile(BuildContext context) {
     return ExpansionTile(
       leading: const Icon(Icons.restore),
       title: const Text('Backup'),
@@ -129,12 +130,21 @@ class SettingsScreen extends StatelessWidget {
               children: const [Text('Export backup copy'), Icon(Icons.cloud_upload_outlined)]),
         ),
         const Divider(thickness: 1.2, height: 12.0),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [Text('Import backup copy'), Icon(Icons.cloud_download)]),
-        ),
+        ChangeNotifierProvider<BackupProvider>(
+            create: (context) => BackupProvider(),
+            lazy: true,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                const Text('Import backup copy'),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => const BackupView()));
+                    },
+                    icon: const Icon(Icons.cloud_download))
+              ]),
+            )),
       ],
     );
   }
