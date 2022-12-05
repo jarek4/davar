@@ -4,9 +4,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:davar/src/errors_reporter/errors_reporter.dart';
-import 'package:davar/src/utils/utils.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as dart_path;
 import 'package:sqflite/sqflite.dart';
 
 import 'db_consts.dart';
@@ -19,22 +19,34 @@ class DB {
 
   Future<Database> get database async {
     if (_db != null) return _db!;
-    const String dbFileName = '${DbConsts.dbName}.db';
+    const String dbFileName = '${DbConsts.dbName}.db'; // davar_database.db
     _db = await _initDB(dbFileName);
     return _db!;
   }
 
+  // for iOS: Using path_provider is recommended to get the databases directory.
+
   Future<Database> _initDB(String filePath) async {
-    final String dbPath = await getDatabasesPath();
-    // dbPath = /data/user/0/com.example.test_two
-    final String path = join(dbPath, filePath);
-    //  path =  /data/user/0/com.example.test_two/databases/blaa.db
+     final String dbPath = await _getPath();
+    // old: dbPath = /data/user/0/com.example.app_name
+    final String path = dart_path.join(dbPath, filePath);
+    // old:  path =  /data/user/0/com.example.app_name/databases/db_name.db
     return await openDatabase(path,
         version: DbConsts.dbVersion,
         onConfigure: _onConfigure,
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
         onOpen: _onOpen);
+  }
+
+  Future<String> _getPath() async {
+   final String? path = await utils.GetDirectory.getDbPath();
+   print('DB path: $path');
+   if(path != null) return path;
+   final String dbPath = await getDatabasesPath();
+   print('DB path: $dbPath');
+   // Android: /data/user/0/com.example.davar/files
+   return dbPath;
   }
 
   _onConfigure(Database db) async {
@@ -47,7 +59,7 @@ class DB {
       await db.execute(DbConsts.createWordsTableStatement);
       await db.execute(DbConsts.createWordCategoriesTableStatement);
       // create common category [no category] in word_categories table
-      await db.insert(DbConsts.tableUsers, AppConst.emptyUser.toJson());
+      await db.insert(DbConsts.tableUsers, utils.AppConst.emptyUser.toJson());
       await db.insert(DbConsts.tableWordCategories, DbConsts.commonNoCategory);
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
@@ -166,9 +178,11 @@ class DB {
 
   Future<String> restoreDatabaseFromFile(File source) async {
     const String dbFileName = '${DbConsts.dbName}.db';
-    final String dbPath = await getDatabasesPath();
-    final String path = join(dbPath, dbFileName);
+    final String dbPath = await _getPath();
+    final String path = dart_path.join(dbPath, dbFileName);
     print('DB-restoreDatabaseFromFile(File:  ${source.path})');
+    // source.path :
+    // /storage/emulated/0/Android/data/com.example.davar/files/Davar/davar.db
     try {
       File copied = await source.copy(path);
       final String copiedPath = copied.path;
@@ -191,43 +205,16 @@ class DB {
     }
   }
 
-  Future<String> copyDatabaseFileTo(Directory copyTo) async {
-    const String dbFileName = '${DbConsts.dbName}.db';
-    final String dbPath = await getDatabasesPath();
-    final String path = join(dbPath, dbFileName);
-    File databaseFile = File(path);
-    bool e = await databaseFile.exists();
-    print('source1 if exists: $e');
-    print('DB-copyDatabaseFileTo(File:  ${copyTo.path})');
+  Future<String?> getDatabasePathWithFileName() async {
     try {
-      Directory newDirectory = await copyTo.create();
-      print('copyDatabaseFileTo newDirectory: ${newDirectory.toString()}');
-      String newPath = '${copyTo.path}/blaa.db';
-      await databaseFile.copy(newPath);
-      return 'copyDatabaseFileTo: ${copyTo.path} success';
-    } on DatabaseException catch (e) {
-      await ErrorsReporter.genericThrow(
-          e.toString(),
-          Exception(
-              'DatabaseException. DB class copyDatabaseFileTo(Directory.path: ${copyTo.path})'));
-      throw Exception('It is not possible to copy to Directory: ${copyTo.path}');
-    } on FormatException catch (e) {
-      await ErrorsReporter.genericThrow(
-          e.toString(),
-          Exception(
-              'FormatException. DB class copyDatabaseFileTo(Directory.path: ${copyTo.path})'));
-      throw Exception('It is not possible to copy to the Directory: ${copyTo.path}');
+      const String dbFileName = '${DbConsts.dbName}.db';
+      final String dbPath = await _getPath();
+      final String path = dart_path.join(dbPath, dbFileName);
+      return path;
     } catch (e) {
-      print(e);
-      return 'database copy not created!';
+      print('DB-getDatabasePathWithFileName ERROR: $e');
+      return null;
     }
-  }
-
-  Future<String> getDatabasePathWithFileName() async {
-    const String dbFileName = '${DbConsts.dbName}.db';
-    final String dbPath = await getDatabasesPath();
-    final String path = join(dbPath, dbFileName);
-    return path;
   }
 
 /* /// statement = 'name = ?, email = ?'

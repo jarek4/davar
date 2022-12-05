@@ -130,21 +130,18 @@ class SettingsScreen extends StatelessWidget {
               children: const [Text('Export backup copy'), Icon(Icons.cloud_upload_outlined)]),
         ),
         const Divider(thickness: 1.2, height: 12.0),
-        ChangeNotifierProvider<BackupProvider>(
-            create: (context) => BackupProvider(),
-            lazy: true,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                const Text('Import backup copy'),
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => const BackupView()));
-                    },
-                    icon: const Icon(Icons.cloud_download))
-              ]),
-            )),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            const Text('Import backup copy'),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => const BackupView()));
+                },
+                icon: const Icon(Icons.cloud_download))
+          ]),
+        ),
       ],
     );
   }
