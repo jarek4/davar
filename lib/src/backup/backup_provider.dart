@@ -20,7 +20,8 @@ class BackupProvider with ChangeNotifier {
   // iOS:
 
   static const String dbFileName = '${DbConsts.dbName}.db';
-  static const String backupFileName = 'davar_backup.db';
+  static const String backupFileName = 'davar_backup';
+  static const String backupFileExtension = '.db';
 
   BackupProviderStatus _status = BackupProviderStatus.success;
 
@@ -69,7 +70,7 @@ class BackupProvider with ChangeNotifier {
         final Directory? easyDir = await _tryToGetAndroidUserDirectory('storage/emulated/0/Davar');
         if (easyDir != null) {
           final String path = await _writeDbFile(easyDir);
-          _info = path;
+          _info = 'backup copy saved in this location:\n$path';
           notifyListeners();
           print('DB backup saved in: storage/emulated/0/Davar');
           return path;
@@ -77,7 +78,7 @@ class BackupProvider with ChangeNotifier {
         final Directory? dir = await utils.GetDirectory.getUserDirectory();
         if (dir == null) return 'Please check application permissions.';
         final String path = await _writeDbFile(dir);
-        print('DB backup saved in: $path');
+        print('DB backup saved in this location:\n$path');
         _info = path;
         notifyListeners();
         return path;
@@ -121,6 +122,9 @@ class BackupProvider with ChangeNotifier {
   }
 
   Future<String> _writeDbFile(Directory location) async {
+    final DateTime now = DateTime.now();
+    final String iso = now.toIso8601String().split('.').first;
+    final String timeStamp = iso.replaceAll(RegExp(r':'), '-');
     try {
       final String? bdPathAndName = await _localDB.getDatabasePathWithFileName();
       // database file path is null
@@ -133,7 +137,7 @@ class BackupProvider with ChangeNotifier {
       if (!isFile) {
         return 'No permission to get application files. File not found!';
       }
-      String newPath = '${location.path}/VV-test55_$backupFileName';
+      String newPath = '${location.path}/$backupFileName-$timeStamp$backupFileExtension';
       File copy = await bdSource.copy(newPath);
       return copy.path;
     } catch (e) {

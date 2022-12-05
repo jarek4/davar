@@ -125,40 +125,18 @@ class SettingsScreen extends StatelessWidget {
         const Divider(thickness: 1.2, height: 12.0),
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [Text('Export backup copy'), Icon(Icons.cloud_upload_outlined)]),
-        ),
-        const Divider(thickness: 1.2, height: 12.0),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            const Text('Import backup copy'),
+            const Text('Import/Export backup copy'),
             IconButton(
                 onPressed: () {
                   Navigator.push(
                       context, MaterialPageRoute(builder: (context) => const BackupView()));
                 },
-                icon: const Icon(Icons.cloud_download))
+                icon: const Icon(Icons.restore))
           ]),
         ),
       ],
     );
   }
 
-  void _showDialog(BuildContext context, String title, VoidCallback onConfirmation) {
-    showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: Text(title, textAlign: TextAlign.center),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-                  TextButton(onPressed: onConfirmation, child: const Text('OK'))
-                ],
-              ),
-            ));
-  }
 }
