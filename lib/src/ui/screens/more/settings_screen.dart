@@ -130,7 +130,7 @@ class SettingsScreen extends StatelessWidget {
             IconButton(
                 onPressed: () {
                   Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => const BackupView()));
+                      context, MaterialPageRoute(builder: (context) => const BackupView(), fullscreenDialog: true));
                 },
                 icon: const Icon(Icons.restore))
           ]),

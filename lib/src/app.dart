@@ -1,10 +1,10 @@
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/ui/navigation/navigation.dart';
 import 'package:davar/src/ui/onboarding/Onboarding.dart';
 import 'package:davar/src/ui/root_widget.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
-
 import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -29,11 +29,6 @@ class DavarApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // StreamProvider<User>(create: (_) => AuthenticationRepository().user, initialData: const User(),),
-        // ChangeNotifierProxyProvider<User, AuthProvider>(
-        //   create: (_) => AuthProvider(),
-        //   update: (_, user, authProvider) => authProvider!..handleUserRepositoryStream(user),
-        // ),
         ChangeNotifierProvider<SettingsController>.value(
           value: settingsController,
         ),
@@ -89,7 +84,15 @@ class DavarApp extends StatelessWidget {
               print('app.dart - provider.status: ${provider.status}');
               switch (provider.status) {
                 case AuthenticationStatus.authenticated:
-                  return const RootWidget();
+                  // WordsProvider need to be here because inside RootWidget, it is disposing
+                  // when navigate Navigator.push()!
+                  return ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
+                    create: (_) => WordsProvider(context.read<AuthProvider>().user),
+                    update: (_, auth, __) => WordsProvider(auth.user),
+                    builder: (BuildContext context, _) {
+                      return const RootWidget();
+                    },
+                  );
                 case AuthenticationStatus.error:
                   return _onAuthenticationError(provider.authenticationError, context);
                 case AuthenticationStatus.unauthenticated:

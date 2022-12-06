@@ -48,12 +48,18 @@ class _EditWordViewState extends State<EditWordView> {
                     Consumer<EditWordProvider>(
                         builder: (BuildContext context, EditWordProvider wep, _) {
                       String txt = wep.edited.catchword;
-                      return Text('temporary: $txt');
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                        child: Text('temporary: $txt'),
+                      );
                     }),
                     Consumer<EditWordProvider>(
                         builder: (BuildContext context, EditWordProvider wep, _) {
                       String txt = wep.edited.userTranslation;
-                      return Text('temporary: $txt');
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                        child: Text('temporary: $txt'),
+                      );
                     }),
                     buildHead(context),
                     const SizedBox(height: 10),
