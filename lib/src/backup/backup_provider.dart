@@ -90,6 +90,7 @@ class BackupProvider with ChangeNotifier {
         }
         // device file system accessible
         final File? writtenFile = await _writeDbFile(saveTo);
+        print('BP makeDatabaseFileCopy writtenFile.path => ${writtenFile?.path}');
         if (writtenFile == null) {
           // backup copy not saved!
           _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
@@ -101,6 +102,10 @@ class BackupProvider with ChangeNotifier {
         //permissions not granted!
         _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
         if (kDebugMode) print('BP makeDatabaseFileCopy permissions not granted!');
+      }
+    } on FileSystemException catch (e) {
+      if (kDebugMode) {
+        print('BackupProvider makeDatabaseFileCopy FileSystemException: $e');
       }
     } catch (e) {
       if (kDebugMode) print('BP makeDatabaseFileCopy E: $e');
@@ -118,6 +123,11 @@ class BackupProvider with ChangeNotifier {
       }
       // user easy-access folder inaccessible or iOS platform
       return await utils.GetDirectory.getUserAccessibleDirectory();
+    } on FileSystemException catch (e) {
+      if (kDebugMode) {
+        print('BackupProvider getDirectoryToSave FileSystemException: $e');
+      }
+      return null;
     } catch (e) {
       if (kDebugMode) print('BP getDirectoryToSave ERROR: $e');
       return null;
@@ -136,6 +146,11 @@ class BackupProvider with ChangeNotifier {
           if (await newDirectory.exists()) return newDirectory;
         }
       }
+    } on FileSystemException catch (e) {
+      if (kDebugMode) {
+        print('BackupProvider tryToGetAndroidDir FileSystemException: $e');
+      }
+      return null;
     } catch (e) {
       if (kDebugMode) {
         print('tryToGetAndroidUserDirectory $path ERROR: $e');
@@ -164,6 +179,7 @@ class BackupProvider with ChangeNotifier {
       }
       File bdSource = File(bdPathAndName);
       final bool isFile = await bdSource.exists();
+      print('writeDbFile bdSource.path: ${bdSource.path} --- exists() => $isFile');
       // database file was not found
       if (!isFile) {
         // return 'No permission to get application files. File not found!';
@@ -171,16 +187,22 @@ class BackupProvider with ChangeNotifier {
       }
       String newPath = '${location.path}/$_backupFileName-$timeStamp$_backupFileExtension';
       File copy = await bdSource.copy(newPath);
+      print('writeDbFile copy.path: ${copy.path}');
       return copy;
+    } on FileSystemException catch (e) {
+      if (kDebugMode) {
+        print('BackupProvider writeDbFile FileSystemException: $e');
+      }
+      return null;
     } catch (e) {
       if (kDebugMode) print('writeDbFile(Directory $location) E: $e');
-      // return 'Please check application permissions. Backup copy was not saved!';
       return null;
     }
   }
 
   void _handleStatusChange(BackupStatus status,
       {bool doNotify = true, String info = '', String err = ''}) {
+    print('handleStatusChange $status info: $info; E: $err');
     _error = err;
     _info = info;
     _status = status;

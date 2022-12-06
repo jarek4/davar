@@ -19,8 +19,6 @@ class WordItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final Brightness brightness = MediaQuery.of(context).platformBrightness;
-    // final bool isDarkMode = brightness == Brightness.dark;
     return Card(
       key: key,
       borderOnForeground: false,
@@ -113,7 +111,7 @@ class WordItem extends StatelessWidget {
                       : Icon(Icons.favorite_border_outlined, color: Colors.red.shade300))),
           Expanded(
               child: IconButton(
-                  onPressed: () => _onDeleteDialog(context, item.userTranslation),
+                  onPressed: () => _onDeleteDialog(context, item.catchword),
                   icon: const Icon(Icons.delete_forever),
                   iconSize: 18))
         ],

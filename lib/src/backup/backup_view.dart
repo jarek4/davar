@@ -17,11 +17,7 @@ class BackupView extends StatelessWidget {
             return Column(
               children: [
                 const SizedBox(height: 18.0),
-                Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
-                  return Text(state.info,
-                      style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
-                }),
-                const SizedBox(height: 18.0),
+                const Divider(thickness: 1.8, indent: 38.0, endIndent: 38.0),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   const Text('Import backup copy'),
                   Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider bp, _) {
@@ -41,7 +37,8 @@ class BackupView extends StatelessWidget {
                         icon: const Icon(Icons.cloud_upload_outlined));
                   })
                 ]),
-                const SizedBox(height: 18.0),
+                const SizedBox(height: 10.0),
+                const Divider(thickness: 1.8, indent: 38.0, endIndent: 38.0),
                 Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
                   if (state.status == BackupStatus.loading) {
                     return const Center(
@@ -51,9 +48,13 @@ class BackupView extends StatelessWidget {
                         style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
                   }
                 }),
-                const SizedBox(height: 18.0),
+                const SizedBox(height: 8.0),
                 Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
-                  return Text('Error: ${state.error}');
+                  if (state.status == BackupStatus.error) {
+                    return Text(state.error,
+                        style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
+                  }
+                  return const SizedBox.shrink();
                 }),
               ],
             );
@@ -65,7 +66,10 @@ class BackupView extends StatelessWidget {
     _showDialog(
       context,
       'Are you sure you want to overwrite all your data?',
-      () => context.read<BackupProvider>().restoreDatabaseFromFile(),
+      () {
+        context.read<BackupProvider>().restoreDatabaseFromFile();
+        Navigator.of(context).pop();
+      },
     );
   }
 
