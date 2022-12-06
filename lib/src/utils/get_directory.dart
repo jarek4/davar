@@ -4,29 +4,38 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart' as pp;
 
 class GetDirectory {
+  /// Android and iOS location
   static Future<String?> getDbPath() async {
-    final String? sd = await _getAppSupportDirectory();
-    if (sd != null) return sd;
-    final String? ad = await _getAppDocumentsDirectory();
-    return ad;
-  }
-  static Future<Directory?> getUserDirectory() async {
-    if (Platform.isAndroid) {
-     final Directory? forUser = await pp.getExternalStorageDirectory();
-     if(forUser == null) return null;
-     return forUser;
-    } else if (Platform.isIOS) {
-      return null;
-    }
-    return null;
+    final Directory? sd = await _getAppSupportDirectory();
+    // final String? sd = await _getAppSupportDirectory();
+    if (sd != null) return sd.path;
+    final Directory? ad = await _getAppDocumentsDirectory();
+    // final String? ad = await _getAppDocumentsDirectory();
+    return ad?.path;
   }
 
-  static Future<String?> _getAppSupportDirectory() async {
+  /// Android and iOS location
+  static Future<Directory?> getUserAccessibleDirectory() async {
+    Directory? dir;
+    try {
+      if (Platform.isIOS) return dir = await _getAppDocumentsDirectory();
+      if (Platform.isAndroid) {
+        final Directory? forUser = await pp.getExternalStorageDirectory();
+        if (forUser != null) return dir = forUser;
+        dir = await _getAppDocumentsDirectory();
+      }
+    } catch (e) {
+      if (kDebugMode) print('GetDbDirectory getUserDirectory E: $e');
+    }
+    return dir;
+  }
+
+  static Future<Directory?> _getAppSupportDirectory() async {
     try {
       Directory d = await pp.getApplicationSupportDirectory();
       // Android: /data/user/0/com.example.davar/files
-      if (await d.exists()) return d.path;
-      return d.path;
+      if (await d.exists()) return d;
+      return d;
     } on pp.MissingPlatformDirectoryException catch (e) {
       if (kDebugMode) {
         print('GetDbDirectory getAppSupportDirectory MissingPlatformDirectory: $e');
@@ -34,18 +43,18 @@ class GetDirectory {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('GetDbDirectory getAppSupportDirectory MissingPlatformDirectory: $e');
+        print('GetDbDirectory getAppSupportDirectory E: $e');
       }
       return null;
     }
   }
 
-  static Future<String?> _getAppDocumentsDirectory() async {
+  static Future<Directory?> _getAppDocumentsDirectory() async {
     try {
       Directory d = await pp.getApplicationDocumentsDirectory();
       print('GetDirectory AppDocumentsDirectory: ${d.path}');
-      if (await d.exists()) return d.path;
-      return d.path;
+      if (await d.exists()) return d;
+      return d;
     } on pp.MissingPlatformDirectoryException catch (e) {
       if (kDebugMode) {
         print('GetDbDirectory getAppDocumentsDirectory MissingPlatformDirectory: $e');
@@ -53,7 +62,7 @@ class GetDirectory {
       return null;
     } catch (e) {
       if (kDebugMode) {
-        print('GetDbDirectory getAppDocumentsDirectory MissingPlatformDirectory: $e');
+        print('GetDbDirectory getAppDocumentsDirectory E: $e');
       }
       return null;
     }

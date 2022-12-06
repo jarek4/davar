@@ -2,14 +2,13 @@ import 'dart:io';
 
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/local/database/db.dart';
-import 'package:davar/src/data/local/database/db_consts.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:permission_handler/permission_handler.dart';
 
-enum BackupProviderStatus { success, loading, error }
+enum BackupStatus { ready, loading, error }
 
 class BackupProvider with ChangeNotifier {
   final DB _localDB = locator<DB>();
@@ -19,13 +18,15 @@ class BackupProvider with ChangeNotifier {
   // /data/user/0/com.example.davar/files/${DbConsts.dbName}.db
   // iOS:
 
-  static const String dbFileName = '${DbConsts.dbName}.db';
-  static const String backupFileName = 'davar_backup';
-  static const String backupFileExtension = '.db';
+  static const String _backupFileName = 'davar_backup';
+  static const String _backupFileExtension = '.db';
+  static const String _androidEasyAccessPath = 'storage/emulated/0/Davar';
+  static const String _noPermissionInfo =
+      'Please check application permissions, or your device does not support this option.';
 
-  BackupProviderStatus _status = BackupProviderStatus.success;
+  BackupStatus _status = BackupStatus.ready;
 
-  BackupProviderStatus get status => _status;
+  BackupStatus get status => _status;
 
   String _error = '';
 
@@ -35,68 +36,97 @@ class BackupProvider with ChangeNotifier {
 
   String get info => _info;
 
-  Future<String> restoreDatabaseFromFile() async {
-    print('BackupProvider restoreDatabaseFromFile');
-    String info = 'Restore not tested';
+  Future<void> restoreDatabaseFromFile() async {
+    print('BP restoreDatabaseFromFile');
+    _handleStatusChange(BackupStatus.loading);
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-      if (result == null) return 'restoreDatabaseFromFile - no file!';
-      if (!result.isSinglePick) return 'restoreDatabaseFromFile - pick only one file!';
-      if (result.files.single.path == null) return 'restoreDatabaseFromFile - file path is bad!';
-      // check the file type:
-      final String extension = dart_path.extension(result.files.single.path!);
-      if (extension != '.db') {
-        _error = 'Bad file format!';
-        notifyListeners();
-        return 'Bad file format!';
-      }
-      File firstFile = File(result.files.single.path!);
+      if (!_verifyFile(result)) return;
+      File firstFile = File(result!.files.single.path!);
       String res = await _localDB.restoreDatabaseFromFile(firstFile);
-      info = 'Successfully Restored - res: $res';
+      _handleStatusChange(BackupStatus.ready, info: 'Successfully Restored - res: $res');
     } catch (e) {
-      print('BackupProvider restoreDatabaseFromFile ERROR: $e');
+      print('BP restoreDatabaseFromFile ERROR: $e');
+      _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
     }
-    return info;
   }
 
-  Future<String> makeDatabaseFileCopy() async {
+  bool _verifyFile(FilePickerResult? result) {
+    if (result == null) {
+      _handleStatusChange(BackupStatus.ready, info: 'No file');
+      return false;
+    }
+    if (!result.isSinglePick) {
+      _handleStatusChange(BackupStatus.ready, info: 'Pick up only one file!');
+      return false;
+    }
+    if (result.files.single.path == null) {
+      _handleStatusChange(BackupStatus.ready, info: 'File not found');
+      return false;
+    }
+    // check the file type:
+    final String extension = dart_path.extension(result.files.single.path!);
+    if (extension != _backupFileExtension) {
+      _handleStatusChange(BackupStatus.ready, info: 'Bad file format!');
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> makeDatabaseFileCopy() async {
     print('BP makeDatabaseFileCopy');
+    _handleStatusChange(BackupStatus.loading);
     try {
       final PermissionStatus status = await Permission.manageExternalStorage.status;
       if (!status.isGranted) await _grantPermissions();
       // second verification for permissions:
       if (await Permission.manageExternalStorage.request().isGranted) {
-        final Directory? easyDir = await _tryToGetAndroidUserDirectory('storage/emulated/0/Davar');
-        if (easyDir != null) {
-          final String path = await _writeDbFile(easyDir);
-          _info = 'backup copy saved in this location:\n$path';
-          notifyListeners();
-          print('DB backup saved in: storage/emulated/0/Davar');
-          return path;
+        // get directory to writ the backup file
+        final Directory? saveTo = await _getDirectoryToSave();
+        if (saveTo == null || !(await saveTo.exists())) {
+          // no access to the file system
+          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
+          return;
         }
-        final Directory? dir = await utils.GetDirectory.getUserDirectory();
-        if (dir == null) return 'Please check application permissions.';
-        final String path = await _writeDbFile(dir);
-        print('DB backup saved in this location:\n$path');
-        _info = path;
-        notifyListeners();
-        return path;
+        // device file system accessible
+        final File? writtenFile = await _writeDbFile(saveTo);
+        if (writtenFile == null) {
+          // backup copy not saved!
+          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
+        } else {
+          //saved
+          _handleStatusChange(BackupStatus.ready, info: 'Backup location:\n${writtenFile.path}');
+        }
+      } else {
+        //permissions not granted!
+        _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
+        if (kDebugMode) print('BP makeDatabaseFileCopy permissions not granted!');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('BP makeDatabaseFileCopy storage/emulated/0/Davar cannot be created! ERROR: $e');
-      }
-      _info = 'Directory not created! Please check application permissions';
-      notifyListeners();
-      return 'Directory not created!';
+      if (kDebugMode) print('BP makeDatabaseFileCopy E: $e');
+      _handleStatusChange(BackupStatus.error, err: 'Backup copy not saved');
     }
-    return 'Please check application permissions, or your system is not supported!';
   }
 
-  Future<Directory?> _tryToGetAndroidUserDirectory(String path) async {
-    final Directory copyTo = Directory('storage/emulated/0/Davar');
+  // finds platform specific user accessible directory
+  Future<Directory?> _getDirectoryToSave() async {
     try {
+      // android user easy-access folder
+      if (Platform.isAndroid) {
+        Directory? easyAccess = await _tryToGetAndroidDir(_androidEasyAccessPath);
+        if (easyAccess != null && await easyAccess.exists()) return easyAccess;
+      }
+      // user easy-access folder inaccessible or iOS platform
+      return await utils.GetDirectory.getUserAccessibleDirectory();
+    } catch (e) {
+      if (kDebugMode) print('BP getDirectoryToSave ERROR: $e');
+      return null;
+    }
+  }
+
+  Future<Directory?> _tryToGetAndroidDir(String path) async {
+    try {
+      final Directory copyTo = Directory(path);
       if (await Permission.manageExternalStorage.request().isGranted) {
         if (await copyTo.exists()) return copyTo;
       } else {
@@ -108,7 +138,7 @@ class BackupProvider with ChangeNotifier {
       }
     } catch (e) {
       if (kDebugMode) {
-        print('tryToGetAndroidUserDirectory storage/emulated/0/Davar ERROR: $e');
+        print('tryToGetAndroidUserDirectory $path ERROR: $e');
       }
     }
     return null;
@@ -121,28 +151,39 @@ class BackupProvider with ChangeNotifier {
     return false;
   }
 
-  Future<String> _writeDbFile(Directory location) async {
+  Future<File?> _writeDbFile(Directory location) async {
     final DateTime now = DateTime.now();
     final String iso = now.toIso8601String().split('.').first;
-    final String timeStamp = iso.replaceAll(RegExp(r':'), '-');
+    final String timeStamp = iso.replaceAll(RegExp(r'[:\-T]'), '');
     try {
       final String? bdPathAndName = await _localDB.getDatabasePathWithFileName();
       // database file path is null
       if (bdPathAndName == null) {
-        return 'No permission to get application files!';
+        // return 'No permission to get application files!';
+        return null;
       }
       File bdSource = File(bdPathAndName);
       final bool isFile = await bdSource.exists();
       // database file was not found
       if (!isFile) {
-        return 'No permission to get application files. File not found!';
+        // return 'No permission to get application files. File not found!';
+        return null;
       }
-      String newPath = '${location.path}/$backupFileName-$timeStamp$backupFileExtension';
+      String newPath = '${location.path}/$_backupFileName-$timeStamp$_backupFileExtension';
       File copy = await bdSource.copy(newPath);
-      return copy.path;
+      return copy;
     } catch (e) {
-      if (kDebugMode) print('writeDbFile(Directory $location): $e');
-      return 'Please check application permissions. Backup copy was not saved!';
+      if (kDebugMode) print('writeDbFile(Directory $location) E: $e');
+      // return 'Please check application permissions. Backup copy was not saved!';
+      return null;
     }
+  }
+
+  void _handleStatusChange(BackupStatus status,
+      {bool doNotify = true, String info = '', String err = ''}) {
+    _error = err;
+    _info = info;
+    _status = status;
+    if (doNotify) notifyListeners();
   }
 }

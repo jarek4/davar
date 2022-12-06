@@ -19,14 +19,15 @@ class BackupView extends StatelessWidget {
                 const SizedBox(height: 18.0),
                 Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
                   return Text(state.info,
-                      style: const TextStyle(fontSize: 18.0), textAlign: TextAlign.center);
+                      style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
                 }),
                 const SizedBox(height: 18.0),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   const Text('Import backup copy'),
                   Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider bp, _) {
+                    final bool isLoading = bp.status == BackupStatus.loading;
                     return IconButton(
-                        onPressed: () => _importHandle(context),
+                        onPressed: () => isLoading ? null : _importHandle(context),
                         icon: const Icon(Icons.cloud_download));
                   })
                 ]),
@@ -34,11 +35,22 @@ class BackupView extends StatelessWidget {
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   const Text('Export backup copy'),
                   Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider p, _) {
+                    final bool isLoading = p.status == BackupStatus.loading;
                     return IconButton(
-                        onPressed: () => p.makeDatabaseFileCopy(),
+                        onPressed: () => isLoading ? null : p.makeDatabaseFileCopy(),
                         icon: const Icon(Icons.cloud_upload_outlined));
                   })
                 ]),
+                const SizedBox(height: 18.0),
+                Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
+                  if (state.status == BackupStatus.loading) {
+                    return const Center(
+                        child: SizedBox(height: 30.0, child: CircularProgressIndicator.adaptive()));
+                  } else {
+                    return Text(state.info,
+                        style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
+                  }
+                }),
                 const SizedBox(height: 18.0),
                 Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
                   return Text('Error: ${state.error}');
