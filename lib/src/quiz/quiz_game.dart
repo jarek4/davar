@@ -25,6 +25,7 @@ class QuizGame extends StatelessWidget {
                 builder: (BuildContext context, QuizProvider provider, _) {
               switch (provider.status) {
                 case QuizProviderStatus.loading:
+                  print('QuizGame Consumer<QuizProvider> QuizProviderStatus.loading');
                   return const LinearLoadingWidget(info: 'Loading wait...');
                 case QuizProviderStatus.success:
                   if (provider.state.notPlayedIds.length < 3 && provider.state.isLocked) {

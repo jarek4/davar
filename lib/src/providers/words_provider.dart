@@ -160,6 +160,9 @@ class WordsProvider with ChangeNotifier {
       notifyListeners();
       print(e);
     }
+    _errorMsg = '';
+    _status = WordsProviderStatus.success;
+    notifyListeners();
   }
   /*Future<void> _fetchWords() async {
     print('WordsProvider _fetchWords()');
@@ -223,6 +226,13 @@ class WordsProvider with ChangeNotifier {
     _status = WordsProviderStatus.success;
     notifyListeners();
   }
+
+ /* void _handleStatusChange(WordsProviderStatus status, {bool doNotify = true, String info = ''}) {
+    _errorMsg = info;
+    _status = status;
+    if(doNotify) notifyListeners();
+  }*/
+
   @override
   void dispose(){
     print(' -- WORDS PROVIDER DISPOSE --');

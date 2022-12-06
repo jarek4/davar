@@ -12,13 +12,16 @@ class QuizScreen extends StatelessWidget {
     return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
       switch (provider.status) {
         case WordsProviderStatus.loading:
+          print('QuizScreen Consumer<WordsProvider> WordsProviderStatus.loading');
           return const LinearLoadingWidget(info: 'Loading wait...');
         case WordsProviderStatus.success:
           return _buildScreenBody(context, provider);
         case WordsProviderStatus.error:
+          print('QuizScreen Consumer<WordsProvider> WordsProviderStatus.error');
           String e = provider.wordsErrorMsg;
           return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? e : 'Error');
         default:
+          print('QuizScreen Consumer<WordsProvider> default');
           return const Center(child: CircularProgressIndicator.adaptive());
       }
     });
