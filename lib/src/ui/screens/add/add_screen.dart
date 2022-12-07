@@ -32,7 +32,7 @@ class AddScreen extends StatelessWidget {
               )),
               const SizedBox(height: 20),
               Expanded(
-                child: _buildMainContent(isWidthMore600, context),
+                child: _buildMainContent(isWidthMore600, constraints.maxHeight, context),
               ),
             ],
           ),
@@ -97,21 +97,25 @@ class AddScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMainContent(bool isWidthMore600, BuildContext context) {
-    return Wrap(
-        direction: isWidthMore600 ? Axis.horizontal : Axis.vertical,
-        spacing: 26.0,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        runAlignment: WrapAlignment.center,
-        children: [
-          // const Text('ADD NEW:', style: TextStyle(fontSize: 20)),
-          const SizedBox(height: 30),
-          _buildAddNewWord(context),
-          const SizedBox(height: 50),
-          _buildAddNewSentence(context),
-          // errors:
-          _handleErrorAndLoadingState()
-        ]);
+  Widget _buildMainContent(bool isWidthMore600, double maxH, BuildContext context) {
+    print('MAX HEIGHT: $maxH');
+    final bool isHeight = maxH > 680.0;
+    return Padding(
+      padding: EdgeInsets.only(top: isHeight ? 50.0 : 16.0),
+      child: Wrap(
+          direction: isWidthMore600 ? Axis.horizontal : Axis.vertical,
+          spacing: 76,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          runAlignment: WrapAlignment.center,
+          children: [
+            //SizedBox(height: isHeight ? 60 : 20),
+            _buildAddNewWord(context),
+            //SizedBox(height: isHeight ? 40 : 20),
+            _buildAddNewSentence(context),
+            // errors:
+            _handleErrorAndLoadingState()
+          ]),
+    );
   }
 
   Widget _buildAddNewWord(BuildContext context) {
