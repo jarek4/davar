@@ -1,0 +1,1 @@
+ /Users/jarek/development/davar/.dart_tool/flutter_gen/gen_l10n/app_localizations_en.dart /Users/jarek/development/davar/.dart_tool/flutter_gen/gen_l10n/app_localizations.dart:  /Users/jarek/development/davar/l10n.yaml /Users/jarek/development/davar/lib/src/localization/app_en.arb

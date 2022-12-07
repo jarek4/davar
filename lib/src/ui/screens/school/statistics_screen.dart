@@ -18,8 +18,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   void initState() {
-    _futureStatistics =
-        Provider.of<StatisticsProvider>(context, listen: false).loadPreviewsStatistics();
+    _futureStatistics = Provider.of<StatisticsProvider>(context, listen: false)
+        .loadPreviewsStatistics();
     super.initState();
   }
 
@@ -29,7 +29,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     return ChangeNotifierProvider<StatisticsProvider>(
         create: (context) => StatisticsProvider(wp),
         builder: (context, _) {*/
-    return Consumer<StatisticsProvider>(builder: (BuildContext context, StatisticsProvider sp, _) {
+    return Consumer<StatisticsProvider>(
+        builder: (BuildContext context, StatisticsProvider sp, _) {
       switch (sp.status) {
         case StatisticsProviderStatus.loading:
           return const LinearLoadingWidget(info: 'Loading wait...');
@@ -37,7 +38,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           return _buildScreenBody(context, sp);
         case StatisticsProviderStatus.error:
           String e = sp.errorMsg;
-          return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? e : 'Error');
+          return LinearLoadingWidget(
+              isError: true, info: e.isNotEmpty ? e : 'Error');
         default:
           return const Center(child: CircularProgressIndicator.adaptive());
       }
@@ -56,13 +58,15 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             return _buildContent(context, sp, snapshot);
           }
           if (snapHasError) {
-            return const LinearLoadingWidget(isError: true, info: 'Error occurs');
+            return const LinearLoadingWidget(
+                isError: true, info: 'Error occurs');
           }
           return const Center(child: CircularProgressIndicator.adaptive());
         });
   }
 
-  Widget _buildContent(BuildContext context, StatisticsProvider sp, AsyncSnapshot snap) {
+  Widget _buildContent(
+      BuildContext context, StatisticsProvider sp, AsyncSnapshot snap) {
     DavarStatistic stats = snap.data;
     return _layoutBuilderWrapper([
       _buildUpdateCard(context, value: stats.date),
@@ -96,7 +100,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   LayoutBuilder _layoutBuilderWrapper(List<Widget> children) {
     return LayoutBuilder(builder: (context, constraint) {
-      final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      final bool isPortrait =
+          MediaQuery.of(context).orientation == Orientation.portrait;
       return GridView.count(
         primary: false,
         padding: const EdgeInsets.all(15),
@@ -116,21 +121,23 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     required String subtitle,
     String value = '-',
   }) {
-    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
       decoration: BoxDecoration(
-        // color: color,
+        color: color.withOpacity(0.17),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 15,
-            offset: const Offset(0.5, 1.2),
-            blurStyle: BlurStyle.outer,
-          ),
-        ],
+        // on iOS BoxShadow makes little squer inside container
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: color.withOpacity(0.2),
+        //     spreadRadius: 1,
+        //     blurRadius: 15,
+        //     offset: const Offset(0.5, 1.2),
+        //     blurStyle: BlurStyle.outer,
+        //   ),
+        // ],
       ),
       padding: const EdgeInsets.all(8),
 
@@ -205,7 +212,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   void _refresh() {
     setState(() {
       _futureStatistics =
-          Provider.of<StatisticsProvider>(context, listen: false).refreshStatistics();
+          Provider.of<StatisticsProvider>(context, listen: false)
+              .refreshStatistics();
     });
   }
 }

@@ -32,7 +32,8 @@ class AddScreen extends StatelessWidget {
               )),
               const SizedBox(height: 20),
               Expanded(
-                child: _buildMainContent(isWidthMore600, context),
+                child: _buildMainContent(
+                    isWidthMore600, constraints.maxHeight, context),
               ),
             ],
           ),
@@ -43,7 +44,10 @@ class AddScreen extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context) => AppBar(
         title: Text('DAVAR',
-            style: Theme.of(context).textTheme.headline6?.copyWith(color: const Color(0XFF00695C))),
+            style: Theme.of(context)
+                .textTheme
+                .headline6
+                ?.copyWith(color: const Color(0XFF00695C))),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -83,35 +87,45 @@ class AddScreen extends StatelessWidget {
                   blurRadius: 18,
                   offset: Offset(isWidthMore600 ? 750 : 370, 0)),
             ]),
-        child: Stack(alignment: AlignmentDirectional.center, fit: StackFit.passthrough, children: [
-          Image.asset(utils.AssetsPath.davarLogoBackground, fit: BoxFit.fill),
-          Positioned(
-            //alignment: Alignment.topRight,
-            right: isHeightLess350 ? 12 : null,
-            top: isHeightLess350 ? 4 : null,
-            child: Image.asset(utils.AssetsPath.davarLogo,
-                fit: BoxFit.scaleDown, width: 70, height: 70),
-          ),
-        ]),
+        child: Stack(
+            alignment: AlignmentDirectional.center,
+            fit: StackFit.passthrough,
+            children: [
+              Image.asset(utils.AssetsPath.davarLogoBackground,
+                  fit: BoxFit.fill),
+              Positioned(
+                //alignment: Alignment.topRight,
+                right: isHeightLess350 ? 12 : null,
+                top: isHeightLess350 ? 4 : null,
+                child: Image.asset(utils.AssetsPath.davarLogo,
+                    fit: BoxFit.scaleDown, width: 70, height: 70),
+              ),
+            ]),
       ),
     );
   }
 
-  Widget _buildMainContent(bool isWidthMore600, BuildContext context) {
-    return Wrap(
-        direction: isWidthMore600 ? Axis.horizontal : Axis.vertical,
-        spacing: 26.0,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        runAlignment: WrapAlignment.center,
-        children: [
-          // const Text('ADD NEW:', style: TextStyle(fontSize: 20)),
-          const SizedBox(height: 30),
-          _buildAddNewWord(context),
-          const SizedBox(height: 50),
-          _buildAddNewSentence(context),
-          // errors:
-          _handleErrorAndLoadingState()
-        ]);
+  Widget _buildMainContent(
+      bool isWidthMore600, double maxH, BuildContext context) {
+    print('MAX HEIGHT: $maxH');
+    // iphone8 maxHeight = 611.0
+    final bool isHeight = maxH > 620.0;
+    return Padding(
+      padding: EdgeInsets.only(top: isHeight ? 50.0 : 16.0),
+      child: Wrap(
+          direction: isWidthMore600 ? Axis.horizontal : Axis.vertical,
+          spacing: 76,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          runAlignment: WrapAlignment.center,
+          children: [
+            //SizedBox(height: isHeight ? 60 : 20),
+            _buildAddNewWord(context),
+            //SizedBox(height: isHeight ? 40 : 20),
+            _buildAddNewSentence(context),
+            // errors:
+            _handleErrorAndLoadingState()
+          ]),
+    );
   }
 
   Widget _buildAddNewWord(BuildContext context) {
@@ -148,14 +162,17 @@ class AddScreen extends StatelessWidget {
           isSentence: isSentence,
           categories: categories,
           handleSubmit: onSubmit,
-          handleErrorMessage: (String v) => context.read<WordsProvider>().errorMsg = v,
+          handleErrorMessage: (String v) =>
+              context.read<WordsProvider>().errorMsg = v,
         ),
         'New Sentence');
   }
 
-  Widget _buildAddNewButton(BuildContext context, VoidCallback handle, {bool isSentence = false}) {
+  Widget _buildAddNewButton(BuildContext context, VoidCallback handle,
+      {bool isSentence = false}) {
     return Container(
-      constraints: const BoxConstraints(minWidth: 178, maxWidth: 200.0, minHeight: 70.0),
+      constraints:
+          const BoxConstraints(minWidth: 178, maxWidth: 200.0, minHeight: 70.0),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(20),
@@ -180,7 +197,8 @@ class AddScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         child: Container(
           color: Colors.grey[400],
-          constraints: const BoxConstraints(minWidth: 145, maxWidth: 150.0, minHeight: 70.0),
+          constraints: const BoxConstraints(
+              minWidth: 145, maxWidth: 150.0, minHeight: 70.0),
           child: MaterialButton(
             onPressed: handle,
             child: Text(isSentence ? _sentence : _word,
@@ -193,7 +211,8 @@ class AddScreen extends StatelessWidget {
     );
   }
 
-  Future<dynamic> _showAddWordDialog(BuildContext ctx, Widget alertContent, String title) =>
+  Future<dynamic> _showAddWordDialog(
+          BuildContext ctx, Widget alertContent, String title) =>
       showGeneralDialog(
         barrierColor: Colors.black.withOpacity(0.5),
         barrierDismissible: true,
@@ -211,7 +230,8 @@ class AddScreen extends StatelessWidget {
                 opacity: a1.value,
                 child: AlertDialog(
                   scrollable: true,
-                  shape: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0)),
+                  shape: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(16.0)),
                   title: Text(title),
                   content: alertContent,
                 ),
@@ -220,13 +240,16 @@ class AddScreen extends StatelessWidget {
       );
 
   Consumer<WordsProvider> _handleErrorAndLoadingState() {
-    return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
+    return Consumer<WordsProvider>(
+        builder: (BuildContext context, WordsProvider provider, _) {
       final bool hasErrorMsg = provider.wordsErrorMsg.isNotEmpty;
       if (hasErrorMsg) {
         utils.showSnackBarInfo(context, msg: provider.wordsErrorMsg);
       }
       switch (provider.status) {
         case WordsProviderStatus.error:
+
+          ///TODO: wrapp with Wraper
           return Text(provider.wordsErrorMsg);
         case WordsProviderStatus.loading:
           return const Text('Wait...');
