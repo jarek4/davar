@@ -8,14 +8,20 @@ class GetDirectory {
   static Future<String?> getDbPath() async {
     final Directory? sd = await _getAppSupportDirectory();
     // final String? sd = await _getAppSupportDirectory();
+    //print('GetDirectory DB PATH sd: $sd');
     if (sd != null) return sd.path;
     final Directory? ad = await _getAppDocumentsDirectory();
     // final String? ad = await _getAppDocumentsDirectory();
+    //print('GetDirectory DB PATH ad: $ad');
     return ad?.path;
   }
 
   /// Android and iOS location
   static Future<Directory?> getUserAccessibleDirectory() async {
+    Directory? d1 = await _getAppDocumentsDirectory();
+    print('GetDirectory AppDocumentsDirectory: ${d1?.path}');
+    Directory? d2 = await _getAppSupportDirectory();
+    print('GetDirectory AppSupportDirectory: ${d2?.path}');
     Directory? dir;
     try {
       if (Platform.isIOS) {
@@ -41,7 +47,7 @@ class GetDirectory {
       Directory d = await pp.getApplicationSupportDirectory();
       // Android: /data/user/0/com.example.davar/files
       if (await d.exists()) return d;
-      print('_getAppSupportDirectory: ${d.path}'.substring(0, 15));
+      print('_getAppSupportDirectory: ${d.path}');
       return d;
     } on pp.MissingPlatformDirectoryException catch (e) {
       if (kDebugMode) {
@@ -57,10 +63,12 @@ class GetDirectory {
     }
   }
 
+  // directory for the app to store files that only it can access.
+  // Android - AppData; iOS - NSDocumentDirectory.
   static Future<Directory?> _getAppDocumentsDirectory() async {
     try {
       Directory d = await pp.getApplicationDocumentsDirectory();
-      print('GetDirectory AppDocumentsDirectory: ${d.path}'.substring(0, 15));
+      print('GetDirectory AppDocumentsDirectory: ${d.path}');
       if (await d.exists()) return d;
       return d;
     } on pp.MissingPlatformDirectoryException catch (e) {
@@ -76,4 +84,23 @@ class GetDirectory {
       return null;
     }
   }
+  // static Future<Directory?> externalStorageDir() async {
+  //   try {
+  //     Directory? d = await pp.getExternalStorageDirectory();
+  //     print('GetDirectory AppDocumentsDirectory: ${d?.path}'.substring(0, 45));
+  //     if (d != null && await d.exists()) return d;
+  //     return d;
+  //   } on pp.MissingPlatformDirectoryException catch (e) {
+  //     if (kDebugMode) {
+  //       print(
+  //           'GetDbDirectory getAppDocumentsDirectory MissingPlatformDirectory: $e');
+  //     }
+  //     return null;
+  //   } catch (e) {
+  //     if (kDebugMode) {
+  //       print('GetDbDirectory getAppDocumentsDirectory E: $e');
+  //     }
+  //     return null;
+  //   }
+  // }
 }

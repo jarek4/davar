@@ -71,6 +71,7 @@ class BackupProvider with ChangeNotifier {
       _handleStatusChange(BackupStatus.ready, info: 'Bad file format!');
       return false;
     }
+    print('BP _verifyFile: ${result.paths}');
     return true;
   }
 
@@ -78,59 +79,46 @@ class BackupProvider with ChangeNotifier {
     print('BP makeDatabaseFileCopy');
     _handleStatusChange(BackupStatus.loading);
     try {
-      final PermissionStatus status =
+      // grant permissions
+      final PermissionStatus permissionsStatus =
           await Permission.manageExternalStorage.status;
-      if (Platform.isIOS) {
-        final Directory? saveTo = await _getDirectoryToSave();
-        print('BP iOScmakeDatabaseFileCopy saveTo.path => ${saveTo?.path}'
-            .substring(0, 15));
-        if (saveTo == null || !(await saveTo.exists())) {
-          // no access to the file system
-          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
-          return;
-        }
-        // device file system accessible
-        final File? writtenFile = await _writeDbFile(saveTo);
-        print(
-            'BP iOScmakeDatabaseFileCopy writtenFile.path => ${writtenFile?.path}'
-                .substring(0, 15));
-        if (writtenFile == null) {
-          // backup copy not saved!
-          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
-        } else {
-          //saved
-          _handleStatusChange(BackupStatus.ready,
-              info: 'Backup location:\n${writtenFile.path}');
-        }
+      if (!permissionsStatus.isGranted) await _grantPermissions();
+
+      // get directory to writ the backup file
+      final Directory? saveTo = await _getDirectoryToSave();
+      if (saveTo == null || !(await saveTo.exists())) {
+        // no access to the file system
+        _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
         return;
       }
-      if (!status.isGranted) await _grantPermissions();
-      // second verification for permissions:
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        // get directory to writ the backup file
-        final Directory? saveTo = await _getDirectoryToSave();
-        if (saveTo == null || !(await saveTo.exists())) {
-          // no access to the file system
-          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
-          return;
-        }
-        // device file system accessible
-        final File? writtenFile = await _writeDbFile(saveTo);
-        print(
-            'BP makeDatabaseFileCopy writtenFile.path => ${writtenFile?.path}');
-        if (writtenFile == null) {
-          // backup copy not saved!
-          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
-        } else {
-          //saved
-          _handleStatusChange(BackupStatus.ready,
-              info: 'Backup location:\n${writtenFile.path}');
-        }
-      } else {
+      // device file system accessible
+      final bool isWritten = await _saveBackupToDirectory(saveTo);
+
+      if (!isWritten && !permissionsStatus.isGranted) {
         //permissions not granted!
         _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
         if (kDebugMode)
           print('BP makeDatabaseFileCopy permissions not granted!');
+      }
+    } catch (e) {
+      if (kDebugMode) print('BP makeDatabaseFileCopy E: $e');
+      _handleStatusChange(BackupStatus.error, err: 'Backup copy not saved');
+    }
+  }
+
+  Future<bool> _saveBackupToDirectory(Directory saveTo) async {
+    try {
+      // device file system accessible
+      final File? writtenFile = await _writeDbFile(saveTo);
+      print('BP makeDatabaseFileCopy writtenFile.path => ${writtenFile?.path}');
+      if (writtenFile == null) {
+        // backup copy not saved!
+        _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
+        return false;
+      } else {
+        //saved
+        _handleStatusChange(BackupStatus.ready,
+            info: 'Backup location:\n${writtenFile.path}');
       }
     } on FileSystemException catch (e) {
       if (kDebugMode) {
@@ -140,6 +128,7 @@ class BackupProvider with ChangeNotifier {
       if (kDebugMode) print('BP makeDatabaseFileCopy E: $e');
       _handleStatusChange(BackupStatus.error, err: 'Backup copy not saved');
     }
+    return true;
   }
 
   // finds platform specific user accessible directory
@@ -190,10 +179,12 @@ class BackupProvider with ChangeNotifier {
   }
 
   Future<bool> _grantPermissions() async {
+    // iOS ExternalStorage is not granted!
     final PermissionStatus es =
         await Permission.manageExternalStorage.request();
-    final PermissionStatus ml = await Permission.accessMediaLocation.request();
-    if (es.isGranted && ml.isGranted) return true;
+    // iOS Storage is granted
+    final PermissionStatus s = await Permission.storage.request();
+    if (es.isGranted && s.isGranted) return true;
     return false;
   }
 
@@ -211,8 +202,8 @@ class BackupProvider with ChangeNotifier {
       }
       File bdSource = File(bdPathAndName);
       final bool isFile = await bdSource.exists();
-      print(
-          'writeDbFile bdSource.path: ${bdSource.path} --- exists() => $isFile');
+      // print(
+      //     'writeDbFile bdSource.path: ${bdSource.path} --- exists() => $isFile');
       // database file was not found
       if (!isFile) {
         // return 'No permission to get application files. File not found!';
@@ -221,7 +212,7 @@ class BackupProvider with ChangeNotifier {
       String newPath =
           '${location.path}/$_backupFileName-$timeStamp$_backupFileExtension';
       File copy = await bdSource.copy(newPath);
-      print('writeDbFile copy.path: ${copy.path}');
+      // print('writeDbFile copy.path: ${copy.path}');
       return copy;
     } on FileSystemException catch (e) {
       if (kDebugMode) {
