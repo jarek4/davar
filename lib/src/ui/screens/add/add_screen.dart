@@ -99,7 +99,8 @@ class AddScreen extends StatelessWidget {
 
   Widget _buildMainContent(bool isWidthMore600, double maxH, BuildContext context) {
     print('MAX HEIGHT: $maxH');
-    final bool isHeight = maxH > 680.0;
+    // iphone8 maxHeight=611.0; pixel4xl=764.5;
+    final bool isHeight = maxH > 620.0;
     return Padding(
       padding: EdgeInsets.only(top: isHeight ? 50.0 : 16.0),
       child: Wrap(

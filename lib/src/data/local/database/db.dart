@@ -46,6 +46,7 @@ class DB {
    final String dbPath = await getDatabasesPath();
    print('DB path: $dbPath');
    // Android: /data/user/0/com.example.davar/files
+   // iOS: /data/Containers/Data/Application/CA..6/Library/Application Support/davar_database.db
    return dbPath;
   }
 

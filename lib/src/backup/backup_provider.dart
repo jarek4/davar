@@ -17,6 +17,7 @@ class BackupProvider with ChangeNotifier {
   // Android:
   // /data/user/0/com.example.davar/files/${DbConsts.dbName}.db
   // iOS:
+  // /data/Containers/Data/Application/CA..6/Library/Application Support/${DbConsts.dbName}.db
 
   static const String _backupFileName = 'davar_backup';
   static const String _backupFileExtension = '.db';
@@ -77,31 +78,43 @@ class BackupProvider with ChangeNotifier {
     print('BP makeDatabaseFileCopy');
     _handleStatusChange(BackupStatus.loading);
     try {
-      final PermissionStatus status = await Permission.manageExternalStorage.status;
-      if (!status.isGranted) await _grantPermissions();
-      // second verification for permissions:
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        // get directory to writ the backup file
-        final Directory? saveTo = await _getDirectoryToSave();
-        if (saveTo == null || !(await saveTo.exists())) {
-          // no access to the file system
-          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
-          return;
-        }
-        // device file system accessible
-        final File? writtenFile = await _writeDbFile(saveTo);
-        print('BP makeDatabaseFileCopy writtenFile.path => ${writtenFile?.path}');
-        if (writtenFile == null) {
-          // backup copy not saved!
-          _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
-        } else {
-          //saved
-          _handleStatusChange(BackupStatus.ready, info: 'Backup location:\n${writtenFile.path}');
-        }
-      } else {
+      // grant permissions
+      final PermissionStatus permissionsStatus = await Permission.manageExternalStorage.status;
+      if (!permissionsStatus.isGranted) await _grantPermissions();
+
+      // get directory to writ the backup file
+      final Directory? saveTo = await _getDirectoryToSave();
+      if (saveTo == null || !(await saveTo.exists())) {
+        // no access to the file system
+        _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
+        return;
+      }
+      // device file system accessible
+      final bool isWritten = await _saveBackupToDirectory(saveTo);
+
+      if (!isWritten && !permissionsStatus.isGranted) {
         //permissions not granted!
         _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
         if (kDebugMode) print('BP makeDatabaseFileCopy permissions not granted!');
+      }
+    } catch (e) {
+      if (kDebugMode) print('BP makeDatabaseFileCopy E: $e');
+      _handleStatusChange(BackupStatus.error, err: 'Backup copy not saved');
+    }
+  }
+
+  Future<bool> _saveBackupToDirectory(Directory saveTo) async {
+    try {
+      // device file system accessible
+      final File? writtenFile = await _writeDbFile(saveTo);
+      print('BP makeDatabaseFileCopy writtenFile.path => ${writtenFile?.path}');
+      if (writtenFile == null) {
+        // backup copy not saved!
+        _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
+        return false;
+      } else {
+        //saved
+        _handleStatusChange(BackupStatus.ready, info: 'Backup location:\n${writtenFile.path}');
       }
     } on FileSystemException catch (e) {
       if (kDebugMode) {
@@ -111,6 +124,7 @@ class BackupProvider with ChangeNotifier {
       if (kDebugMode) print('BP makeDatabaseFileCopy E: $e');
       _handleStatusChange(BackupStatus.error, err: 'Backup copy not saved');
     }
+    return true;
   }
 
   // finds platform specific user accessible directory
@@ -161,8 +175,8 @@ class BackupProvider with ChangeNotifier {
 
   Future<bool> _grantPermissions() async {
     final PermissionStatus es = await Permission.manageExternalStorage.request();
-    final PermissionStatus ml = await Permission.accessMediaLocation.request();
-    if (es.isGranted && ml.isGranted) return true;
+    final PermissionStatus s = await Permission.storage.request();
+    if (es.isGranted && s.isGranted) return true;
     return false;
   }
 
@@ -172,27 +186,17 @@ class BackupProvider with ChangeNotifier {
     final String timeStamp = iso.replaceAll(RegExp(r'[:\-T]'), '');
     try {
       final String? bdPathAndName = await _localDB.getDatabasePathWithFileName();
-      // database file path is null
-      if (bdPathAndName == null) {
-        // return 'No permission to get application files!';
-        return null;
-      }
+      if (bdPathAndName == null) return null;
       File bdSource = File(bdPathAndName);
       final bool isFile = await bdSource.exists();
       print('writeDbFile bdSource.path: ${bdSource.path} --- exists() => $isFile');
-      // database file was not found
-      if (!isFile) {
-        // return 'No permission to get application files. File not found!';
-        return null;
-      }
+      if (!isFile) return null; // database file object not created!
       String newPath = '${location.path}/$_backupFileName-$timeStamp$_backupFileExtension';
       File copy = await bdSource.copy(newPath);
       print('writeDbFile copy.path: ${copy.path}');
       return copy;
     } on FileSystemException catch (e) {
-      if (kDebugMode) {
-        print('BackupProvider writeDbFile FileSystemException: $e');
-      }
+      if (kDebugMode) print('BackupProvider writeDbFile FileSystemException: $e');
       return null;
     } catch (e) {
       if (kDebugMode) print('writeDbFile(Directory $location) E: $e');

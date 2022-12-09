@@ -7,11 +7,11 @@ class GetDirectory {
   /// Android and iOS location
   static Future<String?> getDbPath() async {
     final Directory? sd = await _getAppSupportDirectory();
-    // final String? sd = await _getAppSupportDirectory();
     if (sd != null) return sd.path;
     final Directory? ad = await _getAppDocumentsDirectory();
-    // final String? ad = await _getAppDocumentsDirectory();
     return ad?.path;
+    // iOS: /data/Containers/Data/Application/CA..6/Library/Application Support/davar_database.db
+    // Android: /data/user/0/com.example.davar/files
   }
 
   /// Android and iOS location
@@ -31,9 +31,11 @@ class GetDirectory {
   }
 
   static Future<Directory?> _getAppSupportDirectory() async {
+    // iOS: /data/Containers/Data/Application/CA..6/Library/Application Support
+    // Android: /data/user/0/com.example.davar/files
     try {
       Directory d = await pp.getApplicationSupportDirectory();
-      // Android: /data/user/0/com.example.davar/files
+      // print('GetDbDirectory getAppSupportDirectory: $d.path');
       if (await d.exists()) return d;
       return d;
     } on pp.MissingPlatformDirectoryException catch (e) {
@@ -50,6 +52,7 @@ class GetDirectory {
   }
 
   static Future<Directory?> _getAppDocumentsDirectory() async {
+    // iOS: /data/Containers/Data/Application/CA..6/Documents -> Locations/on my iPhone/Davar/
     try {
       Directory d = await pp.getApplicationDocumentsDirectory();
       print('GetDirectory AppDocumentsDirectory: ${d.path}');
