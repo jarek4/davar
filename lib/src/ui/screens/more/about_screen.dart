@@ -1,4 +1,5 @@
 import 'package:davar/src/authentication/authentication.dart';
+import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/ui/screens/more/about/privacy_terms_provider.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
@@ -30,6 +31,10 @@ class AboutScreen extends StatelessWidget {
             key: const Key('More-AboutScreen'),
             shrinkWrap: true,
             children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 4.0, top: 2.0),
+                child: DavarAdBanner(key: Key('More-AboutScreen-top-banner-320')),
+              ),
               const SizedBox(height: 12.0),
               ListTile(
                 title: Row(

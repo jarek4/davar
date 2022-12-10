@@ -26,7 +26,7 @@ class WordsRepository implements IWordsRepository<Word> {
     asJson.remove('id');
     asJson[DbConsts.colCreated] = isoDate;
     try {
-      final int res = await _localDB.createWord(asJson);
+      final int res = await _localDB.createWord(asJson);      
       return res;
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),

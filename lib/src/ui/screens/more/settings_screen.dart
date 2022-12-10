@@ -1,6 +1,7 @@
 import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/backup/backup.dart';
 import 'package:davar/src/data/models/supported_languages/supported.dart';
+import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/settings/settings_controller.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -125,18 +126,27 @@ class SettingsScreen extends StatelessWidget {
         const Divider(thickness: 1.2, height: 12.0),
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            const Text('Import/Export backup copy'),
-            IconButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => const BackupView(), fullscreenDialog: true));
-                },
-                icon: const Icon(Icons.restore))
-          ]),
+          child: Column(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                const Text('Import/Export backup copy'),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const BackupView(), fullscreenDialog: true));
+                    },
+                    icon: const Icon(Icons.restore))
+              ]),
+              const Padding(
+                padding: EdgeInsets.only(top: 12.0),
+                child: DavarAdBanner(key: Key('More-SettingsScreen-backup-banner-320')),
+              )
+            ],
+          ),
         ),
       ],
     );
   }
-
 }

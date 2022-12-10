@@ -171,6 +171,22 @@ class MockLocalDb extends _i1.Mock
         returnValueForMissingStub: _i3.Future<int>.value(0),
       ) as _i3.Future<int>);
   @override
+  _i3.Future<int> updateUser(
+    Map<String, dynamic>? u,
+    int? userId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateUser,
+          [
+            u,
+            userId,
+          ],
+        ),
+        returnValue: _i3.Future<int>.value(0),
+        returnValueForMissingStub: _i3.Future<int>.value(0),
+      ) as _i3.Future<int>);
+  @override
   _i3.Future<int> deleteUser(int? userId) => (super.noSuchMethod(
         Invocation.method(
           #deleteUser,

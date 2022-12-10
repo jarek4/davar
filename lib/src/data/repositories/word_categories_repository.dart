@@ -1,9 +1,9 @@
-// ignore_for_file: avoid_print
-
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_word_categories_local_db.dart';
 import 'package:davar/src/domain/i_word_categories_repository.dart';
+import 'package:davar/src/errors_reporter/errors_reporter.dart';
+import 'package:flutter/foundation.dart';
 
 class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory> {
   final IWordCategoriesLocalDb _localDB = locator<IWordCategoriesLocalDb<Map<String, dynamic>>>();
@@ -19,10 +19,13 @@ class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory
       asJson.remove('id');
       int res = await _localDB.createWordCategory(asJson);
       return res;
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(e.toString(),
+          Exception('FormatException. WordCategoriesRepository create(category:$category)'));
     } catch (e) {
-      print('WordCategoriesRepository create ERROR: $e');
-      return 0;
+      if (kDebugMode) print('WordCategoriesRepository create ERROR: $e');
     }
+    return 0;
   }
 
   @override
@@ -32,10 +35,13 @@ class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory
     try {
       int res = await _localDB.deleteWordCategory(id);
       return res;
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(), Exception('FormatException. WordCategoriesRepository delete(id:$id)'));
     } catch (e) {
-      print('WordCategoriesRepository delete ERROR: $e');
-      return -1;
+      if (kDebugMode) print('WordCategoriesRepository delete ERROR: $e');
     }
+    return -1;
   }
 
   @override
@@ -46,22 +52,27 @@ class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory
     try {
       int res = await _localDB.updateWordCategory(category.toJson());
       return res;
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(e.toString(),
+          Exception('FormatException. WordCategoriesRepository update(category:$category)'));
     } catch (e) {
-      print('WordCategoriesRepository update ERROR: $e');
-      return -1;
+      if (kDebugMode) print('WordCategoriesRepository update ERROR: $e');
     }
+    return -1;
   }
 
   @override
   Future<WordCategory?> read(int id) async {
     try {
       Map<String, dynamic>? res = await _localDB.readWordCategory(id) as Map<String, dynamic>;
-      if (res.isEmpty) return null;
-      return WordCategory.fromJson(res);
+      if (res.isNotEmpty) return WordCategory.fromJson(res);
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(
+          e.toString(), Exception('FormatException. WordCategoriesRepository read(Id:$id)'));
     } catch (e) {
-      print('WordCategoriesRepository read ERROR: $e');
-      return null;
+      if (kDebugMode) print('WordCategoriesRepository read ERROR: $e');
     }
+    return null;
   }
 
   @override
@@ -73,9 +84,11 @@ class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory
       if (resp.isNotEmpty) {
         models = resp.map((element) => WordCategory.fromJson(element)).toList();
       }
+    } on FormatException catch (e) {
+      await ErrorsReporter.genericThrow(e.toString(),
+          Exception('FormatException. WordCategoriesRepository readAll(userId:$userId)'));
     } catch (e) {
-      print('WordCategoriesRepository readAll ERROR: $e');
-      return [];
+      if (kDebugMode) print('WordCategoriesRepository readAll ERROR: $e');
     }
     return models;
   }

@@ -49,12 +49,6 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
     notifyListeners();
     try {
       final int lastSavedScore = await _readLastQuizSavedScore();
-      //  -- -- TEST:
-      final List<Word> wordsTest = await _timer2().catchError((e) {
-        print('prepare _timer1 Error');
-        return <Word>[];
-      }).timeout(const Duration(seconds: 4), onTimeout: () => <Word>[]);
-      //  -- --
       final List<Word> words = await _wordsProvider.readAllWords().catchError((e) {
         print('readLastQuizSavedScore Error');
         return <Word>[];
@@ -259,12 +253,5 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
       _errorMsg = 'Total game score not saved!';
       notifyListeners();
     }
-  }
-
-  Future<List<Word>> _timer2() async {
-    await Future.delayed(const Duration(seconds: 2), () => print(' _timer2')).catchError((e) {
-      print(' _timer2 Error: \n$e');
-    });
-    return <Word>[];
   }
 }

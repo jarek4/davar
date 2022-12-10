@@ -1,4 +1,5 @@
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/ui/widgets/widgets.dart';
@@ -19,21 +20,26 @@ class AddScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: _buildAppBar(context),
       body: LayoutBuilder(builder: (context, constraints) {
+        // iPhone8: portrait-> maxH= ; maxW= , horizontal-> maxH= ; maxW= ;
+        // Pixel4xl: portrait-> maxH= 764.5; maxW= 411.4, horizontal-> maxH= 355.4; maxW= 771.7;
         final bool isWidthMore600 = constraints.maxWidth > 600;
-        final bool isHeightLess350 = constraints.maxHeight < 350;
+        final bool isHeightLess360 = constraints.maxHeight < 360;
+        print('MAX Width: ${constraints.maxWidth}');
         return Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Flexible(
                   child: _buildHeaderWithLogo(
                 isWidthMore600,
-                isHeightLess350,
+                isHeightLess360,
               )),
               const SizedBox(height: 20),
               Expanded(
                 child: _buildMainContent(isWidthMore600, constraints.maxHeight, context),
               ),
+               const DavarAdBanner(key: Key('AddScreen-bottom-banner-320'),)
             ],
           ),
         );

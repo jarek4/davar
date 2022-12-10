@@ -1,3 +1,4 @@
+import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/quiz/quiz.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
@@ -12,16 +13,13 @@ class QuizScreen extends StatelessWidget {
     return Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider provider, _) {
       switch (provider.status) {
         case WordsProviderStatus.loading:
-          print('QuizScreen Consumer<WordsProvider> WordsProviderStatus.loading');
           return const LinearLoadingWidget(info: 'Loading wait...');
         case WordsProviderStatus.success:
           return _buildScreenBody(context, provider);
         case WordsProviderStatus.error:
-          print('QuizScreen Consumer<WordsProvider> WordsProviderStatus.error');
           String e = provider.wordsErrorMsg;
           return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? e : 'Error');
         default:
-          print('QuizScreen Consumer<WordsProvider> default');
           return const Center(child: CircularProgressIndicator.adaptive());
       }
     });
@@ -77,7 +75,8 @@ class QuizScreen extends StatelessWidget {
           isMoreThen3words
               ? _buildStartBtn(context, provider)
               : _showLessThen3wordsNotification(context, sp.data.length),
-          const SizedBox(height: 15.0),
+          const SizedBox(height: 25.0),
+          const DavarAdBanner(key: Key('School-QuizScreen-bottom-banner-320')),
         ],
       ),
     ));

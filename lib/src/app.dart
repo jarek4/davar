@@ -12,18 +12,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'authentication/authentication.dart';
+import 'davar_ads/davar_ads.dart';
 import 'settings/settings_controller.dart';
 
 /// The Widget that configures your application.
 class DavarApp extends StatelessWidget {
-  const DavarApp({
+   DavarApp({
     super.key,
     required this.settingsController,
   });
 
   final SettingsController settingsController;
+  final Future<InitializationStatus> _initFuture = MobileAds.instance.initialize();
+  // final adState = AdState(_initFuture);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +43,7 @@ class DavarApp extends StatelessWidget {
         ChangeNotifierProvider<BottomNavigationController>(
             create: (_) => BottomNavigationController()),
         ChangeNotifierProvider<AppBarTabsController>(create: (_) => AppBarTabsController()),
+        Provider<AdState>.value(value: AdState(_initFuture)),
       ],
       child: AnimatedBuilder(
         animation: settingsController,

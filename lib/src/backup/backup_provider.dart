@@ -16,7 +16,7 @@ class BackupProvider with ChangeNotifier {
   // db directory:
   // Android:
   // /data/user/0/com.example.davar/files/${DbConsts.dbName}.db
-  // iOS:
+  // iOS simulator:
   // /data/Containers/Data/Application/CA..6/Library/Application Support/${DbConsts.dbName}.db
 
   static const String _backupFileName = 'davar_backup';
@@ -54,11 +54,11 @@ class BackupProvider with ChangeNotifier {
 
   bool _verifyFile(FilePickerResult? result) {
     if (result == null) {
-      _handleStatusChange(BackupStatus.ready, info: 'No file');
+      _handleStatusChange(BackupStatus.ready, info: 'No file selected');
       return false;
     }
     if (!result.isSinglePick) {
-      _handleStatusChange(BackupStatus.ready, info: 'Pick up only one file!');
+      _handleStatusChange(BackupStatus.ready, info: 'Select only one file!');
       return false;
     }
     if (result.files.single.path == null) {
@@ -174,7 +174,9 @@ class BackupProvider with ChangeNotifier {
   }
 
   Future<bool> _grantPermissions() async {
+    // iOS ExternalStorage is not granted!
     final PermissionStatus es = await Permission.manageExternalStorage.request();
+    // iOS Storage is granted
     final PermissionStatus s = await Permission.storage.request();
     if (es.isGranted && s.isGranted) return true;
     return false;

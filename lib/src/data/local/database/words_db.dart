@@ -13,6 +13,7 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
 
   /// Returns the id of the last inserted row.
   Future<int> createWord(Map<String, dynamic> word) async {
+    print('real WordsDb create(Word ${word['catchword']})');
     try {
       final Database db = await instance.database;
       final int newWordId = await db.insert(

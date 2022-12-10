@@ -1,7 +1,8 @@
 import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/providers/providers.dart';
-import 'package:davar/src/theme/theme.dart'as theme;
+import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/ui/screens/more/add_edit_word_category/add_edit_word_category.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -31,11 +32,15 @@ class ProfileScreen extends StatelessWidget {
     return ListView(
         padding: EdgeInsets.symmetric(horizontal: isLandscape ? 80 : 10),
         key: const Key('More-ProfileScreen-signed in'),
-        shrinkWrap: true,
+        // shrinkWrap: true,
         children: [
           OrientationBuilder(builder: (context, orientation) {
             final bool isLandscape = orientation == Orientation.landscape;
             return ListView(shrinkWrap: true, children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 4.0, top: 2.0),
+                child: DavarAdBanner(key: Key('More-ProfileScreen-top-banner-320')),
+              ),
               _buildWordCategoriesList(isLandscape),
             ]);
           }),
