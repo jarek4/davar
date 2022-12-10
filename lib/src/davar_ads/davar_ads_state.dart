@@ -18,24 +18,4 @@ class AdState {
   final String _iosBannerAdUnitId = dotenv.env['ADMOB_IOS_BANNER_UNIT_1_ID'] ?? _iosTest;
 
   String get bannerAdUnitId => Platform.isAndroid ? _androidTest : _iosTest;
-
-/*  BannerAdListener get adListener => _adListener;
-
-  final BannerAdListener _adListener = BannerAdListener(
-    // Called when an ad is successfully received.
-    onAdLoaded: (Ad ad) => print('BannerAdListener Ad loaded.'),
-    // Called when an ad request failed.
-    onAdFailedToLoad: (Ad ad, LoadAdError error) {
-      // Dispose the ad here to free resources.
-      ad.dispose();
-      print('BannerAdListener Ad failed to load: $error');
-    },
-    // Called when an ad opens an overlay that covers the screen.
-    onAdOpened: (Ad ad) => print('BannerAdListener Ad opened.'),
-    // Called when an ad removes an overlay that covers the screen.
-    onAdClosed: (Ad ad) => print('BannerAdListener Ad closed.'),
-    // Called when an impression occurs on the ad.
-    onAdImpression: (Ad ad) => print('BannerAdListener Ad impression.'),
-  );*/
-
 }

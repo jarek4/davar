@@ -24,7 +24,6 @@ class AddScreen extends StatelessWidget {
         // Pixel4xl: portrait-> maxH= 764.5; maxW= 411.4, horizontal-> maxH= 355.4; maxW= 771.7;
         final bool isWidthMore600 = constraints.maxWidth > 600;
         final bool isHeightLess360 = constraints.maxHeight < 360;
-        print('MAX Width: ${constraints.maxWidth}');
         return Padding(
           padding: const EdgeInsets.only(top: 20.0),
           child: Column(
@@ -39,7 +38,9 @@ class AddScreen extends StatelessWidget {
               Expanded(
                 child: _buildMainContent(isWidthMore600, constraints.maxHeight, context),
               ),
-               const DavarAdBanner(key: Key('AddScreen-bottom-banner-320'),)
+              const DavarAdBanner(
+                key: Key('AddScreen-bottom-banner-320'),
+              )
             ],
           ),
         );
@@ -48,8 +49,14 @@ class AddScreen extends StatelessWidget {
   }
 
   AppBar _buildAppBar(BuildContext context) => AppBar(
-        title: Text('DAVAR',
-            style: Theme.of(context).textTheme.headline6?.copyWith(color: const Color(0XFF00695C))),
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 18.0),
+          child: Text('DAVAR',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6
+                  ?.copyWith(color: Colors.white.withOpacity(0.33))),
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -104,7 +111,6 @@ class AddScreen extends StatelessWidget {
   }
 
   Widget _buildMainContent(bool isWidthMore600, double maxH, BuildContext context) {
-    print('MAX HEIGHT: $maxH');
     // iphone8 maxHeight=611.0; pixel4xl=764.5;
     final bool isHeight = maxH > 620.0;
     return Padding(
@@ -115,9 +121,7 @@ class AddScreen extends StatelessWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           runAlignment: WrapAlignment.center,
           children: [
-            //SizedBox(height: isHeight ? 60 : 20),
             _buildAddNewWord(context),
-            //SizedBox(height: isHeight ? 40 : 20),
             _buildAddNewSentence(context),
             // errors:
             _handleErrorAndLoadingState()

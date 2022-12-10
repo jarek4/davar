@@ -25,10 +25,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /* final WordsProvider wp = Provider.of<WordsProvider>(context);
-    return ChangeNotifierProvider<StatisticsProvider>(
-        create: (context) => StatisticsProvider(wp),
-        builder: (context, _) {*/
     return Consumer<StatisticsProvider>(builder: (BuildContext context, StatisticsProvider sp, _) {
       switch (sp.status) {
         case StatisticsProviderStatus.loading:
@@ -74,12 +70,12 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       _buildStatisticCard(context,
           color: theme.DavarColors.wordColors2[0],
           title: 'WORDS',
-          subtitle: 'The number of all your words.',
+          subtitle: 'All words.',
           value: '${stats.wordsNumber}'),
       _buildStatisticCard(context,
           color: theme.DavarColors.sentenceColors2[0],
           title: 'SENTENCES',
-          subtitle: 'The number of all your sentences.',
+          subtitle: 'All sentences.',
           value: '${stats.sentencesNumber}'),
       _buildStatisticCard(context,
           color: Colors.teal[400] ?? Colors.teal,
@@ -90,7 +86,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           color: Colors.teal[600] ?? Colors.teal,
           title: 'WEAKEST',
           subtitle: 'Points: ${stats.leastPointsWord[1]}',
-          value: '${stats.leastPointsWord[0]} stats.leastPointsWord' ?? ''),
+          value: stats.leastPointsWord[0]),
     ]);
   }
 

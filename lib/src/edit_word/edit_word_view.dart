@@ -1,5 +1,6 @@
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
+import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,22 +46,10 @@ class _EditWordViewState extends State<EditWordView> {
                 margin: const EdgeInsets.fromLTRB(30, 70, 30, 5),
                 child: Column(
                   children: [
-                    Consumer<EditWordProvider>(
-                        builder: (BuildContext context, EditWordProvider wep, _) {
-                      String txt = wep.edited.catchword;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                        child: Text('temporary: $txt'),
-                      );
-                    }),
-                    Consumer<EditWordProvider>(
-                        builder: (BuildContext context, EditWordProvider wep, _) {
-                      String txt = wep.edited.userTranslation;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                        child: Text('temporary: $txt'),
-                      );
-                    }),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
+                      child: SizedBox(height: 40.0 , child: Image.asset(AssetsPath.davarLogo)),
+                    ),
                     buildHead(context),
                     const SizedBox(height: 10),
                     _buildCatchwordField(),
