@@ -1,7 +1,6 @@
 import 'package:davar/src/errors_reporter/errors_reporter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'locator.dart';
 import 'src/app.dart';
@@ -13,6 +12,6 @@ void main() async {
   setupLocator();
   final settingsController = SettingsController();
   await settingsController.loadSettings();
-  // final Future<InitializationStatus> _initFuture = MobileAds.instance.initialize();
   await ErrorsReporter.setup(DavarApp(settingsController: settingsController));
+  // DavarApp(settingsController: settingsController);
 }

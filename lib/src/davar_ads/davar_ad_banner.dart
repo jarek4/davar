@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'davar_ads.dart';
 
@@ -56,15 +57,16 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final String support = AppLocalizations.of(context)?.clickAdToSupport ?? 'Support me!';
     if (_bottomBannerAd == null && !_isBottomAdLoaded) {
       return const SizedBox.shrink();
     } else {
       return Column(
         children: [
           SizedBox(height: 50, child: AdWidget(ad: _bottomBannerAd!)),
-          const Padding(
-            padding: EdgeInsets.only(bottom: 4.0, top: 2.0),
-            child: Text('Support my app by clicking this ad!', textAlign: TextAlign.center,),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0, top: 2.0),
+            child: Text('$support!', textAlign: TextAlign.center,),
           )
         ],
       );

@@ -1,0 +1,151 @@
+{
+  "@@locale": "en",
+  "addTranslation": "translation",
+  "@addTranslation": {
+    "description": "translation"
+  },
+  "authLearn": "you learn",
+  "@authLearn": {
+    "description": "you learn"
+  },
+  "authLogout": "Are you sure, you want to logout?",
+  "@authLogout": {
+    "description": "want to log out?"
+  },
+  "authName": "name",
+  "@authName": {},
+  "authYourLanguage": "your language",
+  "@authYourLanguage": {},
+  "clickAdToSupport": "Support my app by clicking this ad",
+  "@clickAdToSupport": {
+    "description": "click ad"
+  },
+  "delete": "delete",
+  "@delete": {},
+  "favorite": "Favorite",
+  "@favorite": {},
+  "fieldNotEmpty": "This field cannot be empty",
+  "@fieldNotEmpty": {
+    "description": "field cannt be empty"
+  },
+  "listAddListTop": "Which element you want to add at the beginning of the main list",
+  "@listAddListTop": {
+    "description": "elemet to add"
+  },
+  "listEmpty": "Maybe your word's list is empty",
+  "@listEmpty": {},
+  "listSearch": "search",
+  "@listSearch": {},
+  "loading": "Loading ... wait…",
+  "@loading": {
+    "description": "loading"
+  },
+  "moreAddCategory": "Add new category",
+  "@moreAddCategory": {},
+  "moreInfo": "more information",
+  "@moreInfo": {
+    "description": "info"
+  },
+  "moreManageCategories": "Manage categories. Add new one, delete or edit.",
+  "@moreManageCategories": {},
+  "newSentence": "New sentence",
+  "@newSentence": {
+    "description": "add new sentence"
+  },
+  "newWord": "New word",
+  "@newWord": {
+    "description": "add new word"
+  },
+  "noData": "Data is unavailable",
+  "@noData": {
+    "description": "no data"
+  },
+  "nothingFound": "Nothing was found",
+  "@nothingFound": {},
+  "pageAddClue": "clue",
+  "@pageAddClue": {},
+  "quizAddAtLeast": "Add at least: {num} more to play.",
+  "@quizAddAtLeast": {
+    "description": "add words number"
+  },
+  "quizAdded": "Until now you have been added {num} words",
+  "@quizAdded": {
+    "description": "until now numbers of words"
+  },
+  "quizHow": "how to play",
+  "@quizHow": {
+    "description": "how to play"
+  },
+  "quizManual1": "Your task is to choose the correct answer. You can win up to 3 points if your first choice is correct.  If you guess the second time you get 2 points.",
+  "@quizManual1": {
+    "description": "how to play quiz"
+  },
+  "quizManual2": "If you have added a clue to the word,  you will be able to use it. But it will takes 1 point. The number of the points of a particular word will be increased accordingly.",
+  "@quizManual2": {
+    "description": "how to play quiz"
+  },
+  "sentence": "sentence",
+  "@sentence": {
+    "description": "sentence"
+  },
+  "settingsBackup": "Backup",
+  "@settingsBackup": {},
+  "settingsBackupAttention": "Attention! If you import any data from a file, all current words and sentences will be replaced.",
+  "@settingsBackupAttention": {},
+  "settingsDark": "Dark theme",
+  "@settingsDark": {
+    "description": "dark mode"
+  },
+  "settingsExport": "Export backup copy",
+  "@settingsExport": {
+    "description": "backup copy"
+  },
+  "settingsExportTo": "You can export all your data to the file",
+  "@settingsExportTo": {
+    "description": "data to file"
+  },
+  "settingsImport": "Import backup copy",
+  "@settingsImport": {
+    "description": "backup copy"
+  },
+  "settingsLanguage": "Language",
+  "@settingsLanguage": {},
+  "settingsLight": "Light theme",
+  "@settingsLight": {
+    "description": "light mode"
+  },
+  "settingsMode": "Light/Dark mode",
+  "@settingsMode": {
+    "description": "light/dark theme"
+  },
+  "statsQuizScore": "The highest quiz score.",
+  "@statsQuizScore": {
+    "description": "quiz score"
+  },
+  "statsRefresh": "refresh",
+  "@statsRefresh": {
+    "description": "refresh"
+  },
+  "statsSentences": "all sentences",
+  "@statsSentences": {
+    "description": "all sentences"
+  },
+  "statsUpdate": "last update",
+  "@statsUpdate": {
+    "description": "last update"
+  },
+  "statsWords": "all words",
+  "@statsWords": {
+    "description": "words"
+  },
+  "tryAgain": "Try again",
+  "@tryAgain": {},
+  "wait": "Wait",
+  "@wait": {
+    "description": "wait"
+  },
+  "word": "word",
+  "@word": {
+    "description": "word"
+  }
+}

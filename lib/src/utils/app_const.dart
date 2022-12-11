@@ -2,6 +2,7 @@ import 'package:davar/src/data/models/models.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConst {
+  static const String appName = 'davar';
   static const int appVersionMajor = 0;
   static const int appVersionMinor = 0;
   static const int appVersionTiny = 1;

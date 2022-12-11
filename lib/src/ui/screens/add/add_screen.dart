@@ -5,14 +5,12 @@ import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class AddScreen extends StatelessWidget {
   const AddScreen({Key? key}) : super(key: key);
   static const routeName = '/add';
-
-  static const _word = 'Word';
-  static const _sentence = 'Sentence';
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +155,8 @@ class AddScreen extends StatelessWidget {
     required List<WordCategory> categories,
     required Function onSubmit,
   }) {
+    final String newS = AppLocalizations.of(context)?.newSentence ?? 'New sentence';
+    final String newW = AppLocalizations.of(context)?.newWord ?? 'New word';
     _showAddWordDialog(
         context,
         AddNewWordModal(
@@ -165,10 +165,12 @@ class AddScreen extends StatelessWidget {
           handleSubmit: onSubmit,
           handleErrorMessage: (String v) => context.read<WordsProvider>().errorMsg = v,
         ),
-        'New Sentence');
+        isSentence ? newS : newW);
   }
 
   Widget _buildAddNewButton(BuildContext context, VoidCallback handle, {bool isSentence = false}) {
+    final String word = utils.capitalize(AppLocalizations.of(context)?.word ?? 'Word');
+    final String sentence = utils.capitalize(AppLocalizations.of(context)?.sentence ?? 'Sentence');
     return Container(
       constraints: const BoxConstraints(minWidth: 178, maxWidth: 200.0, minHeight: 70.0),
       decoration: BoxDecoration(
@@ -198,7 +200,7 @@ class AddScreen extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: 145, maxWidth: 150.0, minHeight: 70.0),
           child: MaterialButton(
             onPressed: handle,
-            child: Text(isSentence ? _sentence : _word,
+            child: Text(isSentence ? sentence : word,
                 style: DefaultTextStyle.of(context)
                     .style
                     .copyWith(fontWeight: FontWeight.bold, fontSize: 20.0)),
@@ -244,7 +246,7 @@ class AddScreen extends StatelessWidget {
         case WordsProviderStatus.error:
           return Text(provider.wordsErrorMsg);
         case WordsProviderStatus.loading:
-          return const Text('Wait...');
+          return Text('${AppLocalizations.of(context)?.wait}...');
         default:
           return const SizedBox.shrink();
       }

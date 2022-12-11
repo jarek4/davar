@@ -16,6 +16,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'authentication/authentication.dart';
 import 'davar_ads/davar_ads.dart';
+import 'localization/l10n.dart';
 import 'settings/settings_controller.dart';
 
 /// The Widget that configures your application.
@@ -55,7 +56,7 @@ class DavarApp extends StatelessWidget {
             // background.
             scaffoldMessengerKey: scaffoldKey,
             restorationScopeId: 'app',
-            navigatorObservers: [SentryNavigatorObserver()],
+            //navigatorObservers: [SentryNavigatorObserver()],
 
             // Provide the generated AppLocalizations to the MaterialApp. This
             // allows descendant Widgets to display the correct translations
@@ -66,16 +67,16 @@ class DavarApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale('en', ''), // English, no country code
-            ],
+            supportedLocales: L10n.all,
+            // locale: const Locale('bg'),
 
             // Use AppLocalizations to configure the correct application title
             // depending on the user's locale.
             //
             // The appTitle is defined in .arb files found in the localization
             // directory.
-            onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+            // onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+            onGenerateTitle: (_) => AppConst.appName,
             theme: ThemeData(
               colorScheme: ColorScheme.fromSwatch(
                 primarySwatch: DavarColors.materialPrimarySwatch,

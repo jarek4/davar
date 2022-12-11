@@ -1,0 +1,151 @@
+{
+  "@@locale": "tr",
+  "addTranslation": "çeviri",
+  "@addTranslation": {
+    "description": "translation"
+  },
+  "authLearn": "sen öğrenirsin",
+  "@authLearn": {
+    "description": "you learn"
+  },
+  "authLogout": "Çıkış yapmak istediğinizden emin misiniz?",
+  "@authLogout": {
+    "description": "want to log out?"
+  },
+  "authName": "ad",
+  "@authName": {},
+  "authYourLanguage": "senin dilin",
+  "@authYourLanguage": {},
+  "clickAdToSupport": "Bu reklama tıklayarak uygulamamı destekleyin",
+  "@clickAdToSupport": {
+    "description": "click ad"
+  },
+  "delete": "silmek",
+  "@delete": {},
+  "favorite": "Favori",
+  "@favorite": {},
+  "fieldNotEmpty": "Bu alan boş olamaz",
+  "@fieldNotEmpty": {
+    "description": "field cannt be empty"
+  },
+  "listAddListTop": "Ana listenin başında eklemek istediğiniz öğeyi",
+  "@listAddListTop": {
+    "description": "elemet to add"
+  },
+  "listEmpty": "Belki kelime listeniz boştur",
+  "@listEmpty": {},
+  "listSearch": "arama",
+  "@listSearch": {},
+  "loading": "Yükleniyor... bekle...",
+  "@loading": {
+    "description": "loading"
+  },
+  "moreAddCategory": "Yeni kategori ekle",
+  "@moreAddCategory": {},
+  "moreInfo": "daha fazla bilgi",
+  "@moreInfo": {
+    "description": "info"
+  },
+  "moreManageCategories": "Kategorileri yönetin. Yeni bir tane ekleyin, silin veya düzenleyin.",
+  "@moreManageCategories": {},
+  "newSentence": "Yeni cümle",
+  "@newSentence": {
+    "description": "add new sentence"
+  },
+  "newWord": "Yeni kelime",
+  "@newWord": {
+    "description": "add new word"
+  },
+  "noData": "Veriler kullanılamıyor",
+  "@noData": {
+    "description": "no data"
+  },
+  "nothingFound": "Hiçbir şey bulunamadı",
+  "@nothingFound": {},
+  "pageAddClue": "ipucu",
+  "@pageAddClue": {},
+  "quizAddAtLeast": "En azından ekle: {num} oynamak için daha fazlası.",
+  "@quizAddAtLeast": {
+    "description": "add words number"
+  },
+  "quizAdded": "Şimdiye kadar {num}kelimeler eklediniz",
+  "@quizAdded": {
+    "description": "until now numbers of words"
+  },
+  "quizHow": "nasıl oynanır",
+  "@quizHow": {
+    "description": "how to play"
+  },
+  "quizManual1": "Göreviniz doğru cevabı seçmektir. İlk tercihiniz doğruysa 3 puana kadar kazanabilirsiniz. İkinci kez tahmin ederseniz 2 puan alırsınız.",
+  "@quizManual1": {
+    "description": "how to play quiz"
+  },
+  "quizManual2": "Kelimeye bir ipucu eklediyseniz, onu kullanabileceksiniz. Ama alacak 1 puan. Belirli bir kelimenin noktalarının sayısı buna göre artırılacaktır.",
+  "@quizManual2": {
+    "description": "how to play quiz"
+  },
+  "sentence": "cümle",
+  "@sentence": {
+    "description": "sentence"
+  },
+  "settingsBackup": "Yedekleme",
+  "@settingsBackup": {},
+  "settingsBackupAttention": "Dikkat! Bir dosyadan herhangi bir veri içe aktarırsanız, tüm geçerli kelimeler ve cümleler değiştirilecektir.",
+  "@settingsBackupAttention": {},
+  "settingsDark": "Karanlık tema",
+  "@settingsDark": {
+    "description": "dark mode"
+  },
+  "settingsExport": "Yedek kopyayı dışa aktar",
+  "@settingsExport": {
+    "description": "backup copy"
+  },
+  "settingsExportTo": "Tüm verilerinizi dosyaya aktarabilirsiniz",
+  "@settingsExportTo": {
+    "description": "data to file"
+  },
+  "settingsImport": "Yedek kopyayı içe aktarın",
+  "@settingsImport": {
+    "description": "backup copy"
+  },
+  "settingsLanguage": "Dil",
+  "@settingsLanguage": {},
+  "settingsLight": "Işık teması",
+  "@settingsLight": {
+    "description": "light mode"
+  },
+  "settingsMode": "Işık/Koyu modu",
+  "@settingsMode": {
+    "description": "light/dark theme"
+  },
+  "statsQuizScore": "En yüksek sınav puanı.",
+  "@statsQuizScore": {
+    "description": "quiz score"
+  },
+  "statsRefresh": "tazelemek",
+  "@statsRefresh": {
+    "description": "refresh"
+  },
+  "statsSentences": "tüm cümleler",
+  "@statsSentences": {
+    "description": "all sentences"
+  },
+  "statsUpdate": "son güncelleme",
+  "@statsUpdate": {
+    "description": "last update"
+  },
+  "statsWords": "tüm kelimeler",
+  "@statsWords": {
+    "description": "words"
+  },
+  "tryAgain": "Tekrar deneyin",
+  "@tryAgain": {},
+  "wait": "Bekle",
+  "@wait": {
+    "description": "wait"
+  },
+  "word": "sözcük",
+  "@word": {
+    "description": "word"
+  }
+}

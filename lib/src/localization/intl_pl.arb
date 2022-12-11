@@ -1,0 +1,151 @@
+{
+  "@@locale": "pl",
+  "addTranslation": "tłumaczenie",
+  "@addTranslation": {
+    "description": "translation"
+  },
+  "authLearn": "uczysz się",
+  "@authLearn": {
+    "description": "you learn"
+  },
+  "authLogout": "Czy na pewno chcesz się wylogować?",
+  "@authLogout": {
+    "description": "want to log out?"
+  },
+  "authName": "imię",
+  "@authName": {},
+  "authYourLanguage": "twój język",
+  "@authYourLanguage": {},
+  "clickAdToSupport": "Wesprzyj moją aplikację, klikając reklamę",
+  "@clickAdToSupport": {
+    "description": "click ad"
+  },
+  "delete": "usuń",
+  "@delete": {},
+  "favorite": "Ulubione",
+  "@favorite": {},
+  "fieldNotEmpty": "To pole nie może być puste",
+  "@fieldNotEmpty": {
+    "description": "field cannt be empty"
+  },
+  "listAddListTop": "Który element chcesz dodać na początek głównej listy",
+  "@listAddListTop": {
+    "description": "elemet to add"
+  },
+  "listEmpty": "Możliwe, że  lista twoich słów jest pusta",
+  "@listEmpty": {},
+  "listSearch": "szukaj",
+  "@listSearch": {},
+  "loading": "Ładuję… zaczekaj …",
+  "@loading": {
+    "description": "loading"
+  },
+  "moreAddCategory": "Dodaj kategorię",
+  "@moreAddCategory": {},
+  "moreInfo": "dodatkowa informacja",
+  "@moreInfo": {
+    "description": "info"
+  },
+  "moreManageCategories": "Kategorie. Dodaj, usuń lub edytuj.",
+  "@moreManageCategories": {},
+  "newSentence": "Nowe wyrażenie",
+  "@newSentence": {
+    "description": "add new sentence"
+  },
+  "newWord": "Nowe słówko",
+  "@newWord": {
+    "description": "add new word"
+  },
+  "noData": "Dane są niedostępne",
+  "@noData": {
+    "description": "no data"
+  },
+  "nothingFound": "Nic nie znaleziono",
+  "@nothingFound": {},
+  "pageAddClue": "wskazówka",
+  "@pageAddClue": {},
+  "quizAddAtLeast": "Dodaj co najmniej: {num} żeby móc grać",
+  "@quizAddAtLeast": {
+    "description": "add words number"
+  },
+  "quizAdded": "Do tej pory dodałeś{num} słówek",
+  "@quizAdded": {
+    "description": "until now numbers of words"
+  },
+  "quizHow": "na czym polega gra",
+  "@quizHow": {
+    "description": "how to play"
+  },
+  "quizManual1": "Twoim zadaniem jest wybrać poprawną odpowiedź. Możesz zdobyć 3 punkty, jeśli Twój pierwszy wybór jest prawidłowy. Jeśli zgadniesz za drugim razem, otrzymasz 2 punkty.",
+  "@quizManual1": {
+    "description": "how to play quiz"
+  },
+  "quizManual2": "Jeśli dodałeś wskazówkę do słowa, będziesz mógł jej użyć. Jednak odejmie Ci to 1 punkt. Liczba punktów danego słowa zostanie odpowiednio zwiększona.",
+  "@quizManual2": {
+    "description": "how to play quiz"
+  },
+  "sentence": "zdanie",
+  "@sentence": {
+    "description": "sentence"
+  },
+  "settingsBackup": "Kopia zapasowa",
+  "@settingsBackup": {},
+  "settingsBackupAttention": "Uwaga! Jeśli zaimportujesz jakiekolwiek dane z pliku, wszystkie bieżące słowa i zdania zostaną zastąpione.",
+  "@settingsBackupAttention": {},
+  "settingsDark": "Ciemny motyw",
+  "@settingsDark": {
+    "description": "dark mode"
+  },
+  "settingsExport": "Eksport kopi zapasowej",
+  "@settingsExport": {
+    "description": "backup copy"
+  },
+  "settingsExportTo": "Możesz wyeksportować wszystkie dane do pliku",
+  "@settingsExportTo": {
+    "description": "data to file"
+  },
+  "settingsImport": "Import z kopi zapasowej",
+  "@settingsImport": {
+    "description": "backup copy"
+  },
+  "settingsLanguage": "Język",
+  "@settingsLanguage": {},
+  "settingsLight": "Jasny motyw",
+  "@settingsLight": {
+    "description": "light mode"
+  },
+  "settingsMode": "Jasny/Ciemny tryb",
+  "@settingsMode": {
+    "description": "light/dark theme"
+  },
+  "statsQuizScore": "Najlepszy wynik z quizu",
+  "@statsQuizScore": {
+    "description": "quiz score"
+  },
+  "statsRefresh": "odświeżać",
+  "@statsRefresh": {
+    "description": "refresh"
+  },
+  "statsSentences": "wszystkie zdania",
+  "@statsSentences": {
+    "description": "all sentences"
+  },
+  "statsUpdate": "ostatnia aktualizacja",
+  "@statsUpdate": {
+    "description": "last update"
+  },
+  "statsWords": "wszystkie wyrazy",
+  "@statsWords": {
+    "description": "words"
+  },
+  "tryAgain": "Spróbuj ponownie",
+  "@tryAgain": {},
+  "wait": "Chwila",
+  "@wait": {
+    "description": "wait"
+  },
+  "word": "słówko",
+  "@word": {
+    "description": "word"
+  }
+}

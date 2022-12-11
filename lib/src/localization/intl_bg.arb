@@ -1,0 +1,151 @@
+{
+  "@@locale": "bg",
+  "addTranslation": "превод",
+  "@addTranslation": {
+    "description": "translation"
+  },
+  "authLearn": "учиш",
+  "@authLearn": {
+    "description": "you learn"
+  },
+  "authLogout": "Сигурни ли сте, че искате да излезете?",
+  "@authLogout": {
+    "description": "want to log out?"
+  },
+  "authName": "име",
+  "@authName": {},
+  "authYourLanguage": "вашият език",
+  "@authYourLanguage": {},
+  "clickAdToSupport": "Подкрепете приложението ми,  щракнете върху рекламаta",
+  "@clickAdToSupport": {
+    "description": "click ad"
+  },
+  "delete": "изтрий",
+  "@delete": {},
+  "favorite": "Лубими",
+  "@favorite": {},
+  "fieldNotEmpty": "Полето не може да бъде празно",
+  "@fieldNotEmpty": {
+    "description": "field cannt be empty"
+  },
+  "listAddListTop": "Кой елемент искате да добавите в началото на основния списък",
+  "@listAddListTop": {
+    "description": "elemet to add"
+  },
+  "listEmpty": "Списъкът с вашите думи изглежда празен",
+  "@listEmpty": {},
+  "listSearch": "търсене",
+  "@listSearch": {},
+  "loading": "Зарежда се... изчакайте…",
+  "@loading": {
+    "description": "loading"
+  },
+  "moreAddCategory": "Добавете нова категория",
+  "@moreAddCategory": {},
+  "moreInfo": "още информация",
+  "@moreInfo": {
+    "description": "info"
+  },
+  "moreManageCategories": "Управлявайте категориите си. Добавете нова, изтрийте или редактирайте.",
+  "@moreManageCategories": {},
+  "newSentence": "Ново изречение",
+  "@newSentence": {
+    "description": "add new sentence"
+  },
+  "newWord": "Нова думичка",
+  "@newWord": {
+    "description": "add new word"
+  },
+  "noData": "Данните са недостъпни",
+  "@noData": {
+    "description": "no data"
+  },
+  "nothingFound": "Нищо не е открито",
+  "@nothingFound": {},
+  "pageAddClue": "подсказване",
+  "@pageAddClue": {},
+  "quizAddAtLeast": "Добавете поне: {num} За да може да играете.",
+  "@quizAddAtLeast": {
+    "description": "add words number"
+  },
+  "quizAdded": "До сега сте добавили {num} думички",
+  "@quizAdded": {
+    "description": "until now numbers of words"
+  },
+  "quizHow": "как се играе",
+  "@quizHow": {
+    "description": "how to play"
+  },
+  "quizManual1": "Вашата задача е да изберете верния отговор. Можете да спечелите до 3 точки, ако първият ви избор е правилен. Ако познаете втория път, получавате 2 точки.",
+  "@quizManual1": {
+    "description": "how to play quiz"
+  },
+  "quizManual2": "Ако сте добавили подсказване към думата, ще можете да го използвате. Но това ще отнеме 1 точка. Броят на точките на определена дума ще бъде съответно увеличен.",
+  "@quizManual2": {
+    "description": "how to play quiz"
+  },
+  "sentence": "изречение",
+  "@sentence": {
+    "description": "sentence"
+  },
+  "settingsBackup": "Резервно копие",
+  "@settingsBackup": {},
+  "settingsBackupAttention": "Внимание! Ако импортирате данни от файл, всички текущи думи и изречения ще бъдат заменени.",
+  "@settingsBackupAttention": {},
+  "settingsDark": "Тъмна тема",
+  "@settingsDark": {
+    "description": "dark mode"
+  },
+  "settingsExport": "Експортиране на резервно копие",
+  "@settingsExport": {
+    "description": "backup copy"
+  },
+  "settingsExportTo": "Можете да експортирате всичките си данни във файла",
+  "@settingsExportTo": {
+    "description": "data to file"
+  },
+  "settingsImport": "Импортирайте от резервно копие",
+  "@settingsImport": {
+    "description": "backup copy"
+  },
+  "settingsLanguage": "Езикът",
+  "@settingsLanguage": {},
+  "settingsLight": "Светла тема",
+  "@settingsLight": {
+    "description": "light mode"
+  },
+  "settingsMode": "Светъл/тъмен режим",
+  "@settingsMode": {
+    "description": "light/dark theme"
+  },
+  "statsQuizScore": "Най-висок резултат от викторината.",
+  "@statsQuizScore": {
+    "description": "quiz score"
+  },
+  "statsRefresh": "опресняване",
+  "@statsRefresh": {
+    "description": "refresh"
+  },
+  "statsSentences": "всичките ви изречения",
+  "@statsSentences": {
+    "description": "all sentences"
+  },
+  "statsUpdate": "последно обновяване",
+  "@statsUpdate": {
+    "description": "last update"
+  },
+  "statsWords": "всичките ви думи",
+  "@statsWords": {
+    "description": "words"
+  },
+  "tryAgain": "Опитай пак",
+  "@tryAgain": {},
+  "wait": "Изчакайте",
+  "@wait": {
+    "description": "wait"
+  },
+  "word": "думичка",
+  "@word": {
+    "description": "word"
+  }
+}

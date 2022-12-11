@@ -1,5 +1,6 @@
 export 'assets_path.dart';
 export 'app_const.dart';
+export 'capitalize.dart';
 export 'get_directory.dart';
 export 'login_form_key.dart';
 export 'scaffold_key.dart';

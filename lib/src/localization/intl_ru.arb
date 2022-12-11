@@ -1,0 +1,151 @@
+{
+  "@@locale": "ru",
+  "addTranslation": "превод",
+  "@addTranslation": {
+    "description": "translation"
+  },
+  "authLearn": " учишь",
+  "@authLearn": {
+    "description": "you learn"
+  },
+  "authLogout": "Вы действительно хотите выйти?",
+  "@authLogout": {
+    "description": "want to log out?"
+  },
+  "authName": "имя",
+  "@authName": {},
+  "authYourLanguage": "ваш язык",
+  "@authYourLanguage": {},
+  "clickAdToSupport": "Поддержите мое приложение, нажав на эту рекламу!",
+  "@clickAdToSupport": {
+    "description": "click ad"
+  },
+  "delete": "удалить",
+  "@delete": {},
+  "favorite": "Любимый",
+  "@favorite": {},
+  "fieldNotEmpty": "Это поле не может быть пустым!",
+  "@fieldNotEmpty": {
+    "description": "field cannt be empty"
+  },
+  "listAddListTop": "Какой элемент вы хотите добавить в начало основного списка",
+  "@listAddListTop": {
+    "description": "elemet to add"
+  },
+  "listEmpty": "Возможно, ваш список слов пуст",
+  "@listEmpty": {},
+  "listSearch": "поиск",
+  "@listSearch": {},
+  "loading": "Загрузка... подождите...",
+  "@loading": {
+    "description": "loading"
+  },
+  "moreAddCategory": "Добавить новую категорию",
+  "@moreAddCategory": {},
+  "moreInfo": "дополнительная информация",
+  "@moreInfo": {
+    "description": "info"
+  },
+  "moreManageCategories": "Управляйте своими категориями. Добавить новый, удалить или изменить.",
+  "@moreManageCategories": {},
+  "newSentence": "Новое предложение",
+  "@newSentence": {
+    "description": "add new sentence"
+  },
+  "newWord": "Новое слово",
+  "@newWord": {
+    "description": "add new word"
+  },
+  "noData": "Данные недоступны",
+  "@noData": {
+    "description": "no data"
+  },
+  "nothingFound": "Ничего не было найдено",
+  "@nothingFound": {},
+  "pageAddClue": "подсказка",
+  "@pageAddClue": {},
+  "quizAddAtLeast": "Добавьте хотя бы: {num} больше, чтобы играть.",
+  "@quizAddAtLeast": {
+    "description": "add words number"
+  },
+  "quizAdded": "До сих пор вы были добавлены {num} слова",
+  "@quizAdded": {
+    "description": "until now numbers of words"
+  },
+  "quizHow": "как игратъ",
+  "@quizHow": {
+    "description": "how to play"
+  },
+  "quizManual1": "Ваша задача выбрать правильный ответ. Вы можете выиграть до 3 очков, если ваш первый выбор правильный. Если вы угадаете во второй раз, вы получите 2 очка.",
+  "@quizManual1": {
+    "description": "how to play quiz"
+  },
+  "quizManual2": "Если вы добавили ключ к слову, вы сможете его использовать. Но это займет 1 балл. Количество точек конкретного слова будет соответственно увеличено",
+  "@quizManual2": {
+    "description": "how to play quiz"
+  },
+  "sentence": "приговор",
+  "@sentence": {
+    "description": "sentence"
+  },
+  "settingsBackup": "Бэкап",
+  "@settingsBackup": {},
+  "settingsBackupAttention": "Внимание! Если вы импортируете какие-либо данные из файла, все текущие слова и предложения будут заменены.",
+  "@settingsBackupAttention": {},
+  "settingsDark": "Темный режим",
+  "@settingsDark": {
+    "description": "dark mode"
+  },
+  "settingsExport": "Экспорт резервной копии",
+  "@settingsExport": {
+    "description": "backup copy"
+  },
+  "settingsExportTo": "Вы можете экспортировать все свои данные в файл",
+  "@settingsExportTo": {
+    "description": "data to file"
+  },
+  "settingsImport": "Импортировать резервную копию",
+  "@settingsImport": {
+    "description": "backup copy"
+  },
+  "settingsLanguage": "Язык",
+  "@settingsLanguage": {},
+  "settingsLight": "Световой режим",
+  "@settingsLight": {
+    "description": "light mode"
+  },
+  "settingsMode": "Светлый/темный режим",
+  "@settingsMode": {
+    "description": "light/dark theme"
+  },
+  "statsQuizScore": "Самый высокий балл викторины.",
+  "@statsQuizScore": {
+    "description": "quiz score"
+  },
+  "statsRefresh": "обновить",
+  "@statsRefresh": {
+    "description": "refresh"
+  },
+  "statsSentences": "все предложения",
+  "@statsSentences": {
+    "description": "all sentences"
+  },
+  "statsUpdate": "последнее обновление",
+  "@statsUpdate": {
+    "description": "last update"
+  },
+  "statsWords": "все слова",
+  "@statsWords": {
+    "description": "words"
+  },
+  "tryAgain": "Попробуй снова",
+  "@tryAgain": {},
+  "wait": "Ждать",
+  "@wait": {
+    "description": "wait"
+  },
+  "word": "слово",
+  "@word": {
+    "description": "word"
+  }
+}
