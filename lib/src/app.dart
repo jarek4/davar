@@ -21,13 +21,14 @@ import 'settings/settings_controller.dart';
 
 /// The Widget that configures your application.
 class DavarApp extends StatelessWidget {
-   DavarApp({
+  DavarApp({
     super.key,
     required this.settingsController,
   });
 
   final SettingsController settingsController;
-  final Future<InitializationStatus> _initFuture = MobileAds.instance.initialize();
+  final Future<InitializationStatus> _initFuture =
+      MobileAds.instance.initialize();
   // final adState = AdState(_initFuture);
 
   @override
@@ -43,7 +44,8 @@ class DavarApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<BottomNavigationController>(
             create: (_) => BottomNavigationController()),
-        ChangeNotifierProvider<AppBarTabsController>(create: (_) => AppBarTabsController()),
+        ChangeNotifierProvider<AppBarTabsController>(
+            create: (_) => AppBarTabsController()),
         Provider<AdState>.value(value: AdState(_initFuture)),
       ],
       child: AnimatedBuilder(
@@ -68,7 +70,7 @@ class DavarApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: L10n.all,
-            // locale: const Locale('bg'),
+            locale: const Locale('bg'),
 
             // Use AppLocalizations to configure the correct application title
             // depending on the user's locale.
@@ -86,21 +88,25 @@ class DavarApp extends StatelessWidget {
             darkTheme: ThemeData.dark(),
             themeMode: settingsController.themeMode,
             // themeMode: ThemeMode.dark,
-            home: Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider provider, _) {
+            home: Consumer<AuthProvider>(
+                builder: (BuildContext context, AuthProvider provider, _) {
               print('app.dart - provider.status: ${provider.status}');
               switch (provider.status) {
                 case AuthenticationStatus.authenticated:
                   // WordsProvider need to be here because inside RootWidget, it is disposing
                   // when navigate Navigator.push()!
-                  return ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
-                    create: (_) => WordsProvider(context.read<AuthProvider>().user),
+                  return ChangeNotifierProxyProvider<AuthProvider,
+                      WordsProvider>(
+                    create: (_) =>
+                        WordsProvider(context.read<AuthProvider>().user),
                     update: (_, auth, __) => WordsProvider(auth.user),
                     builder: (BuildContext context, _) {
                       return const RootWidget();
                     },
                   );
                 case AuthenticationStatus.error:
-                  return _onAuthenticationError(provider.authenticationError, context);
+                  return _onAuthenticationError(
+                      provider.authenticationError, context);
                 case AuthenticationStatus.unauthenticated:
                   return const Onboarding();
                 case AuthenticationStatus.login:
@@ -108,12 +114,15 @@ class DavarApp extends StatelessWidget {
                       create: (_) => LoginProvider(), child: const LoginView());
                 case AuthenticationStatus.register:
                   return ChangeNotifierProvider<RegistrationProvider>(
-                      create: (_) => RegistrationProvider(), child: const RegisterView());
+                      create: (_) => RegistrationProvider(),
+                      child: const RegisterView());
                 case AuthenticationStatus.loggedOut:
                   return LoggedOutView(
-                      loginOnPressed: () => context.read<AuthProvider>().onLoginRequest());
+                      loginOnPressed: () =>
+                          context.read<AuthProvider>().onLoginRequest());
                 default:
-                  return _authenticationStatusUnknown(context, 'Trying to log you in... ');
+                  return _authenticationStatusUnknown(
+                      context, 'Trying to log you in... ');
               }
             }),
           );
@@ -122,7 +131,8 @@ class DavarApp extends StatelessWidget {
     );
   }
 
-  Scaffold _authenticationStatusUnknown(BuildContext context, String text) => Scaffold(
+  Scaffold _authenticationStatusUnknown(BuildContext context, String text) =>
+      Scaffold(
         body: Container(
           color: theme.DavarColors.mainBackground,
           child: Center(
@@ -134,7 +144,9 @@ class DavarApp extends StatelessWidget {
               const CircularProgressIndicator(),
               const SizedBox(height: 30),
               TextButton(
-                onPressed: () => context.read<AuthProvider>().onCancelAuthenticationRequest(),
+                onPressed: () => context
+                    .read<AuthProvider>()
+                    .onCancelAuthenticationRequest(),
                 child: const Icon(Icons.arrow_circle_left_outlined),
               ),
             ],
@@ -142,14 +154,16 @@ class DavarApp extends StatelessWidget {
         ),
       );
 
-  FullScreenProgressIndicator _onAuthenticationError(String error, BuildContext context) {
+  FullScreenProgressIndicator _onAuthenticationError(
+      String error, BuildContext context) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _showMsg(context, error);
     });
     return FullScreenProgressIndicator(
       additionalErrorMessage: error,
       actionButton: TextButton(
-        onPressed: () => context.read<AuthProvider>().onCancelAuthenticationRequest(),
+        onPressed: () =>
+            context.read<AuthProvider>().onCancelAuthenticationRequest(),
         child: const Icon(Icons.arrow_circle_left_outlined),
       ),
     );
