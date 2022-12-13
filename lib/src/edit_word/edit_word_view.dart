@@ -1,4 +1,5 @@
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class _EditWordViewState extends State<EditWordView> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
-                      child: SizedBox(height: 40.0 , child: Image.asset(AssetsPath.davarLogo)),
+                      child: SizedBox(height: 40.0, child: Image.asset(AssetsPath.davarLogo)),
                     ),
                     buildHead(context),
                     const SizedBox(height: 10),
@@ -77,7 +78,8 @@ class _EditWordViewState extends State<EditWordView> {
         Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider wep, _) {
           final bool isLoading = wep.status == EditWordProviderStatus.loading;
           return TextButton(
-              onPressed: isLoading ? null : () => _onSave(wep), child: _buildSaveBtnChild(isLoading));
+              onPressed: isLoading ? null : () => _onSave(wep),
+              child: _buildSaveBtnChild(isLoading));
         }),
       ],
     );
@@ -245,43 +247,42 @@ class _EditWordViewState extends State<EditWordView> {
 
   Container _moreSectionCategory() {
     return Container(
-        margin: const EdgeInsets.only(left: 20.0, right: 10.0),
-        alignment: Alignment.topLeft,
-        child: Consumer<EditWordProvider>(
-          builder: (BuildContext context, EditWordProvider wep, category) {
-            const category =
-                Text('Category', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold));
-            return OverflowBar(
-              alignment: MainAxisAlignment.spaceBetween,
-              children: [
-                category,
-                Text(
-                  wep.edited.category,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  softWrap: false,
-                ),
-                TextButton(
-                  onPressed: () {
-                    editField(
-                      context: context,
-                      description: 'category',
-                      value: wep.edited.category,
+      margin: const EdgeInsets.only(left: 20.0, right: 10.0),
+      alignment: Alignment.topLeft,
+      child: Consumer<EditWordProvider>(
+        builder: (BuildContext context, EditWordProvider wep, category) {
+          const category =
+              Text('Category', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold));
+          return OverflowBar(alignment: MainAxisAlignment.spaceBetween, children: [
+            category,
+            Text(wep.edited.category,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false),
+            _buildEditCategoryPopupList()
+          ]);
+        },
+      ),
+    );
+  }
 
-                      /// TODO dynamic category from dropDown menu
-                      handle: () => wep.onEditCategory(1),
-                    );
-                  },
-                  child: const Text(
-                    'Edit',
-                    style: TextStyle(color: Color(0xff0E9447)),
-                  ),
-                ),
-              ],
-            );
-          },
-        ));
+  Widget _buildEditCategoryPopupList() {
+    return Consumer<CategoriesProvider>(builder: (BuildContext context, CategoriesProvider cp, _) {
+      List<WordCategory> categories = cp.categories;
+      return PopupMenuButton<WordCategory>(
+        icon: const Icon(Icons.arrow_drop_down, color: Color(0xff0E9447)),
+        iconSize: 26.0,
+        itemBuilder: (context) {
+          return categories
+              .map((category) => PopupMenuItem<WordCategory>(
+                    onTap: () => context.read<EditWordProvider>().onEditCategory(category),
+                    child: Text(category.name),
+                  ))
+              .toList();
+        },
+      );
+    });
   }
 
   Container _moreSectionClue() {

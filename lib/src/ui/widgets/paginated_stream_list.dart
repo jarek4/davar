@@ -20,22 +20,14 @@ class PaginatedStreamList extends StatefulWidget {
 }
 
 class _PaginatedStreamListState extends State<PaginatedStreamList> {
-  // Looking up a deactivated widget's ancestor is unsafe error thrown
-  // probably the cause of it that dispose() need to bee async to close stream!
-  // or it could be a NavigatorState _navigator?
-
-  // late NavigatorState _navigator;
-
-  // Stream<List<Word>>? stream;
-  @override
+/*  @override
   void initState() {
     super.initState();
     // stream =Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       // stream =Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
-      // Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
     });
-  }
+  }*/
 
   @override
   void didChangeDependencies() {
@@ -105,10 +97,13 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
   }
 
   Future<Word?> _navigateToEditPage(Word editing) async {
+    CategoriesProvider cp = Provider.of<CategoriesProvider>(context, listen: false);
     final Word? result = await Navigator.push<Word>(
-      context,
-      MaterialPageRoute(builder: (context) => EditWordView(editing)),
-    );
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChangeNotifierProvider<CategoriesProvider>.value(
+              value: cp, child: EditWordView(editing)),
+        ));
     return result;
   }
 

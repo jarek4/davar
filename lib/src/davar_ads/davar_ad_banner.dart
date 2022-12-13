@@ -62,17 +62,21 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
     if (_bottomBannerAd == null && !_isBottomAdLoaded) {
       return const SizedBox.shrink();
     } else {
-      return Column(
-        children: [
-          SizedBox(height: 50, child: AdWidget(ad: _bottomBannerAd!)),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 2.6, top: 2.0),
-            child: Text(
-              '$support!',
-              textAlign: TextAlign.center,
-            ),
-          )
-        ],
+      return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+        padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+        child: Column(
+          children: [
+            SizedBox(height: 50, child: AdWidget(ad: _bottomBannerAd!)),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 2.6, top: 2.0),
+              child: Text(
+                '$support!',
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+        ),
       );
     }
   }

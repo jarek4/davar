@@ -57,8 +57,9 @@ class EditWordProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void onEditCategory(int newId) {
-    _edited = _edited.copyWith(categoryId: newId);
+  void onEditCategory(WordCategory newCategory) {
+    print('onEditCategory($newCategory)');
+    _edited = _edited.copyWith(categoryId: newCategory.id, category: newCategory.name);
     notifyListeners();
   }
 

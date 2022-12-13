@@ -45,40 +45,37 @@ class QuizScreen extends StatelessWidget {
     // need at least 3 words to quiz!
     final bool isMoreThen3words = (sp.data != null && sp.data!.length >= 3);
     return _layoutBuilderWrapper(SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 8.0),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
-              child: Text(
-                'HOW TO PLAY',
-                style: Theme.of(context).textTheme.headlineSmall,
-              )),
-          const SizedBox(height: 8.0),
-          Padding(
-              padding: const EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
-              child: Text(
-                _quizManual1,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              )),
-          const SizedBox(height: 8.0),
-          const Padding(
-              padding: EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
-              child: Text(
-                _quizManual2,
-                textAlign: TextAlign.center,
-              )),
-          const Divider(thickness: 1.3),
-          const SizedBox(height: 15.0),
-          isMoreThen3words
-              ? _buildStartBtn(context, provider)
-              : _showLessThen3wordsNotification(context, sp.data.length),
-          const SizedBox(height: 25.0),
-          const DavarAdBanner(key: Key('School-QuizScreen-bottom-banner-320')),
-        ],
-      ),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const SizedBox(height: 4.0),
+        const DavarAdBanner(key: Key('School-QuizScreen-bottom-top-320')),
+        const SizedBox(height: 15.0),
+        Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
+            child: Text(
+              'HOW TO PLAY',
+              style: Theme.of(context).textTheme.headlineSmall,
+            )),
+        const SizedBox(height: 8.0),
+        Padding(
+            padding: const EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
+            child: Text(
+              _quizManual1,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            )),
+        const SizedBox(height: 8.0),
+        const Padding(
+            padding: EdgeInsets.fromLTRB(12.0, 4.0, 12.0, 4.0),
+            child: Text(
+              _quizManual2,
+              textAlign: TextAlign.center,
+            )),
+        const Divider(thickness: 1.3),
+        const SizedBox(height: 15.0),
+        isMoreThen3words
+            ? _buildStartBtn(context, provider)
+            : _showLessThen3wordsNotification(context, sp.data.length),
+      ]),
     ));
   }
 

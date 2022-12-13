@@ -25,16 +25,16 @@ class AboutScreen extends StatelessWidget {
 
   Column _buildScreenBody(BuildContext context) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
+      const Padding(
+        padding: EdgeInsets.only(bottom: 4.0, top: 4.0),
+        child: DavarAdBanner(key: Key('More-AboutScreen-top-banner-320')),
+      ),
       Expanded(
         child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 30),
             key: const Key('More-AboutScreen'),
             shrinkWrap: true,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4.0, top: 2.0),
-                child: DavarAdBanner(key: Key('More-AboutScreen-top-banner-320')),
-              ),
               const SizedBox(height: 12.0),
               ListTile(
                 title: Row(
@@ -56,19 +56,16 @@ class AboutScreen extends StatelessWidget {
                     Icon(Icons.arrow_forward_ios_rounded),
                   ],
                 ),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute (
-                      builder: (BuildContext context) => ChangeNotifierProvider<PrivacyTermsProvider>(
-                          create: (context) => PrivacyTermsProvider(),
-                          builder: (context, _) {
-                          return PrivacyTermsView(
-                            'init data',
-                            context.read<PrivacyTermsProvider>().readPrivacyPolicy()
-                          );
-                        }
-                      ),
-                    ),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => ChangeNotifierProvider<PrivacyTermsProvider>(
+                        create: (context) => PrivacyTermsProvider(),
+                        builder: (context, _) {
+                          return PrivacyTermsView('init data',
+                              context.read<PrivacyTermsProvider>().readPrivacyPolicy());
+                        }),
                   ),
+                ),
               ),
               const Divider(thickness: 1.2),
               _devContact(context),

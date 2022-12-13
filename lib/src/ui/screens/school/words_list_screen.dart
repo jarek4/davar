@@ -1,76 +1,27 @@
-import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import 'custom_search/custom_search.dart';
 
-class WordsListScreen extends StatefulWidget {
+class WordsListScreen extends StatelessWidget {
   const WordsListScreen({Key? key}) : super(key: key);
 
   @override
-  State<WordsListScreen> createState() => _WordsListScreenState();
-}
-
-class _WordsListScreenState extends State<WordsListScreen> {
-  BannerAd? _bottomBannerAd;
-  bool _isBottomAdLoaded = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final adState = Provider.of<AdState>(context);
-    adState.initialization.then((status) {
-      setState(() {
-        _bottomBannerAd = BannerAd(
-          adUnitId: adState.bannerAdUnitId,
-          size: AdSize.banner,
-          request: const AdRequest(),
-          listener: BannerAdListener(onAdLoaded: (_) {
-            setState(() {
-              _isBottomAdLoaded = true;
-            });
-            if (kDebugMode) print('BannerAdListener Ad loaded.');
-          }, onAdFailedToLoad: (Ad ad, LoadAdError error) {
-            ad.dispose();
-            if (kDebugMode) print('BannerAdListener Ad failed to load: $error');
-          }),
-        )..load();
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _isBottomAdLoaded = false;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _bottomBannerAd?.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-        // mainAxisSize: MainAxisSize.max,
-        // mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(padding: const EdgeInsets.only(top: 8.0), child: _buildFilters(context)),
-          const Divider(),
-          Expanded(child: _buildList()),
-          if (_bottomBannerAd == null && !_isBottomAdLoaded)
-            const SizedBox.shrink()
-          else
-            SizedBox(height: 50, child: AdWidget(ad: _bottomBannerAd!)),
-        ]);
+    return Column(children: [
+      Padding(padding: const EdgeInsets.only(top: 8.0), child: _buildFilters(context)),
+      const Divider(),
+      Expanded(child: _buildList()),
+      const Padding(
+        padding: EdgeInsets.only(bottom: 2.0, top: 2.0),
+        child: DavarAdBanner(key: Key('School-AllWordsScreen-bottom-banner-320')),
+      ),
+    ]);
   }
 
   LayoutBuilder _buildList() {
@@ -83,9 +34,8 @@ class _WordsListScreenState extends State<WordsListScreen> {
         children: [
           const Flexible(child: SizedBox()),
           SizedBox(
-            width: isOrientationPortrait ? maxWidth - 30 : landscapeMaxW,
-            child: const PaginatedStreamList(),
-          ),
+              width: isOrientationPortrait ? maxWidth - 30 : landscapeMaxW,
+              child: const PaginatedStreamList()),
           const Flexible(child: SizedBox()),
         ],
       );

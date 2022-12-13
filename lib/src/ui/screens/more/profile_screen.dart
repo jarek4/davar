@@ -29,42 +29,50 @@ class ProfileScreen extends StatelessWidget {
       BuildContext context, String name, String email, String native, String learning) {
     Orientation orientation = MediaQuery.of(context).orientation;
     final bool isLandscape = orientation == Orientation.landscape;
-    return ListView(
-        padding: EdgeInsets.symmetric(horizontal: isLandscape ? 80 : 10),
-        key: const Key('More-ProfileScreen-primaryList'),
-        // shrinkWrap: true,
-        children: [
-          OrientationBuilder(builder: (context, orientation) {
-            final bool isLandscape = orientation == Orientation.landscape;
-            return ListView(shrinkWrap: true, children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 4.0, top: 2.0),
-                child: DavarAdBanner(key: Key('More-ProfileScreen-top-banner-320')),
-              ),
-              _buildWordCategoriesList(isLandscape),
-            ]);
-          }),
-          const Divider(thickness: 1.2),
-          ListTile(
-            title: Text('Name: $name'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+             primary:  true,
+              padding: EdgeInsets.symmetric(horizontal: isLandscape ? 80 : 10),
+              key: const Key('More-ProfileScreen-primaryList'),
+              // shrinkWrap: true,
               children: [
-                Text('Email: $email'),
-                Text('You learn: $learning'),
-              ],
-            ),
-            leading: const Icon(Icons.person_outline),
-          ),
-          const Divider(thickness: 1.2),
-          ListTile(
-            title: const Text('Logout'),
-            leading: const Icon(Icons.logout_outlined),
-            onTap: () => _showDialog(context, 'Are you sure, you want to logout?',
-                () => context.read<AuthProvider>().signOut()),
-          ),
-          const Divider(thickness: 1.2),
-        ]);
+                OrientationBuilder(builder: (context, orientation) {
+                  final bool isLandscape = orientation == Orientation.landscape;
+                  return ListView(shrinkWrap: true, children: [
+
+                    _buildWordCategoriesList(isLandscape),
+                  ]);
+                }),
+                const Divider(thickness: 1.2),
+                ListTile(
+                  title: Text('Name: $name'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Email: $email'),
+                      Text('You learn: $learning'),
+                    ],
+                  ),
+                  leading: const Icon(Icons.person_outline),
+                ),
+                const Divider(thickness: 1.2),
+                ListTile(
+                  title: const Text('Logout'),
+                  leading: const Icon(Icons.logout_outlined),
+                  onTap: () => _showDialog(context, 'Are you sure, you want to logout?',
+                      () => context.read<AuthProvider>().signOut()),
+                ),
+                const Divider(thickness: 1.2),
+              ]),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 2.0),
+          child: DavarAdBanner(key: Key('More-ProfileScreen-bottom-banner-320')),
+        ),
+      ],
+    );
   }
 
   void _showDialog(BuildContext context, String title, VoidCallback onConfirmation) {

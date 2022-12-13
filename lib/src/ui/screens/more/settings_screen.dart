@@ -25,11 +25,21 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildScreenBody(
       BuildContext context, String name, String email, String native, String learning) {
-    return ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        key: const Key('More-SettingsScreen'),
-        shrinkWrap: true,
-        children: [_buildThemeModeTile(), _buildLanguageTile(), _buildBackupTile(context)]);
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
+          child: DavarAdBanner(key: Key('More-SettingsScreen-top-banner-320')),
+        ),
+        Expanded(
+          child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              key: const Key('More-SettingsScreen'),
+              shrinkWrap: true,
+              children: [_buildThemeModeTile(), _buildLanguageTile(), _buildBackupTile(context)]),
+        ),
+      ],
+    );
   }
 
   Widget _buildThemeModeTile() {
@@ -139,10 +149,6 @@ class SettingsScreen extends StatelessWidget {
                     },
                     icon: const Icon(Icons.restore))
               ]),
-              const Padding(
-                padding: EdgeInsets.only(top: 12.0),
-                child: DavarAdBanner(key: Key('More-SettingsScreen-backup-banner-320')),
-              )
             ],
           ),
         ),
