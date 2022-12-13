@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ class DavarAdBanner extends StatefulWidget {
 class _DavarAdBannerState extends State<DavarAdBanner> {
   BannerAd? _bottomBannerAd;
   bool _isBottomAdLoaded = false;
+  bool _isTextVisible = false;
 
   @override
   void didChangeDependencies() {
@@ -30,6 +32,13 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
           listener: BannerAdListener(onAdLoaded: (_) {
             setState(() {
               _isBottomAdLoaded = true;
+            });
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              Future.delayed(const Duration(milliseconds: 800)).then((_) {
+                setState(() {
+                  _isTextVisible = true;
+                });
+              });
             });
             if (kDebugMode) print('BannerAdListener Ad loaded.');
           }, onAdFailedToLoad: (Ad ad, LoadAdError error) {
@@ -48,6 +57,7 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
   void initState() {
     super.initState();
     _isBottomAdLoaded = false;
+    _isTextVisible = false;
   }
 
   @override
@@ -60,7 +70,7 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
   Widget build(BuildContext context) {
     final String support = AppLocalizations.of(context)?.clickAdToSupport ?? 'Support me!';
     if (_bottomBannerAd == null && !_isBottomAdLoaded) {
-      return const SizedBox.shrink();
+      return const SizedBox(height: 50);
     } else {
       return Container(
         decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
@@ -68,13 +78,15 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
         child: Column(
           children: [
             SizedBox(height: 50, child: AdWidget(ad: _bottomBannerAd!)),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 2.6, top: 2.0),
-              child: Text(
-                '$support!',
-                textAlign: TextAlign.center,
-              ),
-            )
+            _isTextVisible
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 2.6, top: 2.0),
+                    child: Text(
+                      '$support!',
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                : const SizedBox(height: 18.0)
           ],
         ),
       );

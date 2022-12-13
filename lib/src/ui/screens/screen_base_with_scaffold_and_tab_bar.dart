@@ -81,7 +81,6 @@ class _ScreenBaseWithScaffoldAndTabBarState extends State<ScreenBaseWithScaffold
     return TabBar(
       controller: _ctr,
       onTap: _tabBatOnTap,
-      //indicatorColor: Theme.of(context).colorScheme.secondary,
       indicatorColor: Colors.white,
       indicatorWeight: 4,
       tabs: bottomBarTabs

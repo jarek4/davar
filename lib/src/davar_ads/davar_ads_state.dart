@@ -11,6 +11,10 @@ class AdState {
   // test ad units
   static const String _androidTest = 'ca-app-pub-3940256099942544/6300978111';
   static const String _iosTest = 'ca-app-pub-3940256099942544/2934735716';
+ /* static final String _testDeviceId = dotenv.env['ADMOB_TEST_DEVICE_ID'] ?? '';
+
+   RequestConfiguration configuration =
+  RequestConfiguration(testDeviceIds: [_testDeviceId]);*/
 
   // Davar app ad units
   final String _androidBannerAdUnitId =

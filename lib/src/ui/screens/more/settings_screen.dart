@@ -25,21 +25,19 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildScreenBody(
       BuildContext context, String name, String email, String native, String learning) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
-          child: DavarAdBanner(key: Key('More-SettingsScreen-top-banner-320')),
-        ),
-        Expanded(
-          child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              key: const Key('More-SettingsScreen'),
-              shrinkWrap: true,
-              children: [_buildThemeModeTile(), _buildLanguageTile(), _buildBackupTile(context)]),
-        ),
-      ],
-    );
+    return Column(children: [
+      const Padding(
+        padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
+        child: DavarAdBanner(key: Key('More-SettingsScreen-top-banner-320')),
+      ),
+      Expanded(
+        child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            key: const Key('More-SettingsScreen'),
+            shrinkWrap: true,
+            children: [_buildThemeModeTile(), _buildLanguageTile(), _buildBackupTile(context)]),
+      ),
+    ]);
   }
 
   Widget _buildThemeModeTile() {
@@ -53,44 +51,43 @@ class SettingsScreen extends StatelessWidget {
           Theme.of(context).iconTheme.color?.withOpacity(0.6) ?? Colors.black.withOpacity(0.6);
       Color activeColor = Theme.of(context).colorScheme.primary.withOpacity(0.8);
       return ExpansionTile(
-        leading: const Icon(Icons.sunny_snowing),
-        title: const Text('Light/Dark mode'),
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
-            child: Row(children: [
-              const Expanded(child: Text('Auto')),
-              Expanded(
-                  child: IconButton(
-                      onPressed: () => settings.updateThemeMode(a),
-                      icon: Icon(Icons.device_unknown_rounded,
-                          color: mode == a ? activeColor : inactiveColor))),
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
-            child: Row(children: [
-              const Expanded(child: Text('Light mode')),
-              Expanded(
-                  child: IconButton(
-                      onPressed: () => settings.updateThemeMode(l),
-                      icon:
-                          Icon(Icons.light_mode, color: mode == l ? activeColor : inactiveColor))),
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
-            child: Row(children: [
-              const Expanded(child: Text('Dark mode')),
-              Expanded(
-                  child: IconButton(
-                      onPressed: () => settings.updateThemeMode(d),
-                      icon: Icon(Icons.dark_mode_outlined,
-                          color: mode == d ? activeColor : inactiveColor))),
-            ]),
-          )
-        ],
-      );
+          leading: const Icon(Icons.sunny_snowing),
+          title: const Text('Light/Dark mode'),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
+              child: Row(children: [
+                const Expanded(child: Text('Auto')),
+                Expanded(
+                    child: IconButton(
+                        onPressed: () => settings.updateThemeMode(a),
+                        icon: Icon(Icons.device_unknown_rounded,
+                            color: mode == a ? activeColor : inactiveColor))),
+              ]),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
+              child: Row(children: [
+                const Expanded(child: Text('Light mode')),
+                Expanded(
+                    child: IconButton(
+                        onPressed: () => settings.updateThemeMode(l),
+                        icon: Icon(Icons.light_mode,
+                            color: mode == l ? activeColor : inactiveColor))),
+              ]),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6.0, left: 18.0, right: 8.0),
+              child: Row(children: [
+                const Expanded(child: Text('Dark mode')),
+                Expanded(
+                    child: IconButton(
+                        onPressed: () => settings.updateThemeMode(d),
+                        icon: Icon(Icons.dark_mode_outlined,
+                            color: mode == d ? activeColor : inactiveColor))),
+              ]),
+            )
+          ]);
     });
   }
 
@@ -103,41 +100,51 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8.0, bottom: 18.0, left: 18.0, right: 18.0),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             const Flexible(child: Text('Application language:')),
-            Flexible(
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<DavarLanguage>(
-                  elevation: 16,
-                  hint: const Text('App language'),
-                  value: SupportedLanguages.list[2],
-                  onChanged: (d) {},
-                  items: SupportedLanguages.list
-                      .map<DropdownMenuItem<DavarLanguage>>((DavarLanguage value) {
-                    return DropdownMenuItem<DavarLanguage>(
-                        key: Key('DropdownMenuItem-$value'), value: value, child: Text(value.name));
-                  }).toList(),
-                ),
-              ),
-            )
+            _buildDropdownLanguagePicker()
           ]),
         )
       ],
     );
   }
 
+  Widget _buildDropdownLanguagePicker() {
+    return Flexible(
+      child: Consumer<SettingsController>(
+          builder: (BuildContext context, SettingsController settings, _) {
+        String current = 'system';
+        if (settings.localeCode != null) {
+          current = SupportedLanguages.codeToLanguage(settings.localeCode!);
+        }
+        return DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+              isExpanded: true,
+              elevation: 16,
+              hint: const Text('App language'),
+              value: current,
+              onChanged: (v) =>
+                  settings.updateLocale(SupportedLanguages.languageToCode(v ?? 'system')),
+              items: SupportedLanguages.localizeNames.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                    key: Key('DropdownMenuItem-$value'), value: value, child: Text(value));
+              }).toList()),
+        );
+      }),
+    );
+  }
+
   Widget _buildBackupTile(BuildContext context) {
     return ExpansionTile(
-      leading: const Icon(Icons.restore),
-      title: const Text('Backup'),
-      children: <Widget>[
-        const Text('You can export all your data to the file: davar_backup.db'),
-        const SizedBox(height: 8.0),
-        const Text(
-            'Attention!\nIf you import any data from a file, all current words and sentences will be replaced.'),
-        const Divider(thickness: 1.2, height: 12.0),
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
-          child: Column(
-            children: [
+        leading: const Icon(Icons.restore),
+        title: const Text('Backup'),
+        children: <Widget>[
+          const Text('You can export all your data to the file: davar_backup.db'),
+          const SizedBox(height: 8.0),
+          const Text(
+              'Attention!\nIf you import any data from a file, all current words and sentences will be replaced.'),
+          const Divider(thickness: 1.2, height: 12.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
+            child: Column(children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 const Text('Import/Export backup copy'),
                 IconButton(
@@ -149,10 +156,8 @@ class SettingsScreen extends StatelessWidget {
                     },
                     icon: const Icon(Icons.restore))
               ]),
-            ],
+            ]),
           ),
-        ),
-      ],
-    );
+        ]);
   }
 }
