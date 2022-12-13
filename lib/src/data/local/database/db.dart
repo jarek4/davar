@@ -24,13 +24,10 @@ class DB {
     return _db!;
   }
 
-  // for iOS: Using path_provider is recommended to get the databases directory.
-
+  // iOS: path_provider is recommended to get the databases directory.
   Future<Database> _initDB(String filePath) async {
      final String dbPath = await _getPath();
-    // old: dbPath = /data/user/0/com.example.app_name
     final String path = dart_path.join(dbPath, filePath);
-    // old:  path =  /data/user/0/com.example.app_name/databases/db_name.db
     return await openDatabase(path,
         version: DbConsts.dbVersion,
         onConfigure: _onConfigure,

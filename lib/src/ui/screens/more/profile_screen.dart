@@ -20,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
           return _buildScreenBody(context, provider.user.name, provider.user.email,
               provider.user.native, provider.user.learning);
         default:
-          return const UnauthenticatedInfo(key: Key('You-ProfileScreen-not authenticated'));
+          return const UnauthenticatedInfo(key: Key('More-ProfileScreen-not authenticated'));
       }
     });
   }
@@ -31,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
     final bool isLandscape = orientation == Orientation.landscape;
     return ListView(
         padding: EdgeInsets.symmetric(horizontal: isLandscape ? 80 : 10),
-        key: const Key('More-ProfileScreen-signed in'),
+        key: const Key('More-ProfileScreen-primaryList'),
         // shrinkWrap: true,
         children: [
           OrientationBuilder(builder: (context, orientation) {
@@ -129,7 +129,7 @@ class ProfileScreen extends StatelessWidget {
         }),
         Consumer<CategoriesProvider>(
             builder: (BuildContext context, CategoriesProvider provider, _) {
-          final bool isStatusSuccess = provider.status == CategoriesProviderStatus.success;
+          // final bool isStatusSuccess = provider.status == CategoriesProviderStatus.success;
           List<WordCategory> categories = provider.categories;
           switch (provider.status) {
             case CategoriesProviderStatus.success:
@@ -171,6 +171,8 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(BuildContext context, WordCategory item) {
+    // prevent edit and delete default category: 'no category' id=1
+    final bool isNotDefault = item.id != 1;
     return Container(
       margin: const EdgeInsets.only(left: 15, right: 15),
       padding: const EdgeInsets.all(5.0),
@@ -184,27 +186,18 @@ class ProfileScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
+          isNotDefault ? IconButton(
               onPressed: () => _showAddEditDialog(
-                    context: context,
-                    title: 'Edit',
-                    onConfirmation: () => context.read<CategoriesProvider>().update(item),
-                    category: item,
-                  ),
-              icon: const Icon(
-                Icons.edit,
-                size: 16,
-                color: Colors.blue,
-              )),
+                  context: context,
+                  title: 'Edit',
+                  onConfirmation: () => context.read<CategoriesProvider>().update(item),
+                  category: item),
+              icon: const Icon(Icons.edit, size: 16, color: Colors.blue)) : const SizedBox(width: 6.0),
           Text('${item.name}. id=${item.id}; userId=${item.userId}'),
-          IconButton(
+          isNotDefault ? IconButton(
               onPressed: () => _showDialog(context, 'Delete ${item.name}?',
                   () => context.read<CategoriesProvider>().delete(item.id)),
-              icon: const Icon(
-                Icons.delete,
-                size: 16,
-                color: Colors.red,
-              )),
+              icon: const Icon(Icons.delete, size: 16, color: Colors.red)) : const SizedBox(width: 6.0),
         ],
       ),
     );

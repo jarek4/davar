@@ -40,7 +40,7 @@ class DbConsts {
   static const String idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
   static const String intNotNullType = 'INTEGER NOT NULL';
   static const String intType = 'INTEGER';
-  static const String intTypeDefault0 = 'INTEGER  DEFAULT 0';
+  static const String intTypeDefault0 = 'INTEGER DEFAULT 0';
   static const String txtNotNullType = 'TEXT NOT NULL';
   static const String txtType = 'TEXT';
   static const String txtTypeDefaultNull = 'TEXT DEFAULT NULL';
@@ -53,16 +53,16 @@ class DbConsts {
       '''CREATE TABLE IF NOT EXISTS $tableWordCategories (
   $colId $idType, 
   $colCName $txtType, 
-  $colCUserId $intType, 
+  $colCUserId $intType DEFAULT 1, 
   FOREIGN KEY ($colCUserId) 
   REFERENCES $tableUsers ($colId) 
   ON UPDATE NO ACTION 
-  ON DELETE CASCADE
+  ON DELETE SET DEFAULT
   )''';
 
   static const String createWordsTableStatement = '''CREATE TABLE IF NOT EXISTS $tableWords (
  $colWCategory $txtType,
-      $colWCategoryId $intType,
+      $colWCategoryId $intType DEFAULT 1,
       $colCreated $timeStampType,
       $colWClue $txtType,
       $colId $idType,
@@ -73,15 +73,15 @@ class DbConsts {
       $colWUserLearn $txtType,
       $colWUserNative $txtType,
       $colWPoints $intType,
-      $colWUserId $intType,
+      $colWUserId $intType DEFAULT 1,
       FOREIGN KEY ($colWUserId) 
       REFERENCES $tableUsers ($colId) 
       ON UPDATE NO ACTION 
-      ON DELETE CASCADE,
+      ON DELETE SET DEFAULT,
       FOREIGN KEY ($colWCategoryId) 
       REFERENCES $tableWordCategories ($colId) 
       ON UPDATE NO ACTION 
-      ON DELETE CASCADE
+      ON DELETE SET DEFAULT
       )''';
 
   static const String createUsersTableStatement = '''CREATE TABLE IF NOT EXISTS $tableUsers (

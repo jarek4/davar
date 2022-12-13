@@ -4,7 +4,8 @@ import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 
 class CategoriesFilter extends StatelessWidget {
-  const CategoriesFilter(this.categories, this.selected, this.handleOnChange, {Key? key}) : super(key: key);
+  const CategoriesFilter(this.categories, this.selected, this.handleOnChange, {Key? key})
+      : super(key: key);
 
   final List<WordCategory> categories;
   final WordCategory selected;
@@ -22,19 +23,14 @@ class CategoriesFilter extends StatelessWidget {
             decoration: theme.smallInputDecoration(label: 'categories'),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<WordCategory>(
-                iconSize: 20.0,
-                dropdownColor: Colors.amberAccent,
-                elevation: 16,
-                // utils.trimTextIfLong()
-                hint: const Text(
-                  'all',
-                  style: TextStyle(fontSize: 13.0),
-                ),
-                value: selected,
-                isDense: true,
-                onChanged: (WordCategory? v) => handleOnChange(v),
-                items: _buildMenuItems(),
-              ),
+                  iconSize: 20.0,
+                  elevation: 16,
+                  isExpanded: true,
+                  hint: const Text('all', style: TextStyle(fontSize: 13.0)),
+                  value: selected,
+                  isDense: true,
+                  onChanged: (WordCategory? v) => handleOnChange(v),
+                  items: _buildMenuItems()),
             ),
           ),
         ));
@@ -43,10 +39,10 @@ class CategoriesFilter extends StatelessWidget {
   List<DropdownMenuItem<WordCategory>> _buildMenuItems() {
     return categories.map<DropdownMenuItem<WordCategory>>((WordCategory c) {
       return DropdownMenuItem<WordCategory>(
-        key: Key('DropdownMenuItem-$c'),
-        value: c,
-        child: Text(utils.trimTextIfLong(c.name), style: const TextStyle(fontSize: 13.0)),
-      );
+          key: Key('DropdownMenuItem-$c'),
+          value: c,
+          child: Text(utils.trimTextIfLong(c.name),
+              style: const TextStyle(fontSize: 13.0), overflow: TextOverflow.fade));
     }).toList();
   }
 }

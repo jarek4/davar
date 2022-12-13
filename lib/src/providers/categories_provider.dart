@@ -28,9 +28,11 @@ class CategoriesProvider with ChangeNotifier {
   UnmodifiableListView<WordCategory> get categories => UnmodifiableListView(_categories);
 
   /// use this to create search by WordCategories. Contains AppConst.allCategoriesFilter id:0, name: 'all'.
-  UnmodifiableListView<WordCategory> get filterCategories => UnmodifiableListView([utils.AppConst.allCategoriesFilter, ..._categories]);
+  UnmodifiableListView<WordCategory> get filterCategories =>
+      UnmodifiableListView([utils.AppConst.allCategoriesFilter, ..._categories]);
 
-  UnmodifiableListView<String> get categoriesNames => UnmodifiableListView(_categories.map((e) => e.name).toList());
+  UnmodifiableListView<String> get categoriesNames =>
+      UnmodifiableListView(_categories.map((e) => e.name).toList());
 
   String _errorMsg = '';
 
@@ -74,10 +76,9 @@ class CategoriesProvider with ChangeNotifier {
   Future<void> update(WordCategory category) async {
     _status = CategoriesProviderStatus.loading;
     notifyListeners();
-    final WordCategory created =
-        WordCategory(id: category.id, userId: _user.id, name: _newCategoryName);
+    final WordCategory toUpdate = category.copyWith(userId: _user.id, name: _newCategoryName);
     try {
-      final int res = await _categoriesRepository.update(created);
+      final int res = await _categoriesRepository.update(toUpdate);
       if (res == -1) {
         _errorMsg = 'The last category change was not saved!';
         _status = CategoriesProviderStatus.success;
@@ -86,7 +87,8 @@ class CategoriesProvider with ChangeNotifier {
       }
       final WordCategory? updated = await _categoriesRepository.read(category.id);
       if (updated != null) {
-        final List<WordCategory> newState = [updated, ..._categories];
+        final List<WordCategory> newState =
+            _categories.map((e) => e.id == updated.id ? updated : e).toList();
         _categories = newState;
         _status = CategoriesProviderStatus.success;
         _errorMsg = '';

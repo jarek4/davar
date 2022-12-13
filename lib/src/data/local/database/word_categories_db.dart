@@ -20,7 +20,7 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
           tableName: DbConsts.tableWordCategories, where: [DbConsts.colCName], values: [name]);
       // check if category exists:
       if (nameRecords > 0) return 0;
-      // db.insert() returns created category id
+      // insert returns created category id
       int response = await db.insert(
         DbConsts.tableWordCategories,
         category,
