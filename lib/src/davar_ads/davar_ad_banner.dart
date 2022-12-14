@@ -73,7 +73,7 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
       return const SizedBox(height: 50);
     } else {
       return Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
+        decoration: BoxDecoration(border: Border.all(color: Colors.blue, width: 1.1)),
         padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
         child: Column(
           children: [
@@ -86,7 +86,7 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
                       textAlign: TextAlign.center,
                     ),
                   )
-                : const SizedBox(height: 18.0)
+                : const SizedBox(height: 20.0)
           ],
         ),
       );

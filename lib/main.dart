@@ -19,7 +19,11 @@ void main() async {
   RequestConfiguration configuration = RequestConfiguration(testDeviceIds: [testDeviceId]);
   final Future<InitializationStatus> initFuture = MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(configuration);
-  await ErrorsReporter.setup(Provider<AdState>.value(
-      value: AdState(initFuture), child: DavarApp(settingsController: settingsController)));
+  await ErrorsReporter.setup(
+    Provider<AdState>.value(
+      value: AdState(initFuture),
+      child: DavarApp(settingsController: settingsController),
+    ),
+  );
   // DavarApp(settingsController: settingsController);
 }

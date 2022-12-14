@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/statistics_services/quiz_statistics_service.dart';
@@ -17,7 +16,8 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
 
   late QuizState _state;
 
-  // last saved quiz highest score
+  // last saved quiz highest score from statistics
+  // to decide if save current quiz score to statistics
   int _previewHighestScore = 0;
 
   QuizState get state => _state;
@@ -48,9 +48,9 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
     _errorMsg = '';
     notifyListeners();
     try {
-      final int lastSavedScore = await _readLastQuizSavedScore();
+      final int lastSavedScore = await _readHighestScore();
       final List<Word> words = await _wordsProvider.readAllWords().catchError((e) {
-        print('readLastQuizSavedScore Error');
+        if (kDebugMode) print('QUIZ-readLastQuizSavedScore E: $e');
         return <Word>[];
       }).timeout(const Duration(seconds: 7), onTimeout: () => <Word>[]);
       List<Word> inGameWords = [];
@@ -88,7 +88,7 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
       _errorMsg = 'Some error occurred 🥴\n Try to restart the application';
       _status = QuizProviderStatus.error;
       notifyListeners();
-      print('QuizProvider_prepare Error:\n $e');
+      if (kDebugMode) print('QuizProvider_prepare Error:\n $e');
     }
   }
 
@@ -112,8 +112,10 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
     // Takes 1 point only once, regardless how many times was opened/closed.
     // If clue is empty don't subtract points!
     if (_state.isLocked) return; // game is over, player won or lost
-    if (_state.isClueShown) {
-      // the clue was already shown
+    final String? clue = _state.inGameWords[0].clue;
+    final bool isClueNullOrEmpty = clue == null || clue.isEmpty;
+    if (_state.isClueShown || isClueNullOrEmpty) {
+      // the clue was already shown or clue was not added
       _openClue();
       return;
     }
@@ -195,23 +197,48 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
   Future<void> _incrementWordsPointsIntoStorage(Word word) async {
     // update word's points
     await _wordsProvider.update(word).catchError((e) {
-      print('incrementWordsPointsIntoStorage(Word.id: ${word.id}) Error');
-    }).timeout(const Duration(seconds: 5),
-        onTimeout: () => print('incrementWordsPointsIntoStorage(Word.id: ${word.id}) onTimeout'));
+      if (kDebugMode) print('QUIZ increment-Points-Storage(id: ${word.id}) update.catch: $e');
+    }).timeout(const Duration(seconds: 5), onTimeout: () {
+      if (kDebugMode) print('QUIZ incrementWordsPointsIntoStorage(id: ${word.id}) onTimeout');
+    });
   }
 
   Future<void> onNext() async {
-    // check if there are at least 3 ids in state.notPlayedIds
     List<int> notPlayedIds = _state.notPlayedIds;
-    if (notPlayedIds.length < 3) return;
+    List<Word> newInGameWords = _state.inGameWords;
 
-    // fill up new state.inGameWords
-    List<Word> newInGameWords = [];
-    final List<int> inGameIds = notPlayedIds.getRange(0, 3).toList();
-    for (int x = 0; x < inGameIds.length; x++) {
-      newInGameWords.add(_state.words.firstWhere((e) => e.id == inGameIds[x]));
+    if (notPlayedIds.length >= 3) {
+      // load new items to inGameWords
+      final List<int> inGameIds = _mixIds(notPlayedIds).getRange(0, 3).toList();
+      // newInGameWords.removeRange(0, newInGameWords.length); //?
+      newInGameWords = _getWordsFromStateByIds(inGameIds);
+    } else {
+      final int idsQuantity = notPlayedIds.length;
+      switch (idsQuantity) {
+        case 2:
+          List<Word> replacements = _getWordsFromStateByIds(notPlayedIds);
+          // replace current inGameWords[0] to inGameWords[2], notPlayedIds don't contain this item!
+          newInGameWords = newInGameWords.reversed.toList();
+          newInGameWords.replaceRange(0, 2, replacements);
+          break;
+        case 1:
+          Word replacement = _getWordsFromStateByIds(notPlayedIds).first;
+          // check do inGameWords contains replacement? IF do, move it at 0 index.
+          final int atIndex = newInGameWords.indexOf(replacement);
+          if (atIndex != -1) {
+            newInGameWords.removeAt(atIndex);
+            newInGameWords.insert(0, replacement);
+          } else {
+            newInGameWords = newInGameWords.reversed.toList();
+            newInGameWords.removeAt(0);
+            newInGameWords.insert(0, replacement);
+          }
+          break;
+        default:
+          return;
+      }
     }
-    // remove inGameIds[0] - the correct one - from state.notPlayedIds
+    // remove inGameIds[0] - the looking for word - from state.notPlayedIds
     List<int> newNotPlayedIds = notPlayedIds.where((e) => e != newInGameWords[0].id).toList();
 
     _state = _state.copyWith(
@@ -229,18 +256,33 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
     notifyListeners();
   }
 
+  List<int> _mixIds(List<int> list) {
+    final List<int> mixed = list.take(list.length).toList();
+    mixed.shuffle();
+    return mixed;
+  }
+
+  List<Word> _getWordsFromStateByIds(List<int> ids) {
+    List<Word> items = [];
+    if (ids.isEmpty) return items;
+    for (int index = 0; index < ids.length; index++) {
+      items.add(_state.words.firstWhere((e) => e.id == ids[index]));
+    }
+    return items;
+  }
+
   Future<bool> _saveTotalGamePointsForStatistics(int totalPoints) async {
     // IQuizStatistics
     return await saveHighestQuizScore(totalPoints).catchError((e) {
-      print('saveTotalGamePointsForStatistics Error');
+      if (kDebugMode) print('QUIZ-saveTotalGamePointsForStatistics E: $e');
       return false;
     }).timeout(const Duration(seconds: 5), onTimeout: () => false);
   }
 
-  Future<int> _readLastQuizSavedScore() async {
+  Future<int> _readHighestScore() async {
     // IQuizStatistics
     final int points = await readHighestQuizScore().catchError((e) {
-      print('readLastQuizSavedScore Error');
+      if (kDebugMode) print('QUIZ-readLastQuizSavedScore E: $e');
       return 0;
     }).timeout(const Duration(seconds: 5), onTimeout: () => 0);
     final int lastSavedScore = points;

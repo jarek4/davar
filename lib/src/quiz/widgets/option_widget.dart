@@ -31,7 +31,7 @@ class _OptionWidgetState extends State<OptionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _layoutBuilderWrapper(GestureDetector(
+    return GestureDetector(
       onTap: () => _handleTap(), // lock the question and set selected option
       child: Container(
         height: 58,
@@ -42,44 +42,30 @@ class _OptionWidgetState extends State<OptionWidget> {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(width: 1.5, color: _getColor()),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-                child: Text(
-              widget.option.text,
-            )),
-            _getIcon(),
-          ],
-        ),
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Flexible(
+            child: Center(child: Text(widget.option.text, textAlign: TextAlign.center)),
+          ),
+          _getIcon(),
+        ]),
       ),
-    ));
-  }
-
-  LayoutBuilder _layoutBuilderWrapper(Widget child) {
-    return LayoutBuilder(builder: (context, constraint) {
-      final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-      final double maxWidth = constraint.maxWidth;
-      final double landscapeMaxW = (maxWidth * 3) / 4;
-      return SizedBox(width: isPortrait ? maxWidth - 40 : landscapeMaxW, child: child);
-    });
+    );
   }
 
   Color _getColor() {
     if (widget.option.isSelected) {
       return widget.option.isCorrect ? Colors.green : Colors.red;
     }
-    // return Colors.grey;
-    return widget.option.isCorrect ? Colors.green : Colors.red;
+    // return Colors.grey; // tests: widget.option.isCorrect ? Colors.green : Colors.red;
+    return Colors.white;
   }
 
   Widget _getIcon() {
-    const Icon ok = Icon(Icons.check_circle, color: Colors.green);
+    const Icon correct = Icon(Icons.check_circle, color: Colors.green);
     const Icon bad = Icon(Icons.cancel_outlined, color: Colors.red);
     if (widget.option.isSelected) {
-      return widget.option.isCorrect ? ok : bad;
+      return widget.option.isCorrect ? correct : bad;
     }
-    return const SizedBox.shrink();
-    // return option.isCorrect ? ok : bad;
+    return const SizedBox(width: 10.0);
   }
 }

@@ -18,36 +18,37 @@ class QuizGame extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: ChangeNotifierProvider<QuizProvider>(
-          create: (context) => QuizProvider(_wp),
-          builder: (context, _) {
-            return Consumer<QuizProvider>(
-                builder: (BuildContext context, QuizProvider provider, _) {
-              switch (provider.status) {
-                case QuizProviderStatus.loading:
-                  print('QuizGame Consumer<QuizProvider> QuizProviderStatus.loading');
-                  return const LinearLoadingWidget(info: 'Loading wait...');
-                case QuizProviderStatus.success:
-                  if (provider.state.notPlayedIds.length < 3 && provider.state.isLocked) {
-                    utils.showSnackBarInfo(context, msg: 'There is no more word to play');
-                  }
-                  return _buildScreenBody(context, provider);
-                case QuizProviderStatus.error:
-                  String e = provider.errorMsg;
-                  return LinearLoadingWidget(
-                      isError: true,
-                      info: e.isNotEmpty ? e : 'Error',
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(Icons.arrow_back_rounded)),
-                  );
-                default:
-                  return const Center(child: CircularProgressIndicator.adaptive());
-              }
-            });
-          }),
+      body:  _layoutBuilderWrapper(
+         ChangeNotifierProvider<QuizProvider>(
+            create: (context) => QuizProvider(_wp),
+            builder: (context, _) {
+              return Consumer<QuizProvider>(
+                  builder: (BuildContext context, QuizProvider provider, _) {
+                switch (provider.status) {
+                  case QuizProviderStatus.loading:
+                    return const LinearLoadingWidget(info: 'Loading wait...');
+                  case QuizProviderStatus.success:
+                    if (provider.state.notPlayedIds.isEmpty && provider.state.isLocked) {
+                      utils.showSnackBarInfo(context, msg: 'There is no more word to play');
+                    }
+                    return _buildScreenBody(context, provider);
+                  case QuizProviderStatus.error:
+                    String e = provider.errorMsg;
+                    return LinearLoadingWidget(
+                        isError: true,
+                        info: e.isNotEmpty ? e : 'Error',
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(Icons.arrow_back_rounded)),
+                    );
+                  default:
+                    return const Center(child: CircularProgressIndicator.adaptive());
+                }
+              });
+            }),
+      ),
     );
   }
 
@@ -65,7 +66,7 @@ class QuizGame extends StatelessWidget {
     final isStatusLoading = provider.status == QuizProviderStatus.loading;
     return Container(
       alignment: Alignment.center,
-      child: _layoutBuilderWrapper(Padding(
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,14 +77,14 @@ class QuizGame extends StatelessWidget {
             _buildQuestionAndOptions(provider),
             _buildControlButtons(context, isStatusLoading),
             Center(
-              child: (provider.state.notPlayedIds.length < 3 && provider.state.isLocked)
+              child: (provider.state.notPlayedIds.isEmpty && provider.state.isLocked)
                   ? const Text('No more words to play.',
                       style: TextStyle(fontWeight: FontWeight.bold))
                   : null,
             )
           ],
         ),
-      )),
+      ),
     );
   }
 
@@ -145,10 +146,14 @@ class QuizGame extends StatelessWidget {
 
   LayoutBuilder _layoutBuilderWrapper(Widget child) {
     return LayoutBuilder(builder: (context, constraint) {
-      final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      // final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+      print('QUIZ ,mAX WIDTH: ${constraint.maxWidth}');
+      // constraint.maxWidth: tablet Pixel C: v-900, h:1280.
       final double maxWidth = constraint.maxWidth;
-      final double landscapeMaxW = (maxWidth * 3) / 4;
-      return SizedBox(width: isPortrait ? maxWidth - 30 : landscapeMaxW, child: child);
+      final bool isWidth = constraint.maxWidth > 700.0;
+      print('QUIZ ,isWidth: $isWidth');
+      final double landscapeMaxW = ((maxWidth * 3) / 4 - 20);
+      return Center(child: SizedBox(width: isWidth ? landscapeMaxW : maxWidth - 30, child: child));
     });
   }
 
@@ -165,7 +170,7 @@ class QuizGame extends StatelessWidget {
   Widget _buildNextBtn() {
     return Consumer<QuizProvider>(builder: (BuildContext context, QuizProvider qp, _) {
       final bool canGoNext =
-          (qp.state.notPlayedIds.length >= 3 && (qp.state.isLocked || qp.state.didUserGuess));
+          (qp.state.notPlayedIds.isNotEmpty && (qp.state.isLocked || qp.state.didUserGuess));
       return NeonButton(
           gradientColor1: Colors.pink,
           gradientColor2: Colors.blueAccent,

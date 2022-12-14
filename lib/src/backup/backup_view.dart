@@ -9,7 +9,10 @@ class BackupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Backup'),
+        centerTitle: true,
+      ),
       body: ChangeNotifierProvider<BackupProvider>(
           create: (context) => BackupProvider(),
           lazy: true,
@@ -18,6 +21,11 @@ class BackupView extends StatelessWidget {
               children: [
                 const SizedBox(height: 18.0),
                 const Divider(thickness: 1.8, indent: 38.0, endIndent: 38.0),
+                const Text(
+                  'Attention!\nIf you import any data from a file, all current words and sentences will be replaced.',
+                  textAlign: TextAlign.start,
+                ),
+                const SizedBox(height: 28.0),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   const Text('Import backup copy'),
                   Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider bp, _) {
@@ -27,7 +35,9 @@ class BackupView extends StatelessWidget {
                         icon: const Icon(Icons.cloud_download));
                   })
                 ]),
-                const SizedBox(height: 18.0),
+                const Divider(thickness: 1.8, indent: 38.0, endIndent: 38.0),
+                const Text('You can export all your data to the file: davar_backup.db', textAlign: TextAlign.end,),
+                const SizedBox(height: 28.0),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                   const Text('Export backup copy'),
                   Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider p, _) {

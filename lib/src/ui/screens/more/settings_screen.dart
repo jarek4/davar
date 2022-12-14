@@ -137,11 +137,6 @@ class SettingsScreen extends StatelessWidget {
         leading: const Icon(Icons.restore),
         title: const Text('Backup'),
         children: <Widget>[
-          const Text('You can export all your data to the file: davar_backup.db'),
-          const SizedBox(height: 8.0),
-          const Text(
-              'Attention!\nIf you import any data from a file, all current words and sentences will be replaced.'),
-          const Divider(thickness: 1.2, height: 12.0),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 18.0),
             child: Column(children: [
