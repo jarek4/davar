@@ -2,7 +2,6 @@ import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
-import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +14,9 @@ class WordsListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       Padding(padding: const EdgeInsets.only(top: 8.0), child: _buildFilters(context)),
-      const Divider(),
+      const Divider(color: Colors.black),
+      _handleSearchWordsProviderErrors(),
+      _handleCategoriesProviderErrors(),
       Expanded(child: _buildList()),
       const Padding(
         padding: EdgeInsets.only(bottom: 2.0, top: 2.0),
@@ -29,16 +30,13 @@ class WordsListScreen extends StatelessWidget {
       final bool isOrientationPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
       final double maxWidth = constraint.maxWidth;
       final double landscapeMaxW = (maxWidth * 3) / 4;
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Flexible(child: SizedBox()),
-          SizedBox(
-              width: isOrientationPortrait ? maxWidth - 30 : landscapeMaxW,
-              child: const PaginatedStreamList()),
-          const Flexible(child: SizedBox()),
-        ],
-      );
+      return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        const Flexible(child: SizedBox()),
+        SizedBox(
+            width: isOrientationPortrait ? maxWidth - 30 : landscapeMaxW,
+            child: const PaginatedStreamList()),
+        const Flexible(child: SizedBox()),
+      ]);
     });
   }
 
@@ -47,9 +45,9 @@ class WordsListScreen extends StatelessWidget {
       const Expanded(child: SizedBox()),
       Consumer2<CategoriesProvider, SearchWordsProvider>(
           builder: (BuildContext context, CategoriesProvider cp, SearchWordsProvider search, _) {
-        _handleErrors(context, cp, search);
-        final CategoriesProviderStatus cpStatus = cp.status;
-        if (cpStatus == CategoriesProviderStatus.loading) {
+        final bool isCpLoading = cp.status == CategoriesProviderStatus.loading;
+        final bool isCpError = cp.status == CategoriesProviderStatus.error;
+        if (isCpLoading || isCpError) {
           return const SizedBox();
         }
         return CategoriesFilter(
@@ -58,25 +56,16 @@ class WordsListScreen extends StatelessWidget {
           (WordCategory? c) => context.read<SearchWordsProvider>().onCategoryChange(c),
         );
       }),
-      const SizedBox(width: 4.0),
+      const SizedBox(width: 6.0),
       Consumer<SearchWordsProvider>(builder: (BuildContext context, SearchWordsProvider search, _) {
         return FavoriteFilter(
           isChecked: search.selectedOnlyFavorite,
           onChangeHandle: () => search.onOnlyFavoriteChange(),
         );
       }),
-      const SizedBox(width: 4.0),
-      Consumer<SearchWordsProvider>(builder: (BuildContext context, SearchWordsProvider search, _) {
-        final bool hasErrorMsg = search.errorMsg.isNotEmpty;
-        if (hasErrorMsg) utils.showSnackBarInfo(context, msg: search.errorMsg);
-        return SearchFilter(() => _showSearch(context, search));
-      }),
-      Consumer<WordsProvider>(builder: (BuildContext context, WordsProvider wp, _) {
-        final bool hasErrorMsg = wp.wordsErrorMsg.isNotEmpty;
-        if (hasErrorMsg) utils.showSnackBarInfo(context, msg: wp.wordsErrorMsg);
-        return const Expanded(child: SizedBox());
-      }),
-      // const Expanded(child: SizedBox()),
+      const SizedBox(width: 6.0),
+      SearchFilter(() => _showSearch(context, context.read<SearchWordsProvider>())),
+      const Expanded(child: SizedBox()),
     ]);
   }
 
@@ -86,10 +75,31 @@ class WordsListScreen extends StatelessWidget {
     search.insertItemAtTheTop(result);
   }
 
-  void _handleErrors(BuildContext context, CategoriesProvider cp, SearchWordsProvider search) {
-    final bool isCategoriesProviderErrorMsg = cp.categoriesErrorMsg.isNotEmpty;
-    if (isCategoriesProviderErrorMsg) utils.showSnackBarInfo(context, msg: cp.categoriesErrorMsg);
-    final bool isFilteredWordsProviderErrorMsg = search.errorMsg.isNotEmpty;
-    if (isFilteredWordsProviderErrorMsg) utils.showSnackBarInfo(context, msg: search.errorMsg);
+  Widget _handleSearchWordsProviderErrors() {
+    return Selector<SearchWordsProvider, String>(
+        selector: (_, state) => state.errorMsg,
+        shouldRebuild: (String pre, String next) {
+          return pre != next;
+        },
+        builder: (BuildContext context, err, __) {
+          if (err.isNotEmpty) {
+            return SmallUserDialog(err, context.read<SearchWordsProvider>().confirmReadErrorMsg);
+          }
+          return const SizedBox.shrink();
+        });
+  }
+
+  Widget _handleCategoriesProviderErrors() {
+    return Selector<CategoriesProvider, String>(
+        selector: (_, state) => state.categoriesErrorMsg,
+        shouldRebuild: (String pre, String next) {
+          return pre != next;
+        },
+        builder: (BuildContext context, err, __) {
+          if (err.isNotEmpty) {
+            return SmallUserDialog(err, context.read<CategoriesProvider>().confirmReadErrorMsg);
+          }
+          return const SizedBox.shrink();
+        });
   }
 }

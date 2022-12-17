@@ -8,14 +8,22 @@ import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/foundation.dart';
 
 class SearchWordsProvider with ChangeNotifier {
-  SearchWordsProvider(this._wr);
+  SearchWordsProvider(this._wp);
 
-  final WordsProvider _wr;
+  final WordsProvider _wp;
 
   String _errorMsg = '';
 
   String get errorMsg => _errorMsg;
 
+  void confirmReadErrorMsg() {
+    if(_errorMsg.isNotEmpty) {
+      _errorMsg = '';
+      notifyListeners();
+    }
+  }
+
+  // tests using this method:
   set errorMsg(String value) {
     if (_errorMsg != value) {
       _errorMsg = value;
@@ -137,7 +145,7 @@ class SearchWordsProvider with ChangeNotifier {
     final String likeString = prepareLikeSql(queryValue);
     try {
       final String sql = '${DbConsts.selectAllFromTableWords} $likeString';
-      final List<Word> words = await _wr.rawQuerySearch(sql);
+      final List<Word> words = await _wp.rawQuerySearch(sql);
       return words;
     } catch (e) {
       if (kDebugMode) print('SearchWordsProvider searchQuery ERROR:\n $e');
@@ -192,7 +200,7 @@ class SearchWordsProvider with ChangeNotifier {
       args.add(1);
     }
     try {
-      final List<Word> words = await _wr.readPaginated(
+      final List<Word> words = await _wp.readPaginated(
         offset: offset,
         limit: limit,
         where: where,
@@ -229,7 +237,7 @@ class SearchWordsProvider with ChangeNotifier {
   Future<void> delete(int id) async {
     _clearErrorMsg();
     try {
-      await _wr.delete(id);
+      await _wp.delete(id);
       _paginatedList.removeWhere((element) => element.id == id);
       _listOffset = _listOffset - 1;
       notifyListeners();
@@ -243,13 +251,13 @@ class SearchWordsProvider with ChangeNotifier {
   Future<void> toggleFavorite(Word i) async {
     final int value = i.isFavorite == 1 ? 0 : 1;
     try {
-      await _wr.reverseIsFavorite(i);
+      await _wp.reverseIsFavorite(i);
       _paginatedList =
           _paginatedList.map((e) => e.id == i.id ? e.copyWith(isFavorite: value) : e).toList();
       notifyListeners();
       _controller.add(UnmodifiableListView<Word>(_paginatedList));
     } catch (e) {
-      _errorMsg = 'Some thing has happened 🥴\n The word was not deleted';
+      _errorMsg = 'Some thing has happened 🥴\n Changes not saved';
       notifyListeners();
     }
   }

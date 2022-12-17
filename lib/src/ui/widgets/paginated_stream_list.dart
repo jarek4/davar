@@ -35,11 +35,6 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
 
   @override
   Widget build(BuildContext context) {
-    bool hasErrorMsg = Provider.of<SearchWordsProvider>(context, listen: false).errorMsg.isNotEmpty;
-    if (hasErrorMsg) {
-      utils.showSnackBarInfo(context,
-          msg: Provider.of<SearchWordsProvider>(context, listen: false).errorMsg);
-    }
     return StreamBuilder<UnmodifiableListView<Word>?>(
       stream: Provider.of<SearchWordsProvider>(context, listen: false).filteredWords,
       initialData: UnmodifiableListView<Word>([]),

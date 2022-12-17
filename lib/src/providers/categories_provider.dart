@@ -38,6 +38,13 @@ class CategoriesProvider with ChangeNotifier {
 
   String get categoriesErrorMsg => _errorMsg;
 
+  void confirmReadErrorMsg() {
+    if(_errorMsg.isNotEmpty) {
+      _errorMsg = '';
+      notifyListeners();
+    }
+  }
+
   String _newCategoryName = '';
 
   String get newCategoryName => _newCategoryName;

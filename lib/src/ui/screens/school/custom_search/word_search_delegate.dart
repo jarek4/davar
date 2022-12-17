@@ -77,37 +77,34 @@ class WordSearchDelegate extends SearchDelegate<Word?> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text(
-            'Which element you want to add\n at the beginning of the main list?',
-            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
+    return Column(children: [
+      const Padding(
+        padding: EdgeInsets.only(top: 8.0),
+        child: Text(
+          'Which element you want to add\n at the beginning of the main list?',
+          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
-        const Divider(height: 13.0, thickness: 1.4),
-        Expanded(
-          child: _layoutBuilderWrapper(StreamBuilder<UnmodifiableListView<Word>?>(
-            stream: provider.querySearch(query),
-            initialData: UnmodifiableListView<Word>([]),
-            builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<Word>?> snapshot) {
-              final bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
-              if (isWaiting) return buildLoadingIndicator();
-              if (snapshot.hasError) {
-                utils.showSnackBarInfo(context, msg: snapshot.error.toString());
-              }
-              if (!snapshot.hasData) return const Text('Maybe your word\'s list is empty 😯');
-              final UnmodifiableListView<Word> data =
-                  snapshot.data ?? UnmodifiableListView<Word>([]);
-              if (data.isEmpty) return const Text('Nothing was found.');
-              return _buildItemsList(data, _onResultTap, isWaiting);
-            },
-          )),
-        )
-      ],
-    );
+      ),
+      const Divider(height: 13.0, thickness: 1.4),
+      Expanded(
+        child: _layoutBuilderWrapper(StreamBuilder<UnmodifiableListView<Word>?>(
+          stream: provider.querySearch(query),
+          initialData: UnmodifiableListView<Word>([]),
+          builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<Word>?> snapshot) {
+            final bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
+            if (isWaiting) return buildLoadingIndicator();
+            if (snapshot.hasError) {
+              utils.showSnackBarInfo(context, msg: snapshot.error.toString());
+            }
+            if (!snapshot.hasData) return const Text('Maybe your word\'s list is empty 😯');
+            final UnmodifiableListView<Word> data = snapshot.data ?? UnmodifiableListView<Word>([]);
+            if (data.isEmpty) return const Text('Nothing was found.');
+            return _buildItemsList(data, _onResultTap, isWaiting);
+          },
+        )),
+      )
+    ]);
   }
 
   void _onResultTap(BuildContext context, Word item) async {
@@ -116,8 +113,6 @@ class WordSearchDelegate extends SearchDelegate<Word?> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    bool hasErrorMsg = provider.errorMsg.isNotEmpty;
-    if (hasErrorMsg) utils.showSnackBarInfo(context, msg: provider.errorMsg);
     return Container(
       alignment: Alignment.center,
       child: _layoutBuilderWrapper(StreamBuilder<UnmodifiableListView<Word>?>(
@@ -142,12 +137,10 @@ class WordSearchDelegate extends SearchDelegate<Word?> {
 
   Widget _buildEmptyData() {
     return Center(
-      child: Column(
-        children: [
-          const Text('Nothing was found.'),
-          TextButton(onPressed: () => provider.searchQuery(query), child: const Text('Try Again'))
-        ],
-      ),
+      child: Column(children: [
+        const Text('Nothing was found.'),
+        TextButton(onPressed: () => provider.searchQuery(query), child: const Text('Try Again'))
+      ]),
     );
   }
 }
