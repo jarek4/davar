@@ -21,12 +21,11 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
       // check if category exists:
       if (nameRecords > 0) return 0;
       // insert returns created category id
-      int response = await db.insert(
+      final int response = await db.insert(
         DbConsts.tableWordCategories,
         category,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      print('DB createWordCategory response: $response \n');
       return response;
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
@@ -51,7 +50,6 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
           e.toString(), Exception('DatabaseException. DB class deleteWordCategory. id = $id'));
       throw Exception('Category was not deleted. Sorry!');
     } catch (e) {
-      print(e);
       throw Exception('category was not deleted. Sorry!');
     }
   }
@@ -77,7 +75,6 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
           Exception('DatabaseException. DB class readAllWordCategory. UserId = $userId'));
       throw Exception('Category error!');
     } catch (e) {
-      print(e);
       throw Exception('category error!');
     }
   }
@@ -110,7 +107,6 @@ class WordCategoriesDb implements IWordCategoriesLocalDb<Map<String, dynamic>> {
           e.toString(), Exception('DatabaseException. DB class readWordCategory. Id = $id'));
       throw Exception('Category error!');
     } catch (e) {
-      print(e);
       throw Exception('category error!');
     }
   }

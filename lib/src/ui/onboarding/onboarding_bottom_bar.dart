@@ -24,18 +24,12 @@ class OnboardingBottomBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              const Text('Signing in, I agree to the', style: TextStyle(fontSize: 12)),
-              _buildTermsLink(context),
-              const Text(
-                'and',
-                style: TextStyle(fontSize: 12),
-              ),
-              _buildPrivacyLink(context),
-            ],
-          ),
+          Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
+            const Text('Signing in, I agree to the', style: TextStyle(fontSize: 12)),
+            _buildTermsLink(context),
+            const Text('and', style: TextStyle(fontSize: 12)),
+            _buildPrivacyLink(context),
+          ]),
           ClipRRect(
             borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
@@ -74,9 +68,8 @@ class OnboardingBottomBar extends StatelessWidget {
 
   TextButton _buildPrivacyLink(BuildContext context) {
     return TextButton(
-      onPressed: () => _pushFullScreenDialog(context, utils.AssetsPath.txtPrivacyStatement),
-      child: const Text('privacy statement', style: TextStyle(fontSize: 12)),
-    );
+        onPressed: () => _pushFullScreenDialog(context, utils.AssetsPath.txtPrivacyStatement),
+        child: const Text('privacy statement', style: TextStyle(fontSize: 12)));
   }
 
   TextButton _buildTermsLink(BuildContext context) {

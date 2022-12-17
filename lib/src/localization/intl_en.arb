@@ -16,17 +16,65 @@
   "@authName": {},
   "authYourLanguage": "your language",
   "@authYourLanguage": {},
+  "cancel": "cancel",
+  "@cancel": {},
+  "cannotTryNoMore": "You cannot try any more. Please register new user",
+  "@cannotTryNoMore": {
+    "description": "You cannot try any more. Please register new user"
+  },
+  "canScore": "You can score:",
+  "@canScore": {
+    "description": "points"
+  },
+  "category": "category",
+  "@category": {},
+  "changePwd": "Change password",
+  "@changePwd": {},
+  "chooseLang": "Please choose language",
+  "@chooseLang": {},
   "clickAdToSupport": "Support my app by clicking this ad",
   "@clickAdToSupport": {
     "description": "click ad"
   },
+  "close": "close",
+  "@close": {},
+  "clue": "clue",
+  "@clue": {},
+  "clueNotAdded": "clue not added",
+  "@clueNotAdded": {},
+  "confirmDeleteWord": "Are you sure, you want to delete this word?",
+  "@confirmDeleteWord": {},
+  "createdAt": "created at",
+  "@createdAt": {},
+  "createLearningProfile": "Create your learning profile",
+  "@createLearningProfile": {},
   "delete": "delete",
   "@delete": {},
+  "doFillFields": "Do you filled all fields",
+  "@doFillFields": {},
+  "edit": "edit",
+  "@edit": {},
+  "error": "error",
+  "@error": {},
   "favorite": "Favorite",
   "@favorite": {},
   "fieldNotEmpty": "This field cannot be empty",
   "@fieldNotEmpty": {
     "description": "field cannt be empty"
+  },
+  "forgotPwd": "Forgot password?",
+  "@forgotPwd": {
+    "description": "Forgot password?"
+  },
+  "invalidEmail": "invalid email",
+  "@invalidEmail": {},
+  "invalidPwd": "Invalid password! Example:",
+  "@invalidPwd": {
+    "description": "Invalid password! Example:"
+  },
+  "languageToLearn": "language you want to learn",
+  "@languageToLearn": {
+    "description": "language you want to learn"
   },
   "listAddListTop": "Which element you want to add at the beginning of the main list",
   "@listAddListTop": {
@@ -40,6 +88,8 @@
   "@loading": {
     "description": "loading"
   },
+  "loadMore": "Load more",
+  "@loadMore": {},
   "moreAddCategory": "Add new category",
   "@moreAddCategory": {},
   "moreInfo": "more information",
@@ -48,6 +98,10 @@
   },
   "moreManageCategories": "Manage categories. Add new one, delete or edit.",
   "@moreManageCategories": {},
+  "newPwd": "New password",
+  "@newPwd": {
+    "description": "New password"
+  },
   "newSentence": "New sentence",
   "@newSentence": {
     "description": "add new sentence"
@@ -56,19 +110,55 @@
   "@newWord": {
     "description": "add new word"
   },
+  "next": "next",
+  "@next": {},
+  "no": "No",
+  "@no": {},
   "noData": "Data is unavailable",
   "@noData": {
     "description": "no data"
   },
+  "noMoreToPlay": "No more word to play",
+  "@noMoreToPlay": {},
   "nothingFound": "Nothing was found",
   "@nothingFound": {},
-  "pageAddClue": "clue",
-  "@pageAddClue": {},
-  "quizAddAtLeast": "Add at least: {num} more to play.",
+  "notSaved": "not saved",
+  "@notSaved": {},
+  "notThisTime": "Not this time",
+  "@notThisTime": {
+    "description": "quiz lose"
+  },
+  "noUndo": "You cannot undo deleting",
+  "@noUndo": {
+    "description": "delete"
+  },
+  "points": "points",
+  "@points": {},
+  "pwd": "password",
+  "@pwd": {
+    "description": "password"
+  },
+  "pwdNotStrong": "password is not strong",
+  "@pwdNotStrong": {
+    "description": "password is not strong"
+  },
+  "pwdReset": "Reset password",
+  "@pwdReset": {
+    "description": "Reset password"
+  },
+  "pwdResetWhichLang": "Which language you learn?",
+  "@pwdResetWhichLang": {
+    "description": "Which language you learn?"
+  },
+  "pwdWasChanged": "Password was changed",
+  "@pwdWasChanged": {},
+  "quit": "quit",
+  "@quit": {},
+  "quizAddAtLeast": "Add at least:",
   "@quizAddAtLeast": {
     "description": "add words number"
   },
-  "quizAdded": "Until now you have been added {num} words",
+  "quizAdded": "Until now you have been added",
   "@quizAdded": {
     "description": "until now numbers of words"
   },
@@ -83,6 +173,24 @@
   "quizManual2": "If you have added a clue to the word,  you will be able to use it. But it will takes 1 point. The number of the points of a particular word will be increased accordingly.",
   "@quizManual2": {
     "description": "how to play quiz"
+  },
+  "remove": "remove",
+  "@remove": {},
+  "reset": "reset",
+  "@reset": {},
+  "save": "save",
+  "@save": {},
+  "saveChanges": "Save your changes",
+  "@saveChanges": {},
+  "seeMore": "see more",
+  "@seeMore": {},
+  "seeYou": "Hope to see you soon",
+  "@seeYou": {
+    "description": "log out hope to see you soon"
+  },
+  "selectCorrect": "Select the correct answer",
+  "@selectCorrect": {
+    "description": "correct answer"
   },
   "sentence": "sentence",
   "@sentence": {
@@ -118,6 +226,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
+  "someThingHappend": "something has happened",
+  "@someThingHappend": {},
   "statsQuizScore": "The highest quiz score.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -138,14 +248,40 @@
   "@statsWords": {
     "description": "words"
   },
+  "takesPoint": "takes 1 point",
+  "@takesPoint": {
+    "description": "1"
+  },
+  "thankYou": "Thank you",
+  "@thankYou": {},
+  "total": "Total",
+  "@total": {},
   "tryAgain": "Try again",
   "@tryAgain": {},
+  "tryFromBeginniing": "Please try again from the beginning",
+  "@tryFromBeginniing": {
+    "description": "Please try again from the beginning"
+  },
   "wait": "Wait",
   "@wait": {
     "description": "wait"
   },
+  "welcomeBack": "Welcome back",
+  "@welcomeBack": {},
   "word": "word",
   "@word": {
     "description": "word"
+  },
+  "words": "words",
+  "@words": {
+    "description": "plural"
+  },
+  "wordsQuiz": "Words Quiz",
+  "@wordsQuiz": {},
+  "yes": "Yes",
+  "@yes": {},
+  "youWin": "You win",
+  "@youWin": {
+    "description": "points"
   }
 }

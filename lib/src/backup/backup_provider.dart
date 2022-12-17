@@ -38,7 +38,6 @@ class BackupProvider with ChangeNotifier {
   String get info => _info;
 
   Future<void> restoreDatabaseFromFile() async {
-    print('BP restoreDatabaseFromFile');
     _handleStatusChange(BackupStatus.loading);
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -47,7 +46,7 @@ class BackupProvider with ChangeNotifier {
       String res = await _localDB.restoreDatabaseFromFile(firstFile);
       _handleStatusChange(BackupStatus.ready, info: 'Successfully Restored - res: $res');
     } catch (e) {
-      print('BP restoreDatabaseFromFile ERROR: $e');
+      if (kDebugMode) print('BP restoreDatabaseFromFile ERROR: $e');
       _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
     }
   }
@@ -75,7 +74,6 @@ class BackupProvider with ChangeNotifier {
   }
 
   Future<void> makeDatabaseFileCopy() async {
-    print('BP makeDatabaseFileCopy');
     _handleStatusChange(BackupStatus.loading);
     try {
       // grant permissions
@@ -107,7 +105,6 @@ class BackupProvider with ChangeNotifier {
     try {
       // device file system accessible
       final File? writtenFile = await _writeDbFile(saveTo);
-      print('BP makeDatabaseFileCopy writtenFile.path => ${writtenFile?.path}');
       if (writtenFile == null) {
         // backup copy not saved!
         _handleStatusChange(BackupStatus.error, err: _noPermissionInfo);
@@ -117,9 +114,7 @@ class BackupProvider with ChangeNotifier {
         _handleStatusChange(BackupStatus.ready, info: 'Backup location:\n${writtenFile.path}');
       }
     } on FileSystemException catch (e) {
-      if (kDebugMode) {
-        print('BackupProvider makeDatabaseFileCopy FileSystemException: $e');
-      }
+      if (kDebugMode) print('BP makeDatabaseFileCopy FileSystemException: $e');
     } catch (e) {
       if (kDebugMode) print('BP makeDatabaseFileCopy E: $e');
       _handleStatusChange(BackupStatus.error, err: 'Backup copy not saved');
@@ -138,9 +133,7 @@ class BackupProvider with ChangeNotifier {
       // user easy-access folder inaccessible or iOS platform
       return await utils.GetDirectory.getUserAccessibleDirectory();
     } on FileSystemException catch (e) {
-      if (kDebugMode) {
-        print('BackupProvider getDirectoryToSave FileSystemException: $e');
-      }
+      if (kDebugMode) print('BP getDirectoryToSave FileSystemException: $e');
       return null;
     } catch (e) {
       if (kDebugMode) print('BP getDirectoryToSave ERROR: $e');
@@ -161,14 +154,10 @@ class BackupProvider with ChangeNotifier {
         }
       }
     } on FileSystemException catch (e) {
-      if (kDebugMode) {
-        print('BackupProvider tryToGetAndroidDir FileSystemException: $e');
-      }
+      if (kDebugMode) print('BP tryToGetAndroidDir FileSystemException: $e');
       return null;
     } catch (e) {
-      if (kDebugMode) {
-        print('tryToGetAndroidUserDirectory $path ERROR: $e');
-      }
+      if (kDebugMode) print('tryToGetAndroidUserDirectory $path ERROR: $e');
     }
     return null;
   }
@@ -191,14 +180,12 @@ class BackupProvider with ChangeNotifier {
       if (bdPathAndName == null) return null;
       File bdSource = File(bdPathAndName);
       final bool isFile = await bdSource.exists();
-      print('writeDbFile bdSource.path: ${bdSource.path} --- exists() => $isFile');
       if (!isFile) return null; // database file object not created!
       String newPath = '${location.path}/$_backupFileName-$timeStamp$_backupFileExtension';
       File copy = await bdSource.copy(newPath);
-      print('writeDbFile copy.path: ${copy.path}');
       return copy;
     } on FileSystemException catch (e) {
-      if (kDebugMode) print('BackupProvider writeDbFile FileSystemException: $e');
+      if (kDebugMode) print('BP writeDbFile FileSystemException: $e');
       return null;
     } catch (e) {
       if (kDebugMode) print('writeDbFile(Directory $location) E: $e');
@@ -208,7 +195,6 @@ class BackupProvider with ChangeNotifier {
 
   void _handleStatusChange(BackupStatus status,
       {bool doNotify = true, String info = '', String err = ''}) {
-    print('handleStatusChange $status info: $info; E: $err');
     _error = err;
     _info = info;
     _status = status;

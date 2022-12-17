@@ -1,6 +1,6 @@
 import 'package:davar/src/theme/theme.dart';
-import 'package:flutter/material.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
+import 'package:flutter/material.dart';
 
 class DropDownSelect<T> extends StatelessWidget {
   final String hintText;
@@ -25,7 +25,6 @@ class DropDownSelect<T> extends StatelessWidget {
       builder: (FormFieldState<T> state) {
         return InputDecorator(
           decoration: inputDecoration(label: hintText),
-          // isEmpty: value == null || value == '',
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
               dropdownColor: Colors.amberAccent,

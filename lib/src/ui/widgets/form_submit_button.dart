@@ -14,12 +14,7 @@ class FormSubmitBtn extends StatelessWidget {
     return MaterialButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         onPressed: () {
-          if (formState != null && formState!.validate()) {
-            onSubmit();
-          } else {
-            print(
-                'is form.state null: ${formState == null} .. is form valid: ${formState?.validate()}');
-          }
+          if (formState != null && formState!.validate()) onSubmit();
         },
         padding: const EdgeInsets.all(12),
         color: Colors.lightBlueAccent,

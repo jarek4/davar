@@ -1,9 +1,7 @@
-import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/backup/backup.dart';
 import 'package:davar/src/data/models/supported_languages/supported.dart';
 import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/settings/settings_controller.dart';
-import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,19 +10,6 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider provider, _) {
-      switch (provider.status) {
-        case AuthenticationStatus.authenticated:
-          return _buildScreenBody(context, provider.user.name, provider.user.email,
-              provider.user.native, provider.user.learning);
-        default:
-          return const UnauthenticatedInfo(key: Key('More-SettingsScreen-not authenticated'));
-      }
-    });
-  }
-
-  Widget _buildScreenBody(
-      BuildContext context, String name, String email, String native, String learning) {
     return Column(children: [
       const Padding(
         padding: EdgeInsets.only(top: 4.0, bottom: 8.0),
@@ -43,10 +28,10 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildThemeModeTile() {
     return Consumer<SettingsController>(
         builder: (BuildContext context, SettingsController settings, _) {
-      final ThemeMode mode = settings.themeMode;
-      const ThemeMode a = ThemeMode.system;
-      const ThemeMode d = ThemeMode.dark;
-      const ThemeMode l = ThemeMode.light;
+      final ThemeMode tm = settings.themeMode;
+      const ThemeMode tmS = ThemeMode.system;
+      const ThemeMode tmD = ThemeMode.dark;
+      const ThemeMode tmL = ThemeMode.light;
       final Color inactiveColor =
           Theme.of(context).iconTheme.color?.withOpacity(0.6) ?? Colors.black.withOpacity(0.6);
       Color activeColor = Theme.of(context).colorScheme.primary.withOpacity(0.8);
@@ -60,9 +45,9 @@ class SettingsScreen extends StatelessWidget {
                 const Expanded(child: Text('Auto')),
                 Expanded(
                     child: IconButton(
-                        onPressed: () => settings.updateThemeMode(a),
+                        onPressed: () => settings.updateThemeMode(tmS),
                         icon: Icon(Icons.device_unknown_rounded,
-                            color: mode == a ? activeColor : inactiveColor))),
+                            color: tm == tmS ? activeColor : inactiveColor))),
               ]),
             ),
             Padding(
@@ -71,9 +56,9 @@ class SettingsScreen extends StatelessWidget {
                 const Expanded(child: Text('Light mode')),
                 Expanded(
                     child: IconButton(
-                        onPressed: () => settings.updateThemeMode(l),
+                        onPressed: () => settings.updateThemeMode(tmL),
                         icon: Icon(Icons.light_mode,
-                            color: mode == l ? activeColor : inactiveColor))),
+                            color: tm == tmL ? activeColor : inactiveColor))),
               ]),
             ),
             Padding(
@@ -82,9 +67,9 @@ class SettingsScreen extends StatelessWidget {
                 const Expanded(child: Text('Dark mode')),
                 Expanded(
                     child: IconButton(
-                        onPressed: () => settings.updateThemeMode(d),
+                        onPressed: () => settings.updateThemeMode(tmD),
                         icon: Icon(Icons.dark_mode_outlined,
-                            color: mode == d ? activeColor : inactiveColor))),
+                            color: tm == tmD ? activeColor : inactiveColor))),
               ]),
             )
           ]);

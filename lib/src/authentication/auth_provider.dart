@@ -1,13 +1,10 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 
 import 'package:davar/locator.dart';
+import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_authentication_repository.dart';
 import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/foundation.dart';
-
-import '../data/models/models.dart';
 
 // default User == emptyUser returned when unauthenticated [AppConst.emptyUser]:
 // emptyUser (email: 'empty' , id: 1, name: 'empty', password: '', authToken: null);
@@ -42,25 +39,20 @@ class AuthProvider with ChangeNotifier {
 
   String get authenticationError => _errorMsg;
 
-  User? _forgotPasswordUserFound;
+  // User? _forgotPasswordUserFound;
 
   void _onUserChange(User user) {
-    final String m = 'AuthProvider _onUserChange [user.id: ${user.id}, user.name: ${user.name}]';
-    print(m);
     // if (user == _user) return; // it may case error - stacks at status unknown
     if (user == AppConst.emptyUser) {
       _errorMsg = '';
       _status = AuthenticationStatus.unauthenticated;
-      print('1 _onUserChange AuthenticationStatus.unauthenticated _user.id: ${_user.id}');
     } else if (user != AppConst.unknownUser) {
       // else if (user != AppConst.emptyUser && user != AppConst.unknownUser)
       _status = AuthenticationStatus.authenticated;
       _errorMsg = '';
-      print('2 _onUserChange AuthenticationStatus.authenticated id: ${_user.id}');
     } else {
       _status = AuthenticationStatus.unknown;
       _errorMsg = '';
-      print('3 _onUserChange AuthenticationStatus.unknown id: ${_user.id}');
     }
     _user = user;
     notifyListeners();
@@ -87,10 +79,6 @@ class AuthProvider with ChangeNotifier {
     _status = AuthenticationStatus.unknown;
     notifyListeners();
     try {
-      /// TODO: delete delay
-      await Future.delayed(const Duration(seconds: 1), () {
-        print('delay 1 sec');
-      });
       await _authRepository.tryToAuthenticate();
     } catch (e) {
       String err = e.toString();
@@ -109,16 +97,11 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     try {
       await _authRepository.signOut();
-
-      /// TODO: delete delay
-      await Future.delayed(const Duration(seconds: 2), () {
-        print('delay 2 sec');
-      });
       _status = AuthenticationStatus.loggedOut;
       notifyListeners();
     } catch (e) {
       final String err = e.toString();
-      final String msg = 'Sorry! You maybe still logged in.\n$err';
+      final String msg = 'Perhaps you are still logged in.\n$err';
       _errorMsg = msg;
       _status = AuthenticationStatus.error;
       notifyListeners();
@@ -132,11 +115,6 @@ class AuthProvider with ChangeNotifier {
     }
     try {
       final int res = await _authRepository.updateUser(u);
-
-      /// TODO: delete delay
-      await Future.delayed(const Duration(seconds: 2), () {
-        print('delay 2 sec');
-      });
       return res;
     } catch (e) {
       final String err = e.toString();
@@ -152,6 +130,7 @@ class AuthProvider with ChangeNotifier {
   void dispose() {
     super.dispose();
     _errorMsg = '';
+    _user = AppConst.emptyUser;
     _authRepositorySubscription.cancel();
   }
 }

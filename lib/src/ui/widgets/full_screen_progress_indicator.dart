@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FullScreenProgressIndicator extends StatelessWidget {
   const FullScreenProgressIndicator({Key? key, this.additionalErrorMessage, this.actionButton})
@@ -16,6 +17,7 @@ class FullScreenProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String loading = AppLocalizations.of(context)?.loading ?? 'Loading';
     return Scaffold(
       body: Center(
         child: Column(
@@ -29,19 +31,18 @@ class FullScreenProgressIndicator extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                 )),
             const SizedBox(height: 5),
-            const Text('Loading ... wait...'),
+            Text(loading),
             const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.only(top: 10.0),
-              child: Text(_makeInfo(additionalErrorMessage), textAlign: TextAlign.center, style: const TextStyle(height:  2.0),),
+              child: Text(_makeInfo(additionalErrorMessage),
+                  textAlign: TextAlign.center, style: const TextStyle(height: 2.0)),
             ),
             if (actionButton != null)
-              Column(
-                children: [
-                  const SizedBox(height: 5),
-                  actionButton!,
-                ],
-              )
+              Column(children: [
+                const SizedBox(height: 5),
+                actionButton!,
+              ])
           ],
         ),
       ),

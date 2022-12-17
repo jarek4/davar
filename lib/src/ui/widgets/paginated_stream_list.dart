@@ -7,6 +7,7 @@ import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 /// Need initState for updating StreamBuilder. When list item is edited then also data in
@@ -20,15 +21,6 @@ class PaginatedStreamList extends StatefulWidget {
 }
 
 class _PaginatedStreamListState extends State<PaginatedStreamList> {
-/*  @override
-  void initState() {
-    super.initState();
-    // stream =Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      // stream =Provider.of<SearchWordsProvider>(context, listen: false).filteredWords;
-    });
-  }*/
-
   @override
   void didChangeDependencies() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -37,7 +29,7 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
     super.didChangeDependencies();
   }
 
-  void loadMore({isUpdate = false}) {
+  void _loadMore() {
     Provider.of<SearchWordsProvider>(context, listen: false).filter();
   }
 
@@ -50,7 +42,6 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
     }
     return StreamBuilder<UnmodifiableListView<Word>?>(
       stream: Provider.of<SearchWordsProvider>(context, listen: false).filteredWords,
-      // stream: stream,
       initialData: UnmodifiableListView<Word>([]),
       builder: (BuildContext context, AsyncSnapshot<UnmodifiableListView<Word>?> snapshot) {
         final bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
@@ -64,13 +55,13 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
   }
 
   ListView _buildItemsList(UnmodifiableListView<Word> data, bool isWaiting) {
+    final String more = AppLocalizations.of(context)?.loadMore ?? 'Load more';
     return ListView.builder(
       shrinkWrap: true,
       itemCount: data.length + 1,
       itemBuilder: (context, index) {
-        // if (data.isEmpty) return _buildNoData();
         return (index == data.length)
-            ? _buildLoadMoreTextBtn(isWaiting: isWaiting)
+            ? _buildLoadMoreTextBtn(text: more, isWaiting: isWaiting)
             : WordItem(
                 item: data[index],
                 favHandle: () => _onFavoriteChange(data[index]),
@@ -108,22 +99,25 @@ class _PaginatedStreamListState extends State<PaginatedStreamList> {
   }
 
   Widget _buildNoData({bool isNullSnapshot = false}) {
+    final String nothing = AppLocalizations.of(context)?.nothingFound ?? 'Nothing was found';
+    final String empty = '${AppLocalizations.of(context)?.listEmpty} 😯';
+    final String again = AppLocalizations.of(context)?.tryAgain ?? 'Try again';
     // or OverflowBar ?
     return Wrap(
         alignment: WrapAlignment.center,
         crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 8.0,
         children: [
-          const Text('Nothing was found.'),
-          _buildLoadMoreTextBtn(text: 'Try again'),
-          isNullSnapshot ? const Text('Maybe your word\'s list is empty 😯') : const SizedBox()
+          Text(nothing),
+          _buildLoadMoreTextBtn(text: again),
+          isNullSnapshot ? Text(empty) : const SizedBox()
         ]);
   }
 
-  Widget _buildLoadMoreTextBtn({String text = 'Load More', bool isWaiting = false}) {
+  Widget _buildLoadMoreTextBtn({required String text, bool isWaiting = false}) {
     return Center(
       child: TextButton(
-          onPressed: isWaiting ? null : () => loadMore(),
+          onPressed: isWaiting ? null : () => _loadMore(),
           child:
               isWaiting ? const Center(child: CircularProgressIndicator.adaptive()) : Text(text)),
     );

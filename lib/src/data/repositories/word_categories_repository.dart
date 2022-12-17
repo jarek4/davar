@@ -49,8 +49,12 @@ class WordCategoriesRepository implements IWordCategoriesRepository<WordCategory
   /// Returns the number of changes made  -1 on error
   /// not longer then 20 characters!
   Future<int> update(WordCategory category) async {
+    WordCategory trimmedName = category;
+    if (category.name.length > 20) {
+      trimmedName = category.copyWith(name: category.name.substring(0, 20));
+    }
     try {
-      int res = await _localDB.updateWordCategory(category.toJson());
+      int res = await _localDB.updateWordCategory(trimmedName.toJson());
       return res;
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),

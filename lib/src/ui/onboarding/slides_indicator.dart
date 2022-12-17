@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SlidesIndicator extends StatelessWidget {
-  const SlidesIndicator(
-      {Key? key, required this.slidesNumber, required this.currentPage})
+  const SlidesIndicator({Key? key, required this.slidesNumber, required this.currentPage})
       : super(key: key);
   final int slidesNumber;
   final double currentPage;
@@ -22,13 +21,9 @@ class SlidesIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('SlidesIndicator currentPage = $currentPage');
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _indicator(),
-      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: _indicator()),
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_authentication_repository.dart';
 import 'package:flutter/foundation.dart';
 
-enum RegistrationStatus {submitting, error, success }
+enum RegistrationStatus { submitting, error, success }
 
 class RegistrationProvider with ChangeNotifier {
   final IAuthenticationRepository<User> _authRepository =
@@ -55,7 +55,6 @@ class RegistrationProvider with ChangeNotifier {
       _name = name;
       notifyListeners();
     }
-
   }
 
   void onNativeChange(String native) {
@@ -73,33 +72,26 @@ class RegistrationProvider with ChangeNotifier {
   }
 
   Future<void> onSubmit() async {
-    print('RegistrationProvider register');
     _errorMsg = '';
     _status = RegistrationStatus.submitting;
     notifyListeners();
-    await Future.delayed(const Duration(seconds: 1), () {
-      print('delay 1 sec');
-    });
     User submittingUser = const User().copyWith(
-      email: _email,
-      name: _name,
-      learning: _learning,
-      native: _native,
-      password: _password
-    );
+        email: _email, name: _name, learning: _learning, native: _native, password: _password);
     try {
       final int? id = await _authRepository.register(submittingUser);
-      if(id == -1) {
+      if (id == -1) {
         // email is taken
         _status = RegistrationStatus.success;
-        _errorMsg = 'Sorry email: ${submittingUser.email} is taken.\n We cant create new user with this email!';
+        _errorMsg =
+            'Sorry email: ${submittingUser.email} is taken.\n We cant create new user with this email!';
         notifyListeners();
         return;
       }
-      if(id == null || id == 0) {
+      if (id == null || id == 0) {
         // after insert to Db, query this new user from Db failed [id == 0]!
         _status = RegistrationStatus.success;
-        _errorMsg = 'Sorry it looks like there was an error!\nNew user [${submittingUser.name}] was not created ☹️';
+        _errorMsg =
+            'Sorry it looks like there was an error!\nNew user [${submittingUser.name}] was not created ☹️';
         notifyListeners();
         return;
       }
@@ -113,14 +105,6 @@ class RegistrationProvider with ChangeNotifier {
       _errorMsg = msg;
       _status = RegistrationStatus.error;
       notifyListeners();
-      /*await Future.delayed(const Duration(seconds: 2), () {
-        print('delay catch 2 sec');
-      });*/
-    } /*finally {
-      _isLoading = false;
-      _errorMsg = '';
-      notifyListeners();
-      // notifyListeners();
-    }*/
+    }
   }
 }

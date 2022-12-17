@@ -1,10 +1,9 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:davar/src/errors_reporter/errors_reporter.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:sqflite/sqflite.dart';
@@ -26,25 +25,22 @@ class DB {
 
   // iOS: path_provider is recommended to get the databases directory.
   Future<Database> _initDB(String filePath) async {
-     final String dbPath = await _getPath();
+    final String dbPath = await _getPath();
     final String path = dart_path.join(dbPath, filePath);
     return await openDatabase(path,
         version: DbConsts.dbVersion,
         onConfigure: _onConfigure,
         onCreate: _onCreate,
-        onUpgrade: _onUpgrade,
-        onOpen: _onOpen);
+        onUpgrade: _onUpgrade);
   }
 
   Future<String> _getPath() async {
-   final String? path = await utils.GetDirectory.getDbPath();
-   print('DB path: $path');
-   if(path != null) return path;
-   final String dbPath = await getDatabasesPath();
-   print('DB path: $dbPath');
-   // Android: /data/user/0/com.example.davar/files
-   // iOS: /data/Containers/Data/Application/CA..6/Library/Application Support/davar_database.db
-   return dbPath;
+    final String? path = await utils.GetDirectory.getDbPath();
+    if (path != null) return path;
+    final String dbPath = await getDatabasesPath();
+    // Android: /data/user/0/com.example.davar/files
+    // iOS: /data/Containers/Data/Application/CA..6/Library/Application Support/davar_database.db
+    return dbPath;
   }
 
   _onConfigure(Database db) async {
@@ -56,45 +52,26 @@ class DB {
       await db.execute(DbConsts.createUsersTableStatement);
       await db.execute(DbConsts.createWordsTableStatement);
       await db.execute(DbConsts.createWordCategoriesTableStatement);
-      // create common category [no category] in word_categories table
       await db.insert(DbConsts.tableUsers, utils.AppConst.emptyUser.toJson());
+      // create common category [no category] in word_categories table
       await db.insert(DbConsts.tableWordCategories, DbConsts.commonNoCategory);
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
           Exception('Database error. DB class when openDatabase was called - onCreate callback'));
-      print(e.toString());
       throw Exception('Database can not to be created. Sorry!');
     } on PlatformException catch (err) {
       await ErrorsReporter.genericThrow(
           err.toString(), PlatformException(code: err.code, details: 'Sqflite-class DB-_onCreate'));
-      throw Exception(
-          'Same error occurs. Please check whether the application has the required permissions');
+      throw Exception('Same error occurs. Please check application required permissions');
     } catch (e) {
       throw Exception('Sorry device settings do not allow the application to be installed');
-    }
-  }
-
-  _onOpen(Database db) async {
-    try {
-      print('DB-onOpen. Database name: ${DbConsts.dbName}');
-    } on DatabaseException catch (e) {
-      await ErrorsReporter.genericThrow(e.toString(),
-          Exception('Database error. DB class when openDatabase was called - onOpen callback'));
-      throw Exception('Database can not to be open. Sorry!');
-    } on PlatformException catch (err) {
-      await ErrorsReporter.genericThrow(
-          err.toString(), PlatformException(code: err.code, details: 'Sqflite-class DB-_onOpen'));
-      throw Exception(
-          'Same error occurs. Please check whether the application has the required permissions');
-    } catch (e) {
-      throw Exception('Sorry device settings do not allow the application to be started');
     }
   }
 
   FutureOr<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     try {
       if (oldVersion < newVersion) {
-        print('DB-onUpgrade. Database name: ${DbConsts.dbName}');
+        if (kDebugMode) print('DB-onUpgrade. Database name: ${DbConsts.dbName}');
       }
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
@@ -103,17 +80,10 @@ class DB {
     } on PlatformException catch (err) {
       await ErrorsReporter.genericThrow(err.toString(),
           PlatformException(code: err.code, details: 'Sqflite-class DB-_onUpgrade'));
-      throw Exception(
-          'Same error occurs. Please check whether the application has the required permissions');
+      throw Exception('Same error occurs. Please check application required permissions');
     } catch (e) {
       throw Exception('Sorry device settings do not allow performing this operation');
     }
-  }
-
-  Future<String> getVersion() async {
-    final Database db = await instance.database;
-    final int currentVersion = await db.getVersion();
-    return currentVersion.toString();
   }
 
   Future<int> queryRowCount(
@@ -161,7 +131,6 @@ class DB {
     const String append = ', ';
     for (int i = 0; i < array.length; i++) {
       String param = array[i];
-      // String temp = '$tableName.$param =?';
       String temp = '$param =?';
       if (i < array.length - 1) {
         statement = '$statement$temp$append';
@@ -178,7 +147,6 @@ class DB {
     const String dbFileName = '${DbConsts.dbName}.db';
     final String dbPath = await _getPath();
     final String path = dart_path.join(dbPath, dbFileName);
-    print('DB-restoreDatabaseFromFile(File:  ${source.path})');
     // source.path :
     // /storage/emulated/0/Android/data/com.example.davar/files/Davar/davar.db
     try {
@@ -198,7 +166,6 @@ class DB {
               'FormatException. DB class restoreDatabaseFromFile(source.path: ${source.path})'));
       throw Exception('The file: ${source.path} is a bad format');
     } catch (e) {
-      print(e);
       return 'not restored';
     }
   }
@@ -210,25 +177,8 @@ class DB {
       final String path = dart_path.join(dbPath, dbFileName);
       return path;
     } catch (e) {
-      print('DB-getDatabasePathWithFileName ERROR: $e');
+      if (kDebugMode) print('DB-getDatabasePathWithFileName ERROR: $e');
       return null;
     }
   }
-
-/* /// statement = 'name = ?, email = ?'
-  String prepareRawLikeFilterFromArray(List<String> array, List<dynamic> args) {
-    // array = ['email', 'name']; => statement = 'name = ?, email = ?'
-    String statement = '';
-    const String append = ', ';
-    for (int i = 0; i < array.length; i++) {
-      String param = array[i];
-      String temp = '$param = ?';
-      if (i < array.length - 1) {
-        statement = '$statement$temp$append';
-      } else {
-        statement = '$statement$temp';
-      }
-    }
-    return statement;
-  }*/
 }

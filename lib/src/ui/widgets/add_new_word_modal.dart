@@ -1,21 +1,23 @@
+import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class AddNewWordModal extends StatefulWidget {
-  const AddNewWordModal(
-      {Key? key,
-      this.isSentence = false,
-      this.themeColor = const Color(0XFFFF6D00),// DavarColors.wordColors2[1]
-      required this.categories,
-      required this.handleSubmit,
-      required this.handleErrorMessage})
-      : super(key: key);
+  const AddNewWordModal({
+    Key? key,
+    this.isSentence = false,
+    this.themeColor = const Color(0XFFFF6D00), // DavarColors.wordColors2[1]
+    required this.categories,
+    required this.handleSubmit,
+  }) : super(key: key);
   final Color themeColor;
   final bool isSentence;
   final List<WordCategory> categories;
   final Function handleSubmit;
-  final ValueChanged<String> handleErrorMessage;
 
   @override
   _AddNewWordModalState createState() => _AddNewWordModalState();
@@ -27,16 +29,18 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
   final TextEditingController _clueCtrl = TextEditingController();
   final GlobalKey<FormState> _addNewWordModalFormKey = GlobalKey<FormState>();
   bool _isFavorite = false;
-  String catchword = 'English - demo';
-  String userTranslation = 'Polish - demo';
+  String userNativeLanguage = 'other';
+  String userLearningLanguage = 'other';
+  String _errorInfo = '';
   late WordCategory _selectedCategory;
 
   @override
   void initState() {
     _isFavorite = false;
+    _errorInfo = '';
     _selectedCategory = widget.categories[0];
-    catchword = widget.isSentence ? 'Sentence' : 'Word';
-    userTranslation = 'Translation';
+    userNativeLanguage = context.read<AuthProvider>().user.native;
+    userLearningLanguage = context.read<AuthProvider>().user.learning;
     super.initState();
   }
 
@@ -56,8 +60,8 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
       userTranslation: _translationCtrl.value.text,
       id: DateTime.now().millisecondsSinceEpoch,
       isSentence: widget.isSentence ? 1 : 0,
-      userLearning: userTranslation,
-      userNative: catchword,
+      userLearning: userLearningLanguage,
+      userNative: userNativeLanguage,
       isFavorite: _isFavorite == true ? 1 : 0,
       userId: -1,
     );
@@ -66,17 +70,18 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLong = widget.isSentence;
-    const String cat = 'Category';
-    const String clue = 'Clue';
-    const String fav = 'Favorite';
-    const String cancel = 'Cancel';
+    final bool isSentence = widget.isSentence;
+    final String cat = utils.capitalize(AppLocalizations.of(context)?.category ?? 'Category');
+    final String clue = utils.capitalize(AppLocalizations.of(context)?.clue ?? 'Clue');
+    final String fav = AppLocalizations.of(context)?.favorite ?? 'Favorite';
+    final String cancel = utils.capitalize(AppLocalizations.of(context)?.cancel ?? 'Cancel');
     const String submit = 'OK';
     return Form(
       key: _addNewWordModalFormKey,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
-        _buildFormField(catchword, isLong ? 50 : 25, _catchwordCtrl),
-        _buildFormField(userTranslation, isLong ? 50 : 25, _translationCtrl),
+        _errorInfo.isNotEmpty ? SmallUserDialog(_errorInfo, _resetError) : const SizedBox.shrink(),
+        _buildFormField(userNativeLanguage, isSentence ? 50 : 25, _catchwordCtrl),
+        _buildFormField(userLearningLanguage, isSentence ? 50 : 25, _translationCtrl),
         _buildFormField(clue, 50, _clueCtrl),
         _buildSelectCategory(cat, context),
         const SizedBox(height: 15),
@@ -84,7 +89,7 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Row(children: [
-              const Text(fav),
+              Text(fav),
               Checkbox(
                 activeColor: Colors.green.shade400,
                 value: _isFavorite,
@@ -97,7 +102,7 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
             ]),
             TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(cancel, style: TextStyle(color: Colors.red, fontSize: 12.0))),
+                child: Text(cancel, style: const TextStyle(color: Colors.red, fontSize: 12.0))),
             OutlinedButton(
                 onPressed: () => _submitForm(context),
                 style: _btnStyle(),
@@ -108,20 +113,28 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
     );
   }
 
-  ButtonStyle? _btnStyle({bool isCancel = false}) => ButtonStyle(
+  void _resetError() {
+    setState(() {
+      _errorInfo = '';
+    });
+  }
+
+  ButtonStyle? _btnStyle() => ButtonStyle(
       shape: MaterialStateProperty.all<OutlinedBorder>(
           const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25.0)))),
       elevation: MaterialStateProperty.all<double>(2.2),
       shadowColor: MaterialStateProperty.all<Color>(Colors.green.shade50));
 
   void _submitForm(BuildContext context) {
-    widget.handleErrorMessage('The last word was not saved. Sorry! Try to restart.');
+    // final String fillAll = '${AppLocalizations.of(context)?.doFillFields}?';
     if (_addNewWordModalFormKey.currentState == null) {
-      widget.handleErrorMessage('The last word was not saved. Sorry! Try to restart.');
-      return Navigator.of(context).pop();
+      final String again = AppLocalizations.of(context)?.tryAgain ?? 'Try to restart';
+      final String notSaved = AppLocalizations.of(context)?.notSaved ?? 'not saved';
+      setState(() {
+        _errorInfo = '$notSaved. $again';
+      });
     }
     if (!_addNewWordModalFormKey.currentState!.validate()) {
-      widget.handleErrorMessage('The last word was not saved. Sorry! Do you filled all fields?');
       return;
     }
     widget.handleSubmit(_createModel());
@@ -159,8 +172,11 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
   }
 
   String? _formFieldValidation(String? input, String label) {
-    if (label == 'clue') return null;
-    return (input == null || input.isEmpty) ? 'This field cannot be empty!' : null;
+    final String c = AppLocalizations.of(context)?.clue ?? 'Clue';
+    final String noEmpty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'cannot be empty!';
+    final String l = label.toLowerCase();
+    if (l == 'clue' || l == c.toLowerCase()) return null;
+    return (input == null || input.isEmpty) ? noEmpty : null;
   }
 
   // if category name is longer then 15 characters - need to be trimmed!
@@ -169,10 +185,9 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
       child: DropDownSelect<WordCategory>(
-        key: const Key('DropDownSelect-Category'),
+        key: const Key('AddNewWordModal-DropDownSelect-Category'),
         hintText: hint,
         options: widget.categories,
-        // options: context.read<CategoriesProvider>().categories,
         value: _selectedCategory,
         onChanged: (WordCategory? newValue) {
           setState(() {

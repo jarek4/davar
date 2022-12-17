@@ -2,6 +2,7 @@ import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CategoriesFilter extends StatelessWidget {
   const CategoriesFilter(this.categories, this.selected, this.handleOnChange, {Key? key})
@@ -13,6 +14,7 @@ class CategoriesFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String c = AppLocalizations.of(context)?.category ?? 'categories';
     return SizedBox(
         height: 40.0,
         width: 130,
@@ -20,7 +22,7 @@ class CategoriesFilter extends StatelessWidget {
           padding: const EdgeInsets.only(left: 4.0),
           alignment: Alignment.center,
           child: InputDecorator(
-            decoration: theme.smallInputDecoration(label: 'categories'),
+            decoration: theme.smallInputDecoration(label: c),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<WordCategory>(
                   iconSize: 20.0,
@@ -39,10 +41,11 @@ class CategoriesFilter extends StatelessWidget {
   List<DropdownMenuItem<WordCategory>> _buildMenuItems() {
     return categories.map<DropdownMenuItem<WordCategory>>((WordCategory c) {
       return DropdownMenuItem<WordCategory>(
-          key: Key('DropdownMenuItem-$c'),
-          value: c,
-          child: Text(utils.trimTextIfLong(c.name),
-              style: const TextStyle(fontSize: 13.0), overflow: TextOverflow.fade));
+        key: Key('CategoriesFilter-DropdownMenuItem-$c'),
+        value: c,
+        child: Text(utils.trimTextIfLong(c.name),
+            style: const TextStyle(fontSize: 13.0), overflow: TextOverflow.fade),
+      );
     }).toList();
   }
 }

@@ -16,17 +16,65 @@
   "@authName": {},
   "authYourLanguage": "вашият език",
   "@authYourLanguage": {},
+  "cancel": "отмени",
+  "@cancel": {},
+  "cannotTryNoMore": "Не можете да опитвате повече. Моля, регистрирайте нов потребител",
+  "@cannotTryNoMore": {
+    "description": "You cannot try any more. Please register new user"
+  },
+  "canScore": "Може да спечелиш:",
+  "@canScore": {
+    "description": "points"
+  },
+  "category": "категория",
+  "@category": {},
+  "changePwd": "Смени паролата",
+  "@changePwd": {},
+  "chooseLang": "Моля, изберете език",
+  "@chooseLang": {},
   "clickAdToSupport": "Подкрепете приложението ми,  щракнете върху рекламаta",
   "@clickAdToSupport": {
     "description": "click ad"
   },
+  "close": "затвори",
+  "@close": {},
+  "clue": "подсказване",
+  "@clue": {},
+  "clueNotAdded": "улика не е добавена",
+  "@clueNotAdded": {},
+  "confirmDeleteWord": "Сигурни ли сте, че искате да изтриете тази дума?",
+  "@confirmDeleteWord": {},
+  "createdAt": "създаден",
+  "@createdAt": {},
+  "createLearningProfile": "Създайте своя учебен профил",
+  "@createLearningProfile": {},
   "delete": "изтрий",
   "@delete": {},
+  "doFillFields": "Попълнихте ли всички полета",
+  "@doFillFields": {},
+  "edit": "редактирай",
+  "@edit": {},
+  "error": "грешка",
+  "@error": {},
   "favorite": "Лубими",
   "@favorite": {},
   "fieldNotEmpty": "Полето не може да бъде празно",
   "@fieldNotEmpty": {
     "description": "field cannt be empty"
+  },
+  "forgotPwd": "Забравена парола?",
+  "@forgotPwd": {
+    "description": "Forgot password?"
+  },
+  "invalidEmail": "невалиден имейл",
+  "@invalidEmail": {},
+  "invalidPwd": "Невалидна парола! Пример:",
+  "@invalidPwd": {
+    "description": "Invalid password! Example:"
+  },
+  "languageToLearn": "език, който искате да научите",
+  "@languageToLearn": {
+    "description": "language you want to learn"
   },
   "listAddListTop": "Кой елемент искате да добавите в началото на основния списък",
   "@listAddListTop": {
@@ -40,6 +88,8 @@
   "@loading": {
     "description": "loading"
   },
+  "loadMore": "Зареди още",
+  "@loadMore": {},
   "moreAddCategory": "Добавете нова категория",
   "@moreAddCategory": {},
   "moreInfo": "още информация",
@@ -48,6 +98,10 @@
   },
   "moreManageCategories": "Управлявайте категориите си. Добавете нова, изтрийте или редактирайте.",
   "@moreManageCategories": {},
+  "newPwd": "Нова парола",
+  "@newPwd": {
+    "description": "New password"
+  },
   "newSentence": "Ново изречение",
   "@newSentence": {
     "description": "add new sentence"
@@ -56,19 +110,55 @@
   "@newWord": {
     "description": "add new word"
   },
+  "next": "следващ",
+  "@next": {},
+  "no": "не",
+  "@no": {},
   "noData": "Данните са недостъпни",
   "@noData": {
     "description": "no data"
   },
+  "noMoreToPlay": "Няма повече думи за игра.",
+  "@noMoreToPlay": {},
   "nothingFound": "Нищо не е открито",
   "@nothingFound": {},
-  "pageAddClue": "подсказване",
-  "@pageAddClue": {},
-  "quizAddAtLeast": "Добавете поне: {num} За да може да играете.",
+  "notSaved": "не е запазено",
+  "@notSaved": {},
+  "notThisTime": "Не и този път",
+  "@notThisTime": {
+    "description": "quiz lose"
+  },
+  "noUndo": "Не можете да отмените изтриването",
+  "@noUndo": {
+    "description": "delete"
+  },
+  "points": "точки",
+  "@points": {},
+  "pwd": "парола",
+  "@pwd": {
+    "description": "password"
+  },
+  "pwdNotStrong": "паролата не е надеждна",
+  "@pwdNotStrong": {
+    "description": "password is not strong"
+  },
+  "pwdReset": "Възстановяване на паролата",
+  "@pwdReset": {
+    "description": "Reset password"
+  },
+  "pwdResetWhichLang": "Кой език учиш?",
+  "@pwdResetWhichLang": {
+    "description": "Which language you learn?"
+  },
+  "pwdWasChanged": "Паролата беше сменена",
+  "@pwdWasChanged": {},
+  "quit": "напусни",
+  "@quit": {},
+  "quizAddAtLeast": "Добавете поне:",
   "@quizAddAtLeast": {
     "description": "add words number"
   },
-  "quizAdded": "До сега сте добавили {num} думички",
+  "quizAdded": "До сега сте добавили",
   "@quizAdded": {
     "description": "until now numbers of words"
   },
@@ -83,6 +173,24 @@
   "quizManual2": "Ако сте добавили подсказване към думата, ще можете да го използвате. Но това ще отнеме 1 точка. Броят на точките на определена дума ще бъде съответно увеличен.",
   "@quizManual2": {
     "description": "how to play quiz"
+  },
+  "remove": "премахване",
+  "@remove": {},
+  "reset": "нулиране",
+  "@reset": {},
+  "save": "запази",
+  "@save": {},
+  "saveChanges": "Запазете промените",
+  "@saveChanges": {},
+  "seeMore": "виж повече",
+  "@seeMore": {},
+  "seeYou": "Надявам се да се видим скоро",
+  "@seeYou": {
+    "description": "log out hope to see you soon"
+  },
+  "selectCorrect": "Изберете правилния отговор",
+  "@selectCorrect": {
+    "description": "correct answer"
   },
   "sentence": "изречение",
   "@sentence": {
@@ -118,6 +226,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
+  "someThingHappend": "нещо се е случило",
+  "@someThingHappend": {},
   "statsQuizScore": "Най-висок резултат от викторината.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -138,14 +248,40 @@
   "@statsWords": {
     "description": "words"
   },
+  "takesPoint": "взема 1 точка",
+  "@takesPoint": {
+    "description": "1"
+  },
+  "thankYou": "Благодаря ви",
+  "@thankYou": {},
+  "total": "Общо",
+  "@total": {},
   "tryAgain": "Опитай пак",
   "@tryAgain": {},
+  "tryFromBeginniing": "Моля, опитайте още веднъж от началото",
+  "@tryFromBeginniing": {
+    "description": "Please try again from the beginning"
+  },
   "wait": "Изчакайте",
   "@wait": {
     "description": "wait"
   },
+  "welcomeBack": "Добре дошъл отново",
+  "@welcomeBack": {},
   "word": "думичка",
   "@word": {
     "description": "word"
+  },
+  "words": "думи",
+  "@words": {
+    "description": "plural"
+  },
+  "wordsQuiz": "Викторина с думи",
+  "@wordsQuiz": {},
+  "yes": "да",
+  "@yes": {},
+  "youWin": "Печелиш",
+  "@youWin": {
+    "description": "points"
   }
 }

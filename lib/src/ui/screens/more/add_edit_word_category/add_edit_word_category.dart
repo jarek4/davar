@@ -44,6 +44,7 @@ class _AddEditWordCategoryState extends State<AddEditWordCategory> {
       key: _addEditCategoryFormKey,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         TextFormField(
+          maxLength: 20,
           decoration: const InputDecoration(hintText: 'new category'),
           initialValue: category != null ? category!.name : '',
           keyboardType: TextInputType.text,

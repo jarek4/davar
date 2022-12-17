@@ -3,6 +3,7 @@ import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:davar/src/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'edit_word.dart';
@@ -22,10 +23,33 @@ class EditWordView extends StatefulWidget {
 class _EditWordViewState extends State<EditWordView> {
   late ScrollController ctr;
 
+  String _edit = 'edit';
+  String _category = 'Category';
+  String _clue = 'clue';
+  String _noClue = 'clue not added';
+  String _created = 'Created at';
+  String _points = 'points';
+  String _reset = 'reset';
+  String _w = 'word';
+  String _s = 'sentence';
+  String _trans = 'translation';
+  String _more = 'See more';
+
   @override
   void initState() {
     super.initState();
     ctr = ScrollController();
+    _edit = AppLocalizations.of(context)?.edit ?? 'EDIT';
+    _category = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Category');
+    _created = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Created at');
+    _clue = AppLocalizations.of(context)?.clue ?? 'clue';
+    _noClue = AppLocalizations.of(context)?.clueNotAdded ?? 'clue not added';
+    _points = AppLocalizations.of(context)?.points ?? 'points';
+    _reset = utils.capitalize(AppLocalizations.of(context)?.reset ?? 'reset');
+    _w = utils.capitalize(AppLocalizations.of(context)?.word ?? 'Word');
+    _s = utils.capitalize(AppLocalizations.of(context)?.sentence ?? 'Sentence');
+    _trans = AppLocalizations.of(context)?.addTranslation ?? 'translation';
+    _more = utils.capitalize(AppLocalizations.of(context)?.seeMore ?? 'See more');
   }
 
   @override
@@ -45,23 +69,20 @@ class _EditWordViewState extends State<EditWordView> {
                 shadowColor: Colors.grey[700],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 margin: const EdgeInsets.fromLTRB(30, 70, 30, 5),
-                child: Column(
-                  children: [
-                    Padding(
+                child: Column(children: [
+                  Padding(
                       padding: const EdgeInsets.only(top: 12.0, bottom: 8.0),
-                      child: SizedBox(height: 40.0, child: Image.asset(AssetsPath.davarLogo)),
-                    ),
-                    buildHead(context),
-                    const SizedBox(height: 10),
-                    _buildCatchwordField(),
-                    _buildUserTranslationField(),
-                    const SizedBox(height: 10),
-                    _buildMoreSection(),
-                    const SizedBox(height: 4),
-                    _buildId(widget.word.id.toString()),
-                    const SizedBox(height: 6)
-                  ],
-                ),
+                      child: SizedBox(height: 40.0, child: Image.asset(AssetsPath.davarLogo))),
+                  buildHead(context),
+                  const SizedBox(height: 10),
+                  _buildCatchwordField(),
+                  _buildUserTranslationField(),
+                  const SizedBox(height: 10),
+                  _buildMoreSection(),
+                  const SizedBox(height: 4),
+                  _buildId(widget.word.id.toString()),
+                  const SizedBox(height: 6)
+                ]),
               ),
             ),
           );
@@ -70,26 +91,32 @@ class _EditWordViewState extends State<EditWordView> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      leading: BackButton(
-          // go back without saving
-          onPressed: () => Navigator.pop<int>(context, null)),
-      actions: [
-        // save changes
-        Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider wep, _) {
-          final bool isLoading = wep.status == EditWordProviderStatus.loading;
-          return TextButton(
-              onPressed: isLoading ? null : () => _onSave(wep),
-              child: _buildSaveBtnChild(isLoading));
-        }),
-      ],
-    );
+        leading: BackButton(
+            // go back without saving
+            onPressed: () => Navigator.pop(context, null)),
+        actions: [
+          // save changes
+          Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider wep, _) {
+            final bool isLoading = wep.status == EditWordProviderStatus.loading;
+            final bool isError = wep.status == EditWordProviderStatus.loading;
+            if (isError) {
+              final String er = '${AppLocalizations.of(context)?.error.toUpperCase() ?? 'ERROR'}!';
+              return Text(er);
+            }
+            return TextButton(
+                onPressed: isLoading ? null : () => _onSave(wep),
+                child: _buildSaveBtnChild(isLoading));
+          }),
+        ]);
   }
 
   Widget _buildSaveBtnChild(bool isWaiting) {
-    if (!isWaiting) return const Text('Save', style: TextStyle(color: Colors.white));
-    return Column(children: const [
-      Text('Waiting...', style: TextStyle(color: Colors.grey)),
-      SizedBox(height: 3, width: 20, child: LinearProgressIndicator(color: Colors.white))
+    final String save = '${utils.capitalize(AppLocalizations.of(context)?.save ?? 'Save')}!';
+    final String wait = '${AppLocalizations.of(context)?.wait ?? 'Waiting'}...';
+    if (!isWaiting) return Text(save, style: const TextStyle(color: Colors.white));
+    return Column(children: [
+      Text(wait, style: const TextStyle(color: Colors.grey)),
+      const SizedBox(height: 3, width: 20, child: LinearProgressIndicator(color: Colors.white))
     ]);
   }
 
@@ -99,6 +126,7 @@ class _EditWordViewState extends State<EditWordView> {
   }
 
   Stack buildHead(BuildContext context) {
+    final String save = AppLocalizations.of(context)?.saveChanges ?? 'Save your changes';
     return Stack(alignment: AlignmentDirectional.topCenter, children: [
       _buildTitle(),
       Positioned(
@@ -106,9 +134,9 @@ class _EditWordViewState extends State<EditWordView> {
         child: Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider wep, _) {
           final bool isChanged = wep.hasChanged;
           return isChanged
-              ? const Text(
-                  'Save your changes',
-                  style: TextStyle(color: Colors.red),
+              ? Text(
+                  save,
+                  style: const TextStyle(color: Colors.red),
                 )
               : const SizedBox();
         }),
@@ -124,35 +152,41 @@ class _EditWordViewState extends State<EditWordView> {
       height: 80.0,
       child: Align(
         alignment: Alignment.center,
-        child: Text('edit'.toUpperCase(),
-            style: const TextStyle(
-                color: Color(0xff0E9447),
-                letterSpacing: 1.4,
-                fontWeight: FontWeight.w800,
-                fontSize: 22)),
+        child: Text(
+          _edit.toUpperCase(),
+          style: const TextStyle(
+              color: Color(0xff0E9447),
+              letterSpacing: 1.4,
+              fontWeight: FontWeight.w800,
+              fontSize: 22),
+        ),
       ),
     );
   }
 
   Widget _buildMenuBtn(BuildContext ctx) {
+    final String remove = AppLocalizations.of(context)?.remove ?? 'Remove';
+    final String favAdd = AppLocalizations.of(context)?.favorite ?? 'Add to Favorites'; // favorite!
+    final String close = utils.capitalize(AppLocalizations.of(context)?.saveChanges ?? 'Close');
     return PopupMenuButton(
       icon: const Icon(Icons.menu_outlined),
       itemBuilder: (context) {
         final bool isFav = context.read<EditWordProvider>().edited.isFavorite == 1;
         return [
           PopupMenuItem(
-            onTap: () => context.read<EditWordProvider>().reversIsFavorite(),
-            child: Row(children: [
-              Icon(isFav ? Icons.favorite : Icons.favorite_outline),
-              const SizedBox(width: 7),
-              Text(isFav ? 'Remove' : 'Add to Favorites')
-            ]),
-          ),
+              onTap: () => context.read<EditWordProvider>().reversIsFavorite(),
+              child: Row(children: [
+                Icon(isFav ? Icons.favorite : Icons.favorite_outline),
+                const SizedBox(width: 7),
+                Text(isFav ? remove : favAdd)
+              ])),
           PopupMenuItem(
-            onTap: () => Navigator.pop<Word>(ctx, widget.word),
-            child: Row(
-                children: const [Icon(Icons.cancel_outlined), SizedBox(width: 7), Text('Close')]),
-          ),
+              onTap: () => Navigator.pop<Word>(ctx, widget.word),
+              child: Row(children: [
+                const Icon(Icons.cancel_outlined),
+                const SizedBox(width: 7),
+                Text(close)
+              ])),
         ];
       },
     );
@@ -169,28 +203,27 @@ class _EditWordViewState extends State<EditWordView> {
             }
             final bool isSentence = wep.edited.isSentence == 1;
             final String catchword = wep.edited.catchword;
-            final String title = isSentence ? 'Sentence' : 'Word';
-            return OverflowBar(
-              alignment: MainAxisAlignment.spaceBetween,
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('$title :', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                Text(catchword,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                TextButton(
-                    onPressed: () {
-                      editField(
-                          context: context,
-                          description: title.toLowerCase(),
-                          value: catchword,
-                          handle: wep.onEditCatchword);
-                    },
-                    child: const Text(
-                      'Edit',
-                      style: TextStyle(color: Color(0xff0E9447)),
-                    ))
-              ],
-            );
+            final String itemType = isSentence ? _s : _w;
+            return OverflowBar(alignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('$itemType:',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                  Text(catchword,
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                  TextButton(
+                      onPressed: () {
+                        editField(
+                            context: context,
+                            description: itemType.toLowerCase(),
+                            value: catchword,
+                            handle: wep.onEditCatchword);
+                      },
+                      child: Text(
+                        utils.capitalize(_edit),
+                        style: const TextStyle(color: Color(0xff0E9447)),
+                      ))
+                ]);
           },
         ));
   }
@@ -202,27 +235,24 @@ class _EditWordViewState extends State<EditWordView> {
         child: Consumer<EditWordProvider>(
           builder: (BuildContext context, EditWordProvider wep, _) {
             final String userTranslation = wep.edited.userTranslation;
-            return OverflowBar(
-              alignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Translation: ',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                Text(userTranslation,
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                TextButton(
-                    onPressed: () {
-                      editField(
-                          context: context,
-                          description: 'translation',
-                          value: userTranslation,
-                          handle: wep.onEditUserTranslation);
-                    },
-                    child: const Text(
-                      'Edit',
-                      style: TextStyle(color: Color(0xff0E9447)),
-                    ))
-              ],
-            );
+            return OverflowBar(alignment: MainAxisAlignment.spaceBetween, children: [
+              Text('${utils.capitalize(_trans)}: ',
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              Text(userTranslation,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+              TextButton(
+                  onPressed: () {
+                    editField(
+                        context: context,
+                        description: _trans,
+                        value: userTranslation,
+                        handle: wep.onEditUserTranslation);
+                  },
+                  child: Text(
+                    utils.capitalize(_edit),
+                    style: const TextStyle(color: Color(0xff0E9447)),
+                  ))
+            ]);
           },
         ));
   }
@@ -230,19 +260,14 @@ class _EditWordViewState extends State<EditWordView> {
   ExpansionTile _buildMoreSection() {
     final String created = widget.word.createdAt ?? '---';
     return ExpansionTile(
-      title: const Text('See more', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-      // subtitle: Text('Trailing expansion arrow icon'),
-      children: <Widget>[
-        _moreSectionCategory(),
-        _moreSectionClue(),
-        _moreSectionPoints(),
-        Text(
-          'Created at:  ${created.length > 10 ? created.substring(0, 10) : created}',
-          textAlign: TextAlign.left,
-          overflow: TextOverflow.ellipsis,
-        )
-      ],
-    );
+        title: Text(_more, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+        children: <Widget>[
+          _moreSectionCategory(),
+          _moreSectionClue(),
+          _moreSectionPoints(),
+          Text('$_created:  ${created.length > 10 ? created.substring(0, 10) : created}',
+              textAlign: TextAlign.left, overflow: TextOverflow.ellipsis)
+        ]);
   }
 
   Container _moreSectionCategory() {
@@ -251,8 +276,8 @@ class _EditWordViewState extends State<EditWordView> {
       alignment: Alignment.topLeft,
       child: Consumer<EditWordProvider>(
         builder: (BuildContext context, EditWordProvider wep, category) {
-          const category =
-              Text('Category', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold));
+          category =
+              Text(_category, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold));
           return OverflowBar(alignment: MainAxisAlignment.spaceBetween, children: [
             category,
             Text(wep.edited.category,
@@ -291,40 +316,34 @@ class _EditWordViewState extends State<EditWordView> {
       alignment: Alignment.topLeft,
       child:
           Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider wep, text) {
-        const Widget text =
-            Text('Clue ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold));
+        Widget text = Text(utils.capitalize(_clue),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold));
         final String? clue = wep.edited.clue;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                text,
-                TextButton(
-                    onPressed: () {
-                      editField(
-                        context: context,
-                        description: 'clue',
-                        value: wep.edited.clue,
-                        handle: wep.onEditClue,
-                      );
-                    },
-                    child: const Text(
-                      'Edit',
-                      style: TextStyle(color: Color(0xff0E9447)),
-                    )),
-              ],
-            ),
-            Text(
-              clue ?? 'no clue was added',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
-              textAlign: TextAlign.justify,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 3,
-            ),
-          ],
-        );
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            text,
+            TextButton(
+                onPressed: () {
+                  editField(
+                    context: context,
+                    description: _clue,
+                    value: wep.edited.clue,
+                    handle: wep.onEditClue,
+                  );
+                },
+                child: Text(
+                  utils.capitalize(_edit),
+                  style: const TextStyle(color: Color(0xff0E9447)),
+                )),
+          ]),
+          Text(
+            clue ?? _noClue,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+            textAlign: TextAlign.justify,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
+          )
+        ]);
       }),
     );
   }
@@ -335,9 +354,10 @@ class _EditWordViewState extends State<EditWordView> {
       alignment: Alignment.topLeft,
       child: Consumer<EditWordProvider>(
           builder: (BuildContext context, EditWordProvider wep, bthTitle) {
-        const Widget bthTitle = Text('Reset', style: TextStyle(color: Color(0xff0E9447)));
+        Widget bthTitle = Text(_reset, style: const TextStyle(color: Color(0xff0E9447)));
         return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('Points: ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          Text('${utils.capitalize(_points)}: ',
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
           Text(wep.edited.points.toString(),
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
           TextButton(onPressed: () => wep.onResetPoints(), child: bthTitle)

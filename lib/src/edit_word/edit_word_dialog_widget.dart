@@ -1,4 +1,6 @@
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditWordDialogWidget extends StatefulWidget {
   const EditWordDialogWidget({
@@ -19,11 +21,15 @@ class EditWordDialogWidget extends StatefulWidget {
 
 class _EditWordDialogWidgetState extends State<EditWordDialogWidget> {
   TextEditingController _ctr = TextEditingController();
+  late String _edit, _cancel, _empty;
 
   @override
   void initState() {
     super.initState();
     _ctr = TextEditingController(text: widget.value);
+    _edit = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Edit');
+    _cancel = utils.capitalize(AppLocalizations.of(context)?.cancel ?? 'Cancel');
+    _empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'Cannot be empty';
   }
 
   @override
@@ -32,42 +38,40 @@ class _EditWordDialogWidgetState extends State<EditWordDialogWidget> {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 140,
       child: Center(
-        child: Column(
-            mainAxisSize: MainAxisSize.min,
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(flex: 1, child: Text('Edit ${widget.description}:')),
-              Expanded(
-                flex: 3,
-                child: TextFormField(
-                    textAlign: TextAlign.center,
-                    controller: _ctr,
-                    autofocus: true,
-                    autovalidateMode: AutovalidateMode.always,
-                    validator: (v) {
-                      if (v == null || v.toString() == '') {
-                        return '                    Cannot be empty!';
-                      }
-                      return null;
-                    }),
-              ),
-              Expanded(
-                flex: 2,
-                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
-                      onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-                  TextButton(
-                      onPressed: () {
-                        if (_ctr.value.text.isNotEmpty) {
-                          widget.handle(_ctr.value.text);
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: const Text('OK'))
-                ]),
-              )
+        child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Expanded(flex: 1, child: Text('$_edit ${widget.description}:')),
+          Expanded(
+            flex: 3,
+            child: TextFormField(
+                textAlign: TextAlign.center,
+                controller: _ctr,
+                autofocus: true,
+                autovalidateMode: AutovalidateMode.always,
+                validator: _validateInput),
+          ),
+          Expanded(
+            flex: 2,
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(_cancel)),
+              TextButton(
+                  onPressed: () {
+                    if (_ctr.value.text.isNotEmpty) {
+                      widget.handle(_ctr.value.text);
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text('OK'))
             ]),
+          )
+        ]),
       ),
     );
+  }
+
+  String? _validateInput(String? v) {
+    if (v == null || v.toString() == '') {
+      return '                    $_empty!';
+    }
+    return null;
   }
 }

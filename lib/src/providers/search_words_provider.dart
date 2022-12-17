@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 import 'dart:collection';
 
@@ -111,22 +109,16 @@ class SearchWordsProvider with ChangeNotifier {
 
   /// Mainly due to a change in list item, updates the list, without query to database.
   void updateState(Word item) {
-    print('SearchProvider updateState(Word:\n ${item.catchword})');
-    try {
-      _paginatedList = _paginatedList
-          .take(_paginatedList.length)
-          .map((Word e) => e.id == item.id ? item : e)
-          .toList();
-      notifyListeners();
-      _controller.add(UnmodifiableListView<Word>(_paginatedList));
-    } catch (e) {
-      print(e);
-    }
+    _paginatedList = _paginatedList
+        .take(_paginatedList.length)
+        .map((Word e) => e.id == item.id ? item : e)
+        .toList();
+    notifyListeners();
+    _controller.add(UnmodifiableListView<Word>(_paginatedList));
   }
 
   /// insert items at the top of the list of current displaying items
   void insertItemAtTheTop(Word item) {
-    print('updateWithFound 1 element: ${item.catchword}');
     // if _paginatedList already contains the item - move it at the beginning
     // else add found item at the beginning
     _paginatedList.removeWhere((e) => e.id == item.id);
@@ -148,7 +140,7 @@ class SearchWordsProvider with ChangeNotifier {
       final List<Word> words = await _wr.rawQuerySearch(sql);
       return words;
     } catch (e) {
-      print('SearchWordsProvider searchQuery ERROR:\n $e');
+      if (kDebugMode) print('SearchWordsProvider searchQuery ERROR:\n $e');
       _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
       notifyListeners();
       return [];
@@ -179,7 +171,6 @@ class SearchWordsProvider with ChangeNotifier {
     } catch (e) {
       _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
       notifyListeners();
-      print(e);
     }
   }
 
@@ -209,7 +200,6 @@ class SearchWordsProvider with ChangeNotifier {
       );
       return words;
     } catch (e) {
-      print('SearchWordsProvider fetch ERROR:\n $e');
       _errorMsg = 'Some thing has happened 🥴\n Data is unavailable';
       notifyListeners();
       return [];
@@ -247,7 +237,6 @@ class SearchWordsProvider with ChangeNotifier {
     } catch (e) {
       _errorMsg = 'Some thing has happened 🥴\n The word was not deleted';
       notifyListeners();
-      print(e);
     }
   }
 
@@ -262,7 +251,6 @@ class SearchWordsProvider with ChangeNotifier {
     } catch (e) {
       _errorMsg = 'Some thing has happened 🥴\n The word was not deleted';
       notifyListeners();
-      print(e);
     }
   }
 
@@ -278,6 +266,6 @@ class SearchWordsProvider with ChangeNotifier {
     super.dispose();
     _listOffset = 0;
     _prevFetchedItems = 0;
-    await _controller.close().then((value) => print('_controller is closed'));
+    await _controller.close();
   }
 }

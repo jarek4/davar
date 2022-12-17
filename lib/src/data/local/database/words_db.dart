@@ -13,7 +13,6 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
 
   /// Returns the id of the last inserted row.
   Future<int> createWord(Map<String, dynamic> word) async {
-    print('real WordsDb create(Word ${word['catchword']})');
     try {
       final Database db = await instance.database;
       final int newWordId = await db.insert(
@@ -21,20 +20,19 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
         word,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      print('DB-createWord - created word: $word');
       return newWordId;
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('DatabaseException. DB class createWord(word): $word'));
-      throw Exception('Word was not created. Sorry!');
+      throw Exception('Word was not created');
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('FormatException. DB class createWord. Word = $word,'));
-      throw Exception('Sorry. Word was not created.! The data has a bad format');
+      throw Exception('Word was not created, bad format.');
     } catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('Local database-createWord \n word = $word'));
-      throw Exception('word was not created. Sorry!');
+      throw Exception('word was not created.');
     }
   }
 
@@ -50,10 +48,10 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('DatabaseException. DB class deleteWord. Id = $id'));
-      throw Exception('Word was not deleted. Sorry!');
+      throw Exception('Word was not deleted.');
     } catch (e) {
       await ErrorsReporter.genericThrow(e.toString(), Exception('DB class deleteWord. Id = $id'));
-      throw Exception('word was not deleted. Sorry!');
+      throw Exception('word was not deleted.');
     }
   }
 
@@ -67,29 +65,25 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
         'SET ${instance.prepareRawComaFilterFromArray(DbConsts.tableWords, columns)}';
     const String whereWordId = 'WHERE ${DbConsts.colId} =?';
     updateQuery = '$updateQuery $set $whereWordId';
-    print('updateQuery = $updateQuery');
-    print('values = $values. ID= $wordId');
-
     try {
       final Database db = await instance.database;
       final int count = await db.rawUpdate(updateQuery, [...values, wordId]);
       return count;
     } on DatabaseException catch (e) {
-      print(e);
       await ErrorsReporter.genericThrow(
           e.toString(),
           Exception(
               'DatabaseException. DB class rawWordUpdate. columns $columns || values = $values'));
-      throw Exception('Word is not updated. Sorry!');
+      throw Exception('Word is not updated.');
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(),
           Exception(
               'FormatException. DB class rawWordUpdate. id = $wordId, columns $columns || values = $values'));
-      throw Exception('Sorry. Word is not updated. The data has a bad format');
+      throw Exception('Word is not updated, bad format.');
     } catch (e) {
       await ErrorsReporter.genericThrow(e.toString(), Exception('DB class rawWordUpdate()'));
-      throw Exception('word is not updated. Sorry!');
+      throw Exception('word is not updated.');
     }
   }
 
@@ -125,13 +119,13 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('DatabaseException. DB class readAllWords. UserId = $userId'));
-      throw Exception('Sorry. Can not load your words!');
+      throw Exception('Can not load your words!');
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('FormatException. DB class readAllWords. UserId = $userId.'));
-      throw Exception('Sorry. Can not load your words! The data has a bad format');
+      throw Exception('Can not load words, bad format.');
     } catch (e) {
-      throw Exception('Sorry! Cannot load your words.');
+      throw Exception('Cannot load your words.');
     }
   }
 
@@ -154,9 +148,8 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('FormatException. DB class readWord. UserId = $id.'));
-      throw Exception('Sorry. Can not load the word! The data has a bad format');
+      throw Exception('Can not load the word, bad format.');
     } catch (e) {
-      print(e);
       throw Exception('Cannot read the word!');
     }
   }
@@ -177,13 +170,13 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('DatabaseException. DB class updateWord. Word = $word'));
-      throw Exception('Word was not updated. Sorry!');
+      throw Exception('Word was not updated.');
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('FormatException. DB class updateWord. Word = $word.'));
-      throw Exception('Sorry. Can not load your words! The data has a bad format');
+      throw Exception('Can not update, bad format.');
     } catch (e) {
-      throw Exception('word was not updated. Sorry!');
+      throw Exception('word was not updated.');
     }
   }
 
@@ -199,13 +192,13 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
     } on DatabaseException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(), Exception('DatabaseException. DB class rawQueryWords. query = $query'));
-      throw Exception('Sorry. Can not load words!');
+      throw Exception('Can not load words.');
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
           Exception('FormatException. DB class rawQueryWords. Query: $query \n arguments:$args'));
-      throw Exception('Sorry. Can not load your words! The data has a bad format');
+      throw Exception('Can not load your words, bad format.');
     } catch (e) {
-      throw Exception('Sorry! Cannot load words.');
+      throw Exception('Cannot load words.');
     }
   }
 
@@ -255,15 +248,15 @@ class WordsDb implements IWordsLocalDb<Map<String, dynamic>> {
           e.toString(),
           Exception(
               'DatabaseException. DB class readAllWordsByIdPaginated. UserId = $userId, query: $sql \n arguments:$whereArgs'));
-      throw Exception('Sorry. Can not load your words!');
+      throw Exception('Can not load your words!');
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
           e.toString(),
           Exception(
               'FormatException. DB class readAllWordsByIdPaginated. UserId = $userId, query: $sql \n arguments:$whereArgs'));
-      throw Exception('Sorry. Can not load your words! The data has a bad format');
+      throw Exception('Can not load your words, bad format.');
     } catch (e) {
-      throw Exception('Sorry! Cannot load your words.');
+      throw Exception('Cannot load your words.');
     }
   }
 

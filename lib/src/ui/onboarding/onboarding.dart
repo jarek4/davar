@@ -25,7 +25,7 @@ class Onboarding extends StatefulWidget {
     [
       'Learn new language fast and easy.',
       'Collect and memorize new words and sentences.',
-      'English - български - романи - Türkçe',
+      'English - български - polski - Türkçe',
     ],
     [
       'Cheerful Quiz. Track your stats.',

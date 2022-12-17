@@ -20,16 +20,73 @@ class AppLocalizationsRu extends AppLocalizations {
   String get authYourLanguage => 'ваш язык';
 
   @override
+  String get cancel => 'отменить';
+
+  @override
+  String get cannotTryNoMore => 'Вы не можете больше пытаться. Пожалуйста, зарегистрируйте нового пользователя';
+
+  @override
+  String get canScore => 'Вы можете забить:';
+
+  @override
+  String get category => 'категория';
+
+  @override
+  String get changePwd => 'Сменить пароль';
+
+  @override
+  String get chooseLang => 'Пожалуйста, выберите язык';
+
+  @override
   String get clickAdToSupport => 'Поддержите мое приложение, нажав на эту рекламу!';
 
   @override
+  String get close => 'закрыть';
+
+  @override
+  String get clue => 'подсказка';
+
+  @override
+  String get clueNotAdded => 'подсказка не добавлена';
+
+  @override
+  String get confirmDeleteWord => 'Bu kelimeyi silmek istediğinizden emin misiniz?';
+
+  @override
+  String get createdAt => 'создано в';
+
+  @override
+  String get createLearningProfile => 'Создайте свой профиль обучения';
+
+  @override
   String get delete => 'удалить';
+
+  @override
+  String get doFillFields => 'Вы заполнили все поля';
+
+  @override
+  String get edit => 'редактировать';
+
+  @override
+  String get error => 'ошибка';
 
   @override
   String get favorite => 'Любимый';
 
   @override
   String get fieldNotEmpty => 'Это поле не может быть пустым!';
+
+  @override
+  String get forgotPwd => 'Забыли пароль?';
+
+  @override
+  String get invalidEmail => 'неверный адрес';
+
+  @override
+  String get invalidPwd => 'Неверный пароль! Пример:';
+
+  @override
+  String get languageToLearn => 'язык, который вы хотите выучить';
 
   @override
   String get listAddListTop => 'Какой элемент вы хотите добавить в начало основного списка';
@@ -44,6 +101,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loading => 'Загрузка... подождите...';
 
   @override
+  String get loadMore => 'Загрузить ещё';
+
+  @override
   String get moreAddCategory => 'Добавить новую категорию';
 
   @override
@@ -53,25 +113,64 @@ class AppLocalizationsRu extends AppLocalizations {
   String get moreManageCategories => 'Управляйте своими категориями. Добавить новый, удалить или изменить.';
 
   @override
+  String get newPwd => 'Новый пароль';
+
+  @override
   String get newSentence => 'Новое предложение';
 
   @override
   String get newWord => 'Новое слово';
 
   @override
+  String get next => 'следующий';
+
+  @override
+  String get no => 'нет';
+
+  @override
   String get noData => 'Данные недоступны';
+
+  @override
+  String get noMoreToPlay => 'Больше нет слов для игры';
 
   @override
   String get nothingFound => 'Ничего не было найдено';
 
   @override
-  String get pageAddClue => 'подсказка';
+  String get notSaved => 'не сохранен';
 
   @override
-  String get quizAddAtLeast => 'Добавьте хотя бы: {num} больше, чтобы играть.';
+  String get notThisTime => 'Не в этот раз';
 
   @override
-  String get quizAdded => 'До сих пор вы были добавлены {num} слова';
+  String get noUndo => 'Вы не можете отменить удаление';
+
+  @override
+  String get points => 'точки';
+
+  @override
+  String get pwd => 'пароль';
+
+  @override
+  String get pwdNotStrong => 'пароль не надежный';
+
+  @override
+  String get pwdReset => 'Восстановить пароль';
+
+  @override
+  String get pwdResetWhichLang => 'Какой язык вы изучаете?';
+
+  @override
+  String get pwdWasChanged => 'Пароль был изменен';
+
+  @override
+  String get quit => 'выходить';
+
+  @override
+  String get quizAddAtLeast => 'Добавьте хотя бы:';
+
+  @override
+  String get quizAdded => 'До сих пор вы были добавлены';
 
   @override
   String get quizHow => 'как игратъ';
@@ -81,6 +180,27 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get quizManual2 => 'Если вы добавили ключ к слову, вы сможете его использовать. Но это займет 1 балл. Количество точек конкретного слова будет соответственно увеличено';
+
+  @override
+  String get remove => 'удалить';
+
+  @override
+  String get reset => 'сброс';
+
+  @override
+  String get save => 'сохранять';
+
+  @override
+  String get saveChanges => 'Сохраните изменения';
+
+  @override
+  String get seeMore => 'см. больше';
+
+  @override
+  String get seeYou => 'Надеюсь увидеть вас в ближайшее время';
+
+  @override
+  String get selectCorrect => 'Выберите правильный ответ';
 
   @override
   String get sentence => 'приговор';
@@ -113,6 +233,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsMode => 'Светлый/темный режим';
 
   @override
+  String get someThingHappend => 'что-то случилось';
+
+  @override
   String get statsQuizScore => 'Самый высокий балл викторины.';
 
   @override
@@ -128,11 +251,38 @@ class AppLocalizationsRu extends AppLocalizations {
   String get statsWords => 'все слова';
 
   @override
+  String get takesPoint => 'занимает 1 балл';
+
+  @override
+  String get thankYou => 'Спасибо';
+
+  @override
+  String get total => 'Общее';
+
+  @override
   String get tryAgain => 'Попробуй снова';
+
+  @override
+  String get tryFromBeginniing => 'Пожалуйста, попробуйте еще раз с самого начала';
 
   @override
   String get wait => 'Ждать';
 
   @override
+  String get welcomeBack => 'Добро пожаловать обратно';
+
+  @override
   String get word => 'слово';
+
+  @override
+  String get words => 'слова';
+
+  @override
+  String get wordsQuiz => 'Викторина по словам';
+
+  @override
+  String get yes => 'да';
+
+  @override
+  String get youWin => 'Вы выигрываете';
 }

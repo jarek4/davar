@@ -1,5 +1,6 @@
 import 'package:davar/src/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LanguageDropdown<T> extends StatelessWidget {
   final String hintText;
@@ -10,7 +11,7 @@ class LanguageDropdown<T> extends StatelessWidget {
 
   const LanguageDropdown({
     required Key key,
-    this.hintText = 'Please select language',
+    this.hintText = 'Select language',
     this.options = const [],
     required this.getLabel,
     required this.value,
@@ -19,15 +20,14 @@ class LanguageDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String select = AppLocalizations.of(context)?.chooseLang ?? 'Please choose language';
     return FormField<T>(
       key: key,
       builder: (FormFieldState<T> state) {
         return InputDecorator(
           decoration: inputDecoration(label: hintText),
-          // isEmpty: value == null || value == '',
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
-              // dropdownColor: Colors.amberAccent,
               elevation: 16,
               hint: Text(hintText),
               value: value,
@@ -45,7 +45,7 @@ class LanguageDropdown<T> extends StatelessWidget {
         );
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (v) => (value == null || value == '') ? 'Please choose language' : null,
+      validator: (v) => (value == null || value == '') ? select : null,
     );
   }
 }

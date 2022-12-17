@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'dart:async';
 
 import 'package:davar/locator.dart';
@@ -22,18 +21,17 @@ class WordsRepository implements IWordsRepository<Word> {
     // oIso8601String() -> 2014-02-15T08:57:47.812
     final DateTime now = DateTime.now();
     final String isoDate = now.toIso8601String().split('.').first;
-    // remove "id" so database will can autoincrement it!
+    // remove "id" - database will autoincrement it!
     asJson.remove('id');
     asJson[DbConsts.colCreated] = isoDate;
     try {
-      final int res = await _localDB.createWord(asJson);      
+      final int res = await _localDB.createWord(asJson);
       return res;
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(e.toString(),
           Exception('FormatException. WordsRepository create(Word item). item = $item'));
       return -1;
     } catch (e) {
-      print('WordsRepository create(item.catchword: ${item.catchword}) Error: $e');
       return -1;
     }
   }
@@ -46,7 +44,6 @@ class WordsRepository implements IWordsRepository<Word> {
       final int res = await _localDB.deleteWord(itemId);
       return res;
     } catch (e) {
-      print('WordsRepository delete(id:$itemId) Error: $e');
       return -1;
     }
   }
@@ -58,10 +55,7 @@ class WordsRepository implements IWordsRepository<Word> {
     try {
       final List<Map<String, dynamic>> res =
           await _localDB.rawQueryWords(query, arguments) as List<Map<String, dynamic>>;
-      //  print('rawQuery query: $query');
-      print('WordsRepository rawQuery res: ${res.length}');
       if (res.isEmpty) return [];
-      // return res.map((element) => Word.fromJson(element)).toList();
       return res;
     } on FormatException catch (e) {
       await ErrorsReporter.genericThrow(
@@ -70,7 +64,6 @@ class WordsRepository implements IWordsRepository<Word> {
               'FormatException. WordsRepository rawQuery(). query = $query, args: $arguments'));
       return null;
     } catch (e) {
-      print('WordsRepository rawQuery Error: $e');
       return null;
     }
   }
@@ -84,7 +77,6 @@ class WordsRepository implements IWordsRepository<Word> {
           await _localDB.rawWordUpdate(columns: columns, values: arguments, wordId: wordId);
       return res;
     } catch (e) {
-      print('WordsRepository rawUpdate Error: $e');
       return null;
     }
   }
@@ -101,7 +93,6 @@ class WordsRepository implements IWordsRepository<Word> {
           e.toString(), Exception('FormatException. WordsRepository readAll(userId:$userId)'));
       return [];
     } catch (e) {
-      print('WordsRepository readAll(userId:$userId) Error: $e');
       return [];
     }
   }
@@ -118,12 +109,10 @@ class WordsRepository implements IWordsRepository<Word> {
           e.toString(), Exception('FormatException. WordsRepository update(Word $item)'));
       return -1;
     } catch (e) {
-      print('WordsRepository update Error: $e');
       return -1;
     }
   }
 
-  // AppConst.allCategoriesFilter id:0, name: 'all'
   @override
   Future<List<Word>> readAllPaginated({
     required int userId,
@@ -143,7 +132,6 @@ class WordsRepository implements IWordsRepository<Word> {
           whereValues: whereValues,
           like: like,
           likeValue: likeValue) as List<Map<String, dynamic>>;
-      // print('readAllPaginatedById returned items no. ${resp.length}');
       if (resp.isEmpty) return [];
 
       return resp.map((element) => Word.fromJson(element)).toList();
@@ -154,8 +142,6 @@ class WordsRepository implements IWordsRepository<Word> {
               'FormatException. WordsRepository readAllPaginatedById(). UserId = $userId,\n offset: $offset where: $where, like: $like'));
       return [];
     } catch (e) {
-      print(
-          'WordsRepository readAllPaginatedById(userId:$userId, offset: $offset , like: $like) Error: $e');
       return [];
     }
   }
@@ -171,7 +157,6 @@ class WordsRepository implements IWordsRepository<Word> {
           e.toString(), Exception('FormatException. WordsRepository readSingle(id:$id)'));
       return null;
     } catch (e) {
-      print('WordsRepository readSingle(id:$id) Error: $e');
       return null;
     }
   }

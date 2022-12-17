@@ -1,4 +1,3 @@
-import 'package:davar/src/data/local/database/db_consts.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/theme/theme.dart' as theme;
@@ -64,7 +63,9 @@ class DavarApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: L10n.all,
-            locale: settingsController.localeCode == null ? null : Locale(settingsController.localeCode!),
+            locale: settingsController.localeCode == null
+                ? null
+                : Locale(settingsController.localeCode!),
 
             // Use AppLocalizations to configure the correct application title
             // depending on the user's locale.
@@ -83,7 +84,6 @@ class DavarApp extends StatelessWidget {
             themeMode: settingsController.themeMode,
             // themeMode: ThemeMode.dark,
             home: Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider provider, _) {
-              print('app.dart - provider.status: ${provider.status}');
               switch (provider.status) {
                 case AuthenticationStatus.authenticated:
                   // WordsProvider need to be here because inside RootWidget, it is disposing
@@ -109,7 +109,7 @@ class DavarApp extends StatelessWidget {
                   return LoggedOutView(
                       loginOnPressed: () => context.read<AuthProvider>().onLoginRequest());
                 default:
-                  return _authenticationStatusUnknown(context, 'Trying to log you in... ');
+                  return _authenticationStatusUnknown(context, 'Try to log you in...');
               }
             }),
           );

@@ -75,7 +75,11 @@ class StatisticsProvider with ChangeNotifier, QuizStatisticsService, WordsStatis
         '${allFromDb[lastIndex].points}',
         '${allFromDb[lastIndex].id}'
       ];
-      final List<String> leastPoints = [allFromDb[0].catchword, '${allFromDb[0].points}', '${allFromDb[0].id}'];
+      final List<String> leastPoints = [
+        allFromDb[0].catchword,
+        '${allFromDb[0].points}',
+        '${allFromDb[0].id}'
+      ];
       tempStats = tempStats.copyWith(mostPointsWord: mostPoints, leastPointsWord: leastPoints);
     }
     // founding words and sentences quantity
@@ -86,11 +90,11 @@ class StatisticsProvider with ChangeNotifier, QuizStatisticsService, WordsStatis
   }
 
   Future<bool> _recordStatistics(DavarStatistic st) async {
-    final bool sd = await saveUpdateDate(st.date);
-    final bool shp = await saveItemWithHighestPoints(st.mostPointsWord);
-    final bool slp = await saveItemWithLowestPoints(st.leastPointsWord);
-    final bool swq = await saveWordsQuantity(st.wordsNumber);
-    final bool ssq = await saveSentencesQuantity(st.sentencesNumber);
+    final bool sd = await saveUpdateDate(st.date).catchError((e) => false);
+    final bool shp = await saveItemWithHighestPoints(st.mostPointsWord).catchError((e) => false);
+    final bool slp = await saveItemWithLowestPoints(st.leastPointsWord).catchError((e) => false);
+    final bool swq = await saveWordsQuantity(st.wordsNumber).catchError((e) => false);
+    final bool ssq = await saveSentencesQuantity(st.sentencesNumber).catchError((e) => false);
     return sd && shp && slp && swq && ssq;
   }
 

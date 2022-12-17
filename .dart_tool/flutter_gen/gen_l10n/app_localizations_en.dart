@@ -20,16 +20,73 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authYourLanguage => 'your language';
 
   @override
+  String get cancel => 'cancel';
+
+  @override
+  String get cannotTryNoMore => 'You cannot try any more. Please register new user';
+
+  @override
+  String get canScore => 'You can score:';
+
+  @override
+  String get category => 'category';
+
+  @override
+  String get changePwd => 'Change password';
+
+  @override
+  String get chooseLang => 'Please choose language';
+
+  @override
   String get clickAdToSupport => 'Support my app by clicking this ad';
 
   @override
+  String get close => 'close';
+
+  @override
+  String get clue => 'clue';
+
+  @override
+  String get clueNotAdded => 'clue not added';
+
+  @override
+  String get confirmDeleteWord => 'Are you sure, you want to delete this word?';
+
+  @override
+  String get createdAt => 'created at';
+
+  @override
+  String get createLearningProfile => 'Create your learning profile';
+
+  @override
   String get delete => 'delete';
+
+  @override
+  String get doFillFields => 'Do you filled all fields';
+
+  @override
+  String get edit => 'edit';
+
+  @override
+  String get error => 'error';
 
   @override
   String get favorite => 'Favorite';
 
   @override
   String get fieldNotEmpty => 'This field cannot be empty';
+
+  @override
+  String get forgotPwd => 'Forgot password?';
+
+  @override
+  String get invalidEmail => 'invalid email';
+
+  @override
+  String get invalidPwd => 'Invalid password! Example:';
+
+  @override
+  String get languageToLearn => 'language you want to learn';
 
   @override
   String get listAddListTop => 'Which element you want to add at the beginning of the main list';
@@ -44,6 +101,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'Loading ... wait…';
 
   @override
+  String get loadMore => 'Load more';
+
+  @override
   String get moreAddCategory => 'Add new category';
 
   @override
@@ -53,25 +113,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get moreManageCategories => 'Manage categories. Add new one, delete or edit.';
 
   @override
+  String get newPwd => 'New password';
+
+  @override
   String get newSentence => 'New sentence';
 
   @override
   String get newWord => 'New word';
 
   @override
+  String get next => 'next';
+
+  @override
+  String get no => 'No';
+
+  @override
   String get noData => 'Data is unavailable';
+
+  @override
+  String get noMoreToPlay => 'No more word to play';
 
   @override
   String get nothingFound => 'Nothing was found';
 
   @override
-  String get pageAddClue => 'clue';
+  String get notSaved => 'not saved';
 
   @override
-  String get quizAddAtLeast => 'Add at least: {num} more to play.';
+  String get notThisTime => 'Not this time';
 
   @override
-  String get quizAdded => 'Until now you have been added {num} words';
+  String get noUndo => 'You cannot undo deleting';
+
+  @override
+  String get points => 'points';
+
+  @override
+  String get pwd => 'password';
+
+  @override
+  String get pwdNotStrong => 'password is not strong';
+
+  @override
+  String get pwdReset => 'Reset password';
+
+  @override
+  String get pwdResetWhichLang => 'Which language you learn?';
+
+  @override
+  String get pwdWasChanged => 'Password was changed';
+
+  @override
+  String get quit => 'quit';
+
+  @override
+  String get quizAddAtLeast => 'Add at least:';
+
+  @override
+  String get quizAdded => 'Until now you have been added';
 
   @override
   String get quizHow => 'how to play';
@@ -81,6 +180,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quizManual2 => 'If you have added a clue to the word,  you will be able to use it. But it will takes 1 point. The number of the points of a particular word will be increased accordingly.';
+
+  @override
+  String get remove => 'remove';
+
+  @override
+  String get reset => 'reset';
+
+  @override
+  String get save => 'save';
+
+  @override
+  String get saveChanges => 'Save your changes';
+
+  @override
+  String get seeMore => 'see more';
+
+  @override
+  String get seeYou => 'Hope to see you soon';
+
+  @override
+  String get selectCorrect => 'Select the correct answer';
 
   @override
   String get sentence => 'sentence';
@@ -113,6 +233,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsMode => 'Light/Dark mode';
 
   @override
+  String get someThingHappend => 'something has happened';
+
+  @override
   String get statsQuizScore => 'The highest quiz score.';
 
   @override
@@ -128,11 +251,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statsWords => 'all words';
 
   @override
+  String get takesPoint => 'takes 1 point';
+
+  @override
+  String get thankYou => 'Thank you';
+
+  @override
+  String get total => 'Total';
+
+  @override
   String get tryAgain => 'Try again';
+
+  @override
+  String get tryFromBeginniing => 'Please try again from the beginning';
 
   @override
   String get wait => 'Wait';
 
   @override
+  String get welcomeBack => 'Welcome back';
+
+  @override
   String get word => 'word';
+
+  @override
+  String get words => 'words';
+
+  @override
+  String get wordsQuiz => 'Words Quiz';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get youWin => 'You win';
 }

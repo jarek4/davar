@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/local/database/db.dart';
 import 'package:davar/src/domain/i_user_local_db.dart';
@@ -15,10 +14,8 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
   /// returns created user id, or -1 if email is taken, 0 if conflict
   Future<int> createUser(Map<String, dynamic> newUser) async {
     final String email = newUser['email'];
-    print('DB-createUser-email: $email');
     // check if user with given email already exists in database
     final bool isTaken = await _checkIsEmailTaken(email);
-    print('DB-createUser-isTaken: $isTaken');
     if (isTaken) return -1;
     try {
       final Database db = await instance.database;
@@ -27,7 +24,6 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
         newUser,
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
-      print('DB-createUser - created user id: $newUserId');
       return newUserId;
     } on DatabaseException catch (e, stackTrace) {
       await ErrorsReporter.genericThrow(
@@ -75,7 +71,8 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
     // database.rawUpdate('UPDATE Test SET name = ?, value = ? WHERE name = ?', ['updated name', '9876', 'some name']);
     // spaces at the ends are important!
     String updateQuery = 'UPDATE ${DbConsts.tableUsers}';
-    final String set = 'SET ${instance.prepareRawComaFilterFromArray(DbConsts.tableUsers, columns)} ';
+    final String set =
+        'SET ${instance.prepareRawComaFilterFromArray(DbConsts.tableUsers, columns)} ';
     const String where = 'WHERE ${DbConsts.colId} = ?';
     updateQuery = '$updateQuery $set $where';
 
@@ -105,13 +102,12 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
   Future<int> updateUser(Map<String, dynamic> u, int userId) async {
     try {
       final Database db = await instance.database;
-      final int res = await db.update(DbConsts.tableUsers, u, where: '${DbConsts.colId} = ?', whereArgs: [userId]);
+      final int res = await db
+          .update(DbConsts.tableUsers, u, where: '${DbConsts.colId} = ?', whereArgs: [userId]);
       return res;
     } on DatabaseException catch (e, stackTrace) {
-      await ErrorsReporter.genericThrow(
-          e.toString(),
-          Exception(
-              'DatabaseException. DB class updateUser. userId $userId || values = $u'),
+      await ErrorsReporter.genericThrow(e.toString(),
+          Exception('DatabaseException. DB class updateUser. userId $userId || values = $u'),
           stackTrace: stackTrace);
       throw Exception('User is not updated. Sorry!');
     } catch (e, stackTrace) {
@@ -155,10 +151,9 @@ class AuthDb implements IUserLocalDb<Map<String, dynamic>> {
   Future<bool> _checkIsEmailTaken(String email) async {
     try {
       final int rowCount = await instance.queryRowCount(
-              tableName: DbConsts.tableUsers, where: [DbConsts.colUEmail], values: [email]);
+          tableName: DbConsts.tableUsers, where: [DbConsts.colUEmail], values: [email]);
       return rowCount > 0;
     } catch (e) {
-      print('AuthDb checkIsEmailTaken (email: $e).\n Error: $e');
       rethrow;
     }
   }

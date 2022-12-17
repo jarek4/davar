@@ -5,6 +5,7 @@ import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPwdView extends StatefulWidget {
@@ -20,6 +21,14 @@ class ForgotPwdView extends StatefulWidget {
 class _ForgotPwdViewState extends State<ForgotPwdView> {
   final GlobalKey<FormState> _forgotPwdFormKye =
       GlobalKey<FormState>(debugLabel: 'Forgot-password-form');
+
+  String _empty = 'cannot be empty';
+
+  @override
+  void initState() {
+    _empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'cannot be empty';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +57,10 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
   }
 
   Widget _buildForm(BuildContext context) {
+    final String name = utils.capitalize(AppLocalizations.of(context)?.sentence ?? 'Username');
+    final String whichLang =
+        AppLocalizations.of(context)?.pwdResetWhichLang ?? 'Which language you learn';
+    final String reset = AppLocalizations.of(context)?.pwdReset ?? 'Reset password';
     return SingleChildScrollView(
       child: Consumer<ForgotPwdProvider>(builder: (BuildContext context, ForgotPwdProvider fp, _) {
         final bool isLoading = fp.status == ForgotPwdStatus.loading;
@@ -59,10 +72,8 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
           const SizedBox(height: 15.0),
           Form(
             key: _forgotPwdFormKye,
-            child: Column(children: [
-              _nameField(context, 'Username'),
-              _languageField(context, 'Witch language you learn')
-            ]),
+            child:
+                Column(children: [_nameField(context, name), _languageField(context, whichLang)]),
           ),
           isPwdChanged
               ? MaterialButton(
@@ -81,7 +92,7 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
                     side: const BorderSide(color: Colors.green),
                   ),
                   onPressed: isLoading ? null : () => _handleResetPasswordRequest(context),
-                  child: isLoading ? progress() : const Text('Reset password'),
+                  child: isLoading ? progress() : Text(reset),
                 ),
           hasError
               ? Padding(
@@ -127,7 +138,7 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
             FilteringTextInputFormatter.allow(RegExp('[ a-zA-Z0-9 -]'))
           ],
           onChanged: (val) => context.read<ForgotPwdProvider>().onUserNameChange(val),
-          validator: (v) => (v != null && v.length >= 2) ? null : 'Enter name',
+          validator: (v) => (v != null && v.length >= 2) ? null : _empty,
           initialValue: '',
           keyboardType: TextInputType.text,
           obscureText: false,
@@ -142,7 +153,7 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
           cursorColor: Colors.black,
           maxLength: 30,
           onChanged: (val) => context.read<ForgotPwdProvider>().onLanguageChange(val),
-          validator: (v) => (v != null && v.length >= 2) ? null : 'Enter language',
+          validator: (v) => (v != null && v.length >= 2) ? null : _empty,
           initialValue: '',
           keyboardType: TextInputType.text,
           decoration: theme.inputDecoration(label: label)),
@@ -150,15 +161,22 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
   }
 
   void showNewPasswordDialog(BuildContext context) {
+    final String newPwd = AppLocalizations.of(context)?.pwdWasChanged ?? 'Password was changed';
+    final String pwd = AppLocalizations.of(context)?.pwd ?? 'password';
+    final String notStrong =
+        AppLocalizations.of(context)?.pwdWasChanged ?? 'password is not strong!';
+    final String change = AppLocalizations.of(context)?.changePwd ?? 'Change password';
+    final String cancel = AppLocalizations.of(context)?.cancel ?? 'Cancel';
+
     final GlobalKey<FormState> resetPwdFormKey =
         GlobalKey<FormState>(debugLabel: 'Forgot-password-resetPwdFormKey');
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text(
-          'New password',
+        title: Text(
+          newPwd,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 17.0),
+          style: const TextStyle(fontSize: 17.0),
         ),
         titlePadding: const EdgeInsets.only(top: 6.0, bottom: 4.0),
         content: SingleChildScrollView(
@@ -166,7 +184,7 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
             key: resetPwdFormKey,
             child: Wrap(children: [
               TextFormField(
-                  decoration: const InputDecoration(hintText: 'password'),
+                  decoration: InputDecoration(hintText: pwd),
                   initialValue: '',
                   keyboardType: TextInputType.text,
                   maxLength: 40,
@@ -174,8 +192,8 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
                   autocorrect: false,
                   autovalidateMode: AutovalidateMode.always,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return 'Cannot be empty!';
-                    if (v.length < 6) return 'the password is not strong!';
+                    if (v == null || v.isEmpty) return _empty;
+                    if (v.length < 6) return notStrong;
                     return null;
                   }),
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -184,9 +202,8 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
                       resetPwdFormKey.currentState?.validate();
                       _handleSaveNewPassword(context);
                     },
-                    child: const Text('Change password')),
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                    child: Text(change)),
+                TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(cancel)),
               ]),
             ]),
           ),
@@ -196,21 +213,24 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
   }
 
   Future<void> _handleSaveNewPassword(BuildContext context) async {
+    final String changed = AppLocalizations.of(context)?.pwdWasChanged ?? 'Password was changed';
     if (context.read<ForgotPwdProvider>().resetAttempts > 3) return;
     if (context.read<ForgotPwdProvider>().validateNewPassword()) {
       Navigator.of(context).pop();
       final bool isChanged = await context.read<ForgotPwdProvider>().changePassword();
       if (isChanged) {
         if (!mounted) return;
-        utils.showSnackBarInfo(context, msg: 'Password was changed');
+        utils.showSnackBarInfo(context, msg: changed);
       }
     }
   }
 
   Widget _buildStatusBlockedScreen() {
+    final String noMore =
+        AppLocalizations.of(context)?.cannotTryNoMore ?? 'Please register new user';
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Text('You cannot try any more. Please register new user'),
+        Text(noMore),
         const SizedBox(height: 25),
         IconButton(
             iconSize: 28.0,
@@ -221,13 +241,14 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
   }
 
   Widget _buildErrorScreen(String errorMsg) {
+    final String noData = AppLocalizations.of(context)?.noData ?? 'The data is not available';
     return Center(
       child: OverflowBar(
           overflowAlignment: OverflowBarAlignment.center,
           spacing: 25.0,
           overflowSpacing: 3.0,
           children: [
-            const Text('Sorry! The data is not available'),
+            Text(noData),
             Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,

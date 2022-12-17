@@ -1,12 +1,9 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 
 import 'package:davar/locator.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_authentication_repository.dart';
 import 'package:davar/src/domain/i_user_local_db.dart';
-import 'package:davar/src/errors_reporter/errors_reporter.dart';
 import 'package:davar/src/utils/utils.dart';
 
 import '../../domain/i_secure_storage.dart';
@@ -30,8 +27,6 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
   Future<int?> loginWithEmailAndPassword({required String email, required String password}) async {
     try {
       Map<String, dynamic> searchResult = await _selectUserFromDatabase(email, password);
-      print('log in found user->${searchResult.isNotEmpty}');
-      print('isE: ${_user == AppConst.emptyUser}; isU: ${_user == AppConst.unknownUser}');
       if (searchResult.isEmpty) {
         // this check allows to show login error info during logging in process
         if (_user != AppConst.emptyUser && _user != AppConst.unknownUser) {
@@ -42,11 +37,9 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       User foundUser = User.fromJson(searchResult);
       await _ss.persistEmail(email);
       await _ss.persistPassword(password);
-      print('AuthenticationRepository loginWithEmailAndPassword');
       _controller.add(_user = foundUser);
       return foundUser.id;
     } catch (e) {
-      print('AuthRepository-loginWithEmailAndPassword (email = $email)\n Exception: $e');
       return null;
     }
   }
@@ -63,21 +56,21 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       //id is auto increment by DB, createdAt is set by DB
       userAsJson.remove('id');
       userAsJson.remove('createdAt');
-      print('AuthenticationRepository register userToJson.remove: $userAsJson\n');
       final int id = await _localDB.createUser(userAsJson);
-      print('AuthenticationRepository register - created user id: $id\n');
+
+      if (id < 1) {
+        // not created
+        _controller.add(_user = AppConst.emptyUser);
+        return null;
+      }
       Map<String, dynamic>? lastInserted = await _selectUserFromDatabase(user.email, user.password);
-
       if (lastInserted.isEmpty) return 0;
-
       final User registered = User.fromJson(lastInserted);
       await _ss.persistEmail(user.email);
       await _ss.persistPassword(user.password);
-      print('AuthenticationRepository ${registered.name} created');
       _controller.add(_user = registered);
       return registered.id;
     } catch (e) {
-      print('AuthRepository-register (user.email = ${user.email}) Exception: $e');
       return null;
     }
   }
@@ -89,31 +82,22 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       if (res.isNotEmpty) return true;
       return false;
     } catch (e) {
-      print('AuthRepository-isEmailTaken($email). Exception: $e');
       rethrow;
     }
   }
 
   @override
   Future<void> signOut() async {
-    print('AuthenticationRepository -> signOut()');
     try {
       await _ss.deleteAll();
-      // important
-      //if _user=AppConst.emptyUser then there is no loggedOut view shown, but onboarding screen!
-      _controller.add(_user = AppConst.unknownUser);
     } catch (e) {
-      print('signOut Error: $e');
-      /*Exception exception = Exception('AuthenticationRepository signOut Error');
-      await ErrorsReporter.genericThrow(
-        e.toString(),
-        exception,
-      );*/
-      _controller.add(_user = AppConst.unknownUser);
+      throw Exception('Error when signing out!');
     }
+    // important
+    //if _user=AppConst.emptyUser then there is no loggedOut view shown, but onboarding screen!
+    _controller.add(_user = AppConst.unknownUser);
   }
 
-// Attention!
   @override
 
   /// Emits user or emptyUser/unknownUser. On error throws Exception!
@@ -121,7 +105,6 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
     try {
       final List<String>? emailAndPassword = await _checkStoredCredentials();
       if (emailAndPassword == null || emailAndPassword.isEmpty) {
-        print('AuthenticationRepository->tryToAuthenticate: emailOrPassword == null');
         return _controller.add(_user = AppConst.emptyUser);
       }
       final Map<String, dynamic> searchResult =
@@ -131,22 +114,18 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
       }
       _controller.add(_user = User.fromJson(searchResult));
     } catch (e) {
-      print('AuthRepository-tryToAuthenticate Exception: $e');
       throw Exception('Error during authentication!');
     }
   }
 
   /// returns Array with email, pwd or empty. Null on error
   Future<List<String>?> _checkStoredCredentials() async {
-    print('AuthenticationRepository -> _checkStoredCredentials()');
     try {
       final String? email = await _ss.getEmail();
       final String? pwd = await _ss.getPassword();
-      print('AuthenticationRepository >_checkStoredCredentials()[email, pwd]=[$email, $pwd]');
       if (email == null || pwd == null || email.isEmpty || pwd.isEmpty) return [];
       return [email, pwd];
     } catch (e) {
-      print('_checkStoredCredentials: $e');
       return null;
     }
   }
@@ -159,26 +138,25 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
         where: ['email', 'password'],
         values: [email, pwd],
       ) as List<Map<String, dynamic>>;
-      print('AuthenticationRepository-> _selectUserFromDatabase res: $res');
       if (res.isEmpty || res[0] == null || res[0]!.isEmpty) return {};
       final Map<String, dynamic> firstFound = res.first!;
       if (res.first!.isEmpty) return {};
       return firstFound;
     } catch (e) {
-      print('AuthenticationRepository-> _selectUserFromDatabase Exception: $e');
       rethrow;
     }
   }
+
   @override
   Future<User?> findUserByEmail(String email) async {
     try {
-      final List<Map<String, dynamic>?> res = await _localDB.selectUser(where: ['email'], values: [email]) as List<Map<String, dynamic>?>;
+      final List<Map<String, dynamic>?> res = await _localDB
+          .selectUser(where: ['email'], values: [email]) as List<Map<String, dynamic>?>;
       if (res.isEmpty) return null;
-      if(res.first == null || res.first!.isEmpty) return null;
+      if (res.first == null || res.first!.isEmpty) return null;
       final Map<String, dynamic> found = res.first!;
       return User.fromJson(found);
     } catch (e) {
-      print('AuthRepository-findUserByEmail($email). Exception: $e');
       rethrow;
     }
   }
@@ -187,12 +165,10 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
   Future<int> updateUser(User user) async {
     try {
       final List<dynamic> u = await _localDB.selectUser(where: ['id'], values: [user.id]);
-      print('AuthRepository-updateUser(.selectUser(where: [id:${user.id}] => $u');
-      if(u.isEmpty || u[0] == null) return 0;
+      if (u.isEmpty || u[0] == null) return 0;
       final int res = await _localDB.updateUser(user.toJson(), user.id);
-     return res;
+      return res;
     } catch (e) {
-      print('AuthRepository-updateUser($user). Exception: $e');
       rethrow;
     }
   }
@@ -205,6 +181,4 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
 
   @override
   void dispose() => _controller.close();
-
-
 }

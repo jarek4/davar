@@ -16,17 +16,65 @@
   "@authName": {},
   "authYourLanguage": "senin dilin",
   "@authYourLanguage": {},
+  "cancel": "iptal",
+  "@cancel": {},
+  "cannotTryNoMore": "Daha fazla deneyemezsin. Lütfen yeni kullanıcı kaydedin",
+  "@cannotTryNoMore": {
+    "description": "You cannot try any more. Please register new user"
+  },
+  "canScore": "Puan atabilirsiniz:",
+  "@canScore": {
+    "description": "points"
+  },
+  "category": "kategori",
+  "@category": {},
+  "changePwd": "Şifre değiştir",
+  "@changePwd": {},
+  "chooseLang": "Lütfen dil seçin",
+  "@chooseLang": {},
   "clickAdToSupport": "Bu reklama tıklayarak uygulamamı destekleyin",
   "@clickAdToSupport": {
     "description": "click ad"
   },
+  "close": "kapat",
+  "@close": {},
+  "clue": "ipucu",
+  "@clue": {},
+  "clueNotAdded": "ipucu eklenmedi",
+  "@clueNotAdded": {},
+  "confirmDeleteWord": "Bu kelimeyi silmek istediğinizden emin misiniz?",
+  "@confirmDeleteWord": {},
+  "createdAt": "oluşturulan",
+  "@createdAt": {},
+  "createLearningProfile": "Öğrenme profilinizi oluşturun",
+  "@createLearningProfile": {},
   "delete": "silmek",
   "@delete": {},
+  "doFillFields": "tüm alanları doldurdun mu",
+  "@doFillFields": {},
+  "edit": "düzenlemek",
+  "@edit": {},
+  "error": "hata",
+  "@error": {},
   "favorite": "Favori",
   "@favorite": {},
   "fieldNotEmpty": "Bu alan boş olamaz",
   "@fieldNotEmpty": {
     "description": "field cannt be empty"
+  },
+  "forgotPwd": "Parolanızı mı unuttunuz?",
+  "@forgotPwd": {
+    "description": "Forgot password?"
+  },
+  "invalidEmail": "Geçersiz e-posta",
+  "@invalidEmail": {},
+  "invalidPwd": "Geçersiz şifre! Örnek vermek:",
+  "@invalidPwd": {
+    "description": "Invalid password! Example:"
+  },
+  "languageToLearn": "öğrenmek istediğin dil",
+  "@languageToLearn": {
+    "description": "language you want to learn"
   },
   "listAddListTop": "Ana listenin başında eklemek istediğiniz öğeyi",
   "@listAddListTop": {
@@ -40,6 +88,8 @@
   "@loading": {
     "description": "loading"
   },
+  "loadMore": "Daha fazla yükle",
+  "@loadMore": {},
   "moreAddCategory": "Yeni kategori ekle",
   "@moreAddCategory": {},
   "moreInfo": "daha fazla bilgi",
@@ -48,6 +98,10 @@
   },
   "moreManageCategories": "Kategorileri yönetin. Yeni bir tane ekleyin, silin veya düzenleyin.",
   "@moreManageCategories": {},
+  "newPwd": "Yeni Şifre",
+  "@newPwd": {
+    "description": "New password"
+  },
   "newSentence": "Yeni cümle",
   "@newSentence": {
     "description": "add new sentence"
@@ -56,19 +110,55 @@
   "@newWord": {
     "description": "add new word"
   },
+  "next": "sonraki",
+  "@next": {},
+  "no": "hayır",
+  "@no": {},
   "noData": "Veriler kullanılamıyor",
   "@noData": {
     "description": "no data"
   },
+  "noMoreToPlay": "Oynayacak kelime kalmadı",
+  "@noMoreToPlay": {},
   "nothingFound": "Hiçbir şey bulunamadı",
   "@nothingFound": {},
-  "pageAddClue": "ipucu",
-  "@pageAddClue": {},
-  "quizAddAtLeast": "En azından ekle: {num} oynamak için daha fazlası.",
+  "notSaved": "kaydedilmedi",
+  "@notSaved": {},
+  "notThisTime": "Bu sefer değil",
+  "@notThisTime": {
+    "description": "quiz lose"
+  },
+  "noUndo": "Silme işlemini geri alamazsınız",
+  "@noUndo": {
+    "description": "delete"
+  },
+  "points": "puanlar",
+  "@points": {},
+  "pwd": "parola",
+  "@pwd": {
+    "description": "password"
+  },
+  "pwdNotStrong": "parola güçlü değil",
+  "@pwdNotStrong": {
+    "description": "password is not strong"
+  },
+  "pwdReset": "Şifreyi yenile",
+  "@pwdReset": {
+    "description": "Reset password"
+  },
+  "pwdResetWhichLang": "Hangi dili öğreniyorsun?",
+  "@pwdResetWhichLang": {
+    "description": "Which language you learn?"
+  },
+  "pwdWasChanged": "Şifre değiştirildi",
+  "@pwdWasChanged": {},
+  "quit": "çıkmak",
+  "@quit": {},
+  "quizAddAtLeast": "En azından şunu ekleyin:",
   "@quizAddAtLeast": {
     "description": "add words number"
   },
-  "quizAdded": "Şimdiye kadar {num}kelimeler eklediniz",
+  "quizAdded": "Şimdiye kadar eklediniz",
   "@quizAdded": {
     "description": "until now numbers of words"
   },
@@ -83,6 +173,24 @@
   "quizManual2": "Kelimeye bir ipucu eklediyseniz, onu kullanabileceksiniz. Ama alacak 1 puan. Belirli bir kelimenin noktalarının sayısı buna göre artırılacaktır.",
   "@quizManual2": {
     "description": "how to play quiz"
+  },
+  "remove": "kaldır",
+  "@remove": {},
+  "reset": "sıfırlama",
+  "@reset": {},
+  "save": "kayıt etmek",
+  "@save": {},
+  "saveChanges": "Değişikliklerinizi kaydedin",
+  "@saveChanges": {},
+  "seeMore": "daha fazlasını gör",
+  "@seeMore": {},
+  "seeYou": "Yakında görüşmek dileğiyle",
+  "@seeYou": {
+    "description": "log out hope to see you soon"
+  },
+  "selectCorrect": "Doğru cevabı seçin",
+  "@selectCorrect": {
+    "description": "correct answer"
   },
   "sentence": "cümle",
   "@sentence": {
@@ -118,6 +226,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
+  "someThingHappend": "bir şey oldu",
+  "@someThingHappend": {},
   "statsQuizScore": "En yüksek sınav puanı.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -138,14 +248,40 @@
   "@statsWords": {
     "description": "words"
   },
+  "takesPoint": "1 puan alır",
+  "@takesPoint": {
+    "description": "1"
+  },
+  "thankYou": "Teşekkür ederim",
+  "@thankYou": {},
+  "total": "Toplam",
+  "@total": {},
   "tryAgain": "Tekrar deneyin",
   "@tryAgain": {},
+  "tryFromBeginniing": "Lütfen en baştan tekrar deneyin",
+  "@tryFromBeginniing": {
+    "description": "Please try again from the beginning"
+  },
   "wait": "Bekle",
   "@wait": {
     "description": "wait"
   },
+  "welcomeBack": "Tekrar hoşgeldiniz",
+  "@welcomeBack": {},
   "word": "sözcük",
   "@word": {
     "description": "word"
+  },
+  "words": "sözler",
+  "@words": {
+    "description": "plural"
+  },
+  "wordsQuiz": "Kelimeler Sınavı",
+  "@wordsQuiz": {},
+  "yes": "evet",
+  "@yes": {},
+  "youWin": "Puan kazanırsın",
+  "@youWin": {
+    "description": "points"
   }
 }

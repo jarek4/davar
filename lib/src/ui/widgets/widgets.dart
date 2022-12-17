@@ -7,5 +7,5 @@ export 'language_dropdown.dart';
 export 'linear_loading_widget.dart';
 export 'neon_button.dart';
 export 'paginated_stream_list.dart';
-export 'unauthenticated_info.dart';
+export 'small_user_dialog.dart';
 export 'word_item.dart';

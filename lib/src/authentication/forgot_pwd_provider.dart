@@ -38,7 +38,7 @@ class ForgotPwdProvider with ChangeNotifier {
 
   void incrementResetAttempts() {
     --_resetAttempts;
-    if(_resetAttempts < 1) {
+    if (_resetAttempts < 1) {
       _status = ForgotPwdStatus.disabled;
     }
     notifyListeners();
@@ -77,7 +77,7 @@ class ForgotPwdProvider with ChangeNotifier {
   // to reset password user has to provide proper username and language that he is learning
   bool onResetPasswordRequest() {
     incrementResetAttempts();
-    if(_resetAttempts < 1) {
+    if (_resetAttempts < 1) {
       _errorMsg = 'You can not try any more. Please register user';
       notifyListeners();
       return false;
@@ -105,7 +105,7 @@ class ForgotPwdProvider with ChangeNotifier {
   }
 
   Future<bool> changePassword() async {
-    if(_resetAttempts < 1) {
+    if (_resetAttempts < 1) {
       _errorMsg = 'You can not try any more. Please register user';
       notifyListeners();
       return false;
@@ -130,7 +130,7 @@ class ForgotPwdProvider with ChangeNotifier {
       return true;
     } catch (e) {
       if (kDebugMode) print(e);
-      _errorMsg = 'Your password has NOT been! Error occurred';
+      _errorMsg = 'Your password has NOT been changed! Error occurred';
       _status = ForgotPwdStatus.error; // error
       notifyListeners();
       return false;

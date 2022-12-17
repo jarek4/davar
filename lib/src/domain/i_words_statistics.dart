@@ -9,11 +9,15 @@ abstract class IWordsStatistics {
   /// <String>['catchword', 'points', 'id']
   Future<List<String>> readItemWithLowestPoints();
 
-  Future<bool> saveWordsQuantity( int value);
-  Future<int> readWordsQuantity();
-  Future<bool> saveSentencesQuantity( int value);
-  Future<int> readSentencesQuantity();
-  Future<bool> saveUpdateDate(String date);
-  Future<String> readUpdateDate();
+  Future<bool> saveWordsQuantity(int value);
 
+  Future<int> readWordsQuantity();
+
+  Future<bool> saveSentencesQuantity(int value);
+
+  Future<int> readSentencesQuantity();
+
+  Future<bool> saveUpdateDate(String date);
+
+  Future<String> readUpdateDate();
 }

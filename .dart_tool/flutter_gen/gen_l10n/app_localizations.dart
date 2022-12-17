@@ -129,17 +129,107 @@ abstract class AppLocalizations {
   /// **'your language'**
   String get authYourLanguage;
 
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'cancel'**
+  String get cancel;
+
+  /// You cannot try any more. Please register new user
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot try any more. Please register new user'**
+  String get cannotTryNoMore;
+
+  /// points
+  ///
+  /// In en, this message translates to:
+  /// **'You can score:'**
+  String get canScore;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'category'**
+  String get category;
+
+  /// No description provided for @changePwd.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get changePwd;
+
+  /// No description provided for @chooseLang.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose language'**
+  String get chooseLang;
+
   /// click ad
   ///
   /// In en, this message translates to:
   /// **'Support my app by clicking this ad'**
   String get clickAdToSupport;
 
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'close'**
+  String get close;
+
+  /// No description provided for @clue.
+  ///
+  /// In en, this message translates to:
+  /// **'clue'**
+  String get clue;
+
+  /// No description provided for @clueNotAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'clue not added'**
+  String get clueNotAdded;
+
+  /// No description provided for @confirmDeleteWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure, you want to delete this word?'**
+  String get confirmDeleteWord;
+
+  /// No description provided for @createdAt.
+  ///
+  /// In en, this message translates to:
+  /// **'created at'**
+  String get createdAt;
+
+  /// No description provided for @createLearningProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your learning profile'**
+  String get createLearningProfile;
+
   /// No description provided for @delete.
   ///
   /// In en, this message translates to:
   /// **'delete'**
   String get delete;
+
+  /// No description provided for @doFillFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you filled all fields'**
+  String get doFillFields;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'edit'**
+  String get edit;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'error'**
+  String get error;
 
   /// No description provided for @favorite.
   ///
@@ -152,6 +242,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This field cannot be empty'**
   String get fieldNotEmpty;
+
+  /// Forgot password?
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get forgotPwd;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'invalid email'**
+  String get invalidEmail;
+
+  /// Invalid password! Example:
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid password! Example:'**
+  String get invalidPwd;
+
+  /// language you want to learn
+  ///
+  /// In en, this message translates to:
+  /// **'language you want to learn'**
+  String get languageToLearn;
 
   /// elemet to add
   ///
@@ -177,6 +291,12 @@ abstract class AppLocalizations {
   /// **'Loading ... wait…'**
   String get loading;
 
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get loadMore;
+
   /// No description provided for @moreAddCategory.
   ///
   /// In en, this message translates to:
@@ -195,6 +315,12 @@ abstract class AppLocalizations {
   /// **'Manage categories. Add new one, delete or edit.'**
   String get moreManageCategories;
 
+  /// New password
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPwd;
+
   /// add new sentence
   ///
   /// In en, this message translates to:
@@ -207,11 +333,29 @@ abstract class AppLocalizations {
   /// **'New word'**
   String get newWord;
 
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'next'**
+  String get next;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
   /// no data
   ///
   /// In en, this message translates to:
   /// **'Data is unavailable'**
   String get noData;
+
+  /// No description provided for @noMoreToPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'No more word to play'**
+  String get noMoreToPlay;
 
   /// No description provided for @nothingFound.
   ///
@@ -219,22 +363,76 @@ abstract class AppLocalizations {
   /// **'Nothing was found'**
   String get nothingFound;
 
-  /// No description provided for @pageAddClue.
+  /// No description provided for @notSaved.
   ///
   /// In en, this message translates to:
-  /// **'clue'**
-  String get pageAddClue;
+  /// **'not saved'**
+  String get notSaved;
+
+  /// quiz lose
+  ///
+  /// In en, this message translates to:
+  /// **'Not this time'**
+  String get notThisTime;
+
+  /// delete
+  ///
+  /// In en, this message translates to:
+  /// **'You cannot undo deleting'**
+  String get noUndo;
+
+  /// No description provided for @points.
+  ///
+  /// In en, this message translates to:
+  /// **'points'**
+  String get points;
+
+  /// password
+  ///
+  /// In en, this message translates to:
+  /// **'password'**
+  String get pwd;
+
+  /// password is not strong
+  ///
+  /// In en, this message translates to:
+  /// **'password is not strong'**
+  String get pwdNotStrong;
+
+  /// Reset password
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get pwdReset;
+
+  /// Which language you learn?
+  ///
+  /// In en, this message translates to:
+  /// **'Which language you learn?'**
+  String get pwdResetWhichLang;
+
+  /// No description provided for @pwdWasChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Password was changed'**
+  String get pwdWasChanged;
+
+  /// No description provided for @quit.
+  ///
+  /// In en, this message translates to:
+  /// **'quit'**
+  String get quit;
 
   /// add words number
   ///
   /// In en, this message translates to:
-  /// **'Add at least: {num} more to play.'**
+  /// **'Add at least:'**
   String get quizAddAtLeast;
 
   /// until now numbers of words
   ///
   /// In en, this message translates to:
-  /// **'Until now you have been added {num} words'**
+  /// **'Until now you have been added'**
   String get quizAdded;
 
   /// how to play
@@ -254,6 +452,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'If you have added a clue to the word,  you will be able to use it. But it will takes 1 point. The number of the points of a particular word will be increased accordingly.'**
   String get quizManual2;
+
+  /// No description provided for @remove.
+  ///
+  /// In en, this message translates to:
+  /// **'remove'**
+  String get remove;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'reset'**
+  String get reset;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'save'**
+  String get save;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your changes'**
+  String get saveChanges;
+
+  /// No description provided for @seeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'see more'**
+  String get seeMore;
+
+  /// log out hope to see you soon
+  ///
+  /// In en, this message translates to:
+  /// **'Hope to see you soon'**
+  String get seeYou;
+
+  /// correct answer
+  ///
+  /// In en, this message translates to:
+  /// **'Select the correct answer'**
+  String get selectCorrect;
 
   /// sentence
   ///
@@ -315,6 +555,12 @@ abstract class AppLocalizations {
   /// **'Light/Dark mode'**
   String get settingsMode;
 
+  /// No description provided for @someThingHappend.
+  ///
+  /// In en, this message translates to:
+  /// **'something has happened'**
+  String get someThingHappend;
+
   /// quiz score
   ///
   /// In en, this message translates to:
@@ -345,11 +591,35 @@ abstract class AppLocalizations {
   /// **'all words'**
   String get statsWords;
 
+  /// 1
+  ///
+  /// In en, this message translates to:
+  /// **'takes 1 point'**
+  String get takesPoint;
+
+  /// No description provided for @thankYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you'**
+  String get thankYou;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
   /// No description provided for @tryAgain.
   ///
   /// In en, this message translates to:
   /// **'Try again'**
   String get tryAgain;
+
+  /// Please try again from the beginning
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again from the beginning'**
+  String get tryFromBeginniing;
 
   /// wait
   ///
@@ -357,11 +627,41 @@ abstract class AppLocalizations {
   /// **'Wait'**
   String get wait;
 
+  /// No description provided for @welcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get welcomeBack;
+
   /// word
   ///
   /// In en, this message translates to:
   /// **'word'**
   String get word;
+
+  /// plural
+  ///
+  /// In en, this message translates to:
+  /// **'words'**
+  String get words;
+
+  /// No description provided for @wordsQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Words Quiz'**
+  String get wordsQuiz;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// points
+  ///
+  /// In en, this message translates to:
+  /// **'You win'**
+  String get youWin;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

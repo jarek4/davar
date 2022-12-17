@@ -16,17 +16,65 @@
   "@authName": {},
   "authYourLanguage": "twój język",
   "@authYourLanguage": {},
+  "cancel": "anuluj",
+  "@cancel": {},
+  "cannotTryNoMore": "Nie możesz próbować dalej. Proszę zarejestruj nowego użytkownika",
+  "@cannotTryNoMore": {
+    "description": "You cannot try any more. Please register new user"
+  },
+  "canScore": "Możesz zdobyć:",
+  "@canScore": {
+    "description": "points"
+  },
+  "category": "kategoria",
+  "@category": {},
+  "changePwd": "Zmiana hasła",
+  "@changePwd": {},
+  "chooseLang": "Wybierz język",
+  "@chooseLang": {},
   "clickAdToSupport": "Wesprzyj moją aplikację, klikając reklamę",
   "@clickAdToSupport": {
     "description": "click ad"
   },
+  "close": "zamknij",
+  "@close": {},
+  "clue": "wskazówka",
+  "@clue": {},
+  "clueNotAdded": "nie dodano podpowiedzi",
+  "@clueNotAdded": {},
+  "confirmDeleteWord": "Czy na pewno chcesz usunąć to słowo?",
+  "@confirmDeleteWord": {},
+  "createdAt": "utworzony",
+  "@createdAt": {},
+  "createLearningProfile": "Stwórz swój profil edukacyjny",
+  "@createLearningProfile": {},
   "delete": "usuń",
   "@delete": {},
+  "doFillFields": "Czy wypełniłeś wszystkie pola",
+  "@doFillFields": {},
+  "edit": "edytuj",
+  "@edit": {},
+  "error": "błąd",
+  "@error": {},
   "favorite": "Ulubione",
   "@favorite": {},
   "fieldNotEmpty": "To pole nie może być puste",
   "@fieldNotEmpty": {
     "description": "field cannt be empty"
+  },
+  "forgotPwd": "Zapomniałeś hasła?",
+  "@forgotPwd": {
+    "description": "Forgot password?"
+  },
+  "invalidEmail": "niepoprawny email",
+  "@invalidEmail": {},
+  "invalidPwd": "Nieprawidłowe hasło! Przykład:",
+  "@invalidPwd": {
+    "description": "Invalid password! Example:"
+  },
+  "languageToLearn": "język, którego chcesz się nauczyć",
+  "@languageToLearn": {
+    "description": "language you want to learn"
   },
   "listAddListTop": "Który element chcesz dodać na początek głównej listy",
   "@listAddListTop": {
@@ -40,6 +88,8 @@
   "@loading": {
     "description": "loading"
   },
+  "loadMore": "Wczytaj więcej",
+  "@loadMore": {},
   "moreAddCategory": "Dodaj kategorię",
   "@moreAddCategory": {},
   "moreInfo": "dodatkowa informacja",
@@ -48,6 +98,10 @@
   },
   "moreManageCategories": "Kategorie. Dodaj, usuń lub edytuj.",
   "@moreManageCategories": {},
+  "newPwd": "Nowe hasło",
+  "@newPwd": {
+    "description": "New password"
+  },
   "newSentence": "Nowe wyrażenie",
   "@newSentence": {
     "description": "add new sentence"
@@ -56,19 +110,55 @@
   "@newWord": {
     "description": "add new word"
   },
+  "next": "dalej",
+  "@next": {},
+  "no": "nie",
+  "@no": {},
   "noData": "Dane są niedostępne",
   "@noData": {
     "description": "no data"
   },
+  "noMoreToPlay": "Skończyły się słówka",
+  "@noMoreToPlay": {},
   "nothingFound": "Nic nie znaleziono",
   "@nothingFound": {},
-  "pageAddClue": "wskazówka",
-  "@pageAddClue": {},
-  "quizAddAtLeast": "Dodaj co najmniej: {num} żeby móc grać",
+  "notSaved": "nie zapisane",
+  "@notSaved": {},
+  "notThisTime": "Nie tym razem",
+  "@notThisTime": {
+    "description": "quiz lose"
+  },
+  "noUndo": "Usunięcia nie można cofnąć",
+  "@noUndo": {
+    "description": "delete"
+  },
+  "points": "punkty",
+  "@points": {},
+  "pwd": "hasło",
+  "@pwd": {
+    "description": "password"
+  },
+  "pwdNotStrong": "słabe hasło",
+  "@pwdNotStrong": {
+    "description": "password is not strong"
+  },
+  "pwdReset": "Resetowanie hasła",
+  "@pwdReset": {
+    "description": "Reset password"
+  },
+  "pwdResetWhichLang": "Jakiego języka się uczysz?",
+  "@pwdResetWhichLang": {
+    "description": "Which language you learn?"
+  },
+  "pwdWasChanged": "Hasło zostało zmienione ",
+  "@pwdWasChanged": {},
+  "quit": "koniec",
+  "@quit": {},
+  "quizAddAtLeast": "Dodaj co najmniej:",
   "@quizAddAtLeast": {
     "description": "add words number"
   },
-  "quizAdded": "Do tej pory dodałeś{num} słówek",
+  "quizAdded": "Do tej pory dodałeś",
   "@quizAdded": {
     "description": "until now numbers of words"
   },
@@ -83,6 +173,24 @@
   "quizManual2": "Jeśli dodałeś wskazówkę do słowa, będziesz mógł jej użyć. Jednak odejmie Ci to 1 punkt. Liczba punktów danego słowa zostanie odpowiednio zwiększona.",
   "@quizManual2": {
     "description": "how to play quiz"
+  },
+  "remove": "usuń",
+  "@remove": {},
+  "reset": "zerowanie",
+  "@reset": {},
+  "save": "zapisz",
+  "@save": {},
+  "saveChanges": "Zapisz zmiany",
+  "@saveChanges": {},
+  "seeMore": "zobacz więcej",
+  "@seeMore": {},
+  "seeYou": "Mam nadzieję, że wkrótce się zobaczymy",
+  "@seeYou": {
+    "description": "log out hope to see you soon"
+  },
+  "selectCorrect": "Wybierz poprawną odpowiedź",
+  "@selectCorrect": {
+    "description": "correct answer"
   },
   "sentence": "zdanie",
   "@sentence": {
@@ -118,6 +226,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
+  "someThingHappend": "coś się stało",
+  "@someThingHappend": {},
   "statsQuizScore": "Najlepszy wynik z quizu",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -138,14 +248,40 @@
   "@statsWords": {
     "description": "words"
   },
+  "takesPoint": "odejmuje 1 punkt",
+  "@takesPoint": {
+    "description": "1"
+  },
+  "thankYou": "Dziękuję",
+  "@thankYou": {},
+  "total": "Razem",
+  "@total": {},
   "tryAgain": "Spróbuj ponownie",
   "@tryAgain": {},
+  "tryFromBeginniing": "Spróbuj ponownie od początku",
+  "@tryFromBeginniing": {
+    "description": "Please try again from the beginning"
+  },
   "wait": "Chwila",
   "@wait": {
     "description": "wait"
   },
+  "welcomeBack": "Witaj ponownie",
+  "@welcomeBack": {},
   "word": "słówko",
   "@word": {
     "description": "word"
+  },
+  "words": "słów/słowa",
+  "@words": {
+    "description": "plural"
+  },
+  "wordsQuiz": "Quiz słowny",
+  "@wordsQuiz": {},
+  "yes": "tak",
+  "@yes": {},
+  "youWin": "Twoje punkty",
+  "@youWin": {
+    "description": "points"
   }
 }

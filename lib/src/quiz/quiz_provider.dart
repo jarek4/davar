@@ -16,24 +16,10 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
 
   late QuizState _state;
 
-  // last saved quiz highest score from statistics
-  // to decide if save current quiz score to statistics
+  // last saved quiz highest score from statistics (saving current quiz score)
   int _previewHighestScore = 0;
 
   QuizState get state => _state;
-
-  static List<Option> _makeOptions(List<Word> inGameWords) {
-    if (inGameWords.isEmpty) return <Option>[];
-    List<Option> options = [];
-    Word first = inGameWords[0];
-    Option correct = Option(text: first.userTranslation, wordId: first.id, isCorrect: true);
-    options.add(correct);
-    List<Option> notCorrect =
-        inGameWords.sublist(1).map((e) => Option(text: e.userTranslation, wordId: e.id)).toList();
-    options.addAll(notCorrect);
-    // options.shuffle();
-    return options;
-  }
 
   QuizProviderStatus _status = QuizProviderStatus.loading;
 
@@ -106,6 +92,20 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
     _errorMsg = 'Still is loading! Please restart application!';
     _status = QuizProviderStatus.error;
     notifyListeners();
+  }
+
+  List<Option> _makeOptions(List<Word> inGameWords) {
+    if (inGameWords.isEmpty) return <Option>[];
+    List<Option> options = [];
+    Word first = inGameWords[0];
+    Option correct = Option(text: first.userTranslation, wordId: first.id, isCorrect: true);
+    options.add(correct);
+    List<Option> notCorrect =
+        inGameWords.sublist(1).map((e) => Option(text: e.userTranslation, wordId: e.id)).toList();
+    options.addAll(notCorrect);
+    // the correct answer appears in various positions
+    options.shuffle();
+    return options;
   }
 
   void onClueDemand() {
@@ -290,10 +290,12 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
   }
 
   Future<void> onQuit() async {
-    final bool isSaved = await _saveTotalGamePointsForStatistics(_state.gamePoints);
-    if (!isSaved) {
-      _errorMsg = 'Total game score not saved!';
-      notifyListeners();
+    if (_state.gamePoints > _previewHighestScore) {
+      final bool isSaved = await _saveTotalGamePointsForStatistics(_state.gamePoints);
+      if (!isSaved) {
+        _errorMsg = 'Total game score not saved!';
+        notifyListeners();
+      }
     }
   }
 }

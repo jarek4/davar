@@ -2,9 +2,11 @@ import 'package:davar/src/authentication/authentication.dart';
 import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class RegisterView extends StatefulWidget {
@@ -16,9 +18,12 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  final GlobalKey<FormState> _registerFormKye =
-      GlobalKey<FormState>(debugLabel: 'Register form');
+  final GlobalKey<FormState> _registerFormKye = GlobalKey<FormState>(debugLabel: 'Register form');
   bool _isHidden = true;
+  String _native = 'My language';
+  String _toLearn = 'I will learn';
+  String _empty = 'cannot be empty';
+  String _invalid = 'invalid value';
   static const _passPattern2 = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{5,}$';
   static const _emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
 
@@ -29,7 +34,20 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _native = utils.capitalize(AppLocalizations.of(context)?.authYourLanguage ?? 'My language');
+    _toLearn = utils.capitalize(AppLocalizations.of(context)?.languageToLearn ?? 'I will learn');
+    _empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'cannot be empty';
+    _invalid = AppLocalizations.of(context)?.invalidEmail ?? 'invalid value';
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final String profile =
+        AppLocalizations.of(context)?.createLearningProfile ?? 'Create your learning profile';
+    final String name = utils.capitalize(AppLocalizations.of(context)?.authName ?? 'Name');
+    final String pwd = utils.capitalize(AppLocalizations.of(context)?.pwd ?? 'Password');
     return Scaffold(
       body: CustomScrollView(slivers: [
         SliverList(
@@ -39,21 +57,21 @@ class _RegisterViewState extends State<RegisterView> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 35.0, right: 35.0, top: 30.0),
                 child: Column(children: <Widget>[
-                  const Text('Create your learning profile',
-                      textAlign: TextAlign.center, style: TextStyle(fontSize: 18.0)),
+                  Text(profile,
+                      textAlign: TextAlign.center, style: const TextStyle(fontSize: 18.0)),
                   const SizedBox(height: 20.0),
-                  _nameField(context, 'Name'),
+                  _nameField(context, name),
                   const SizedBox(height: 8.0),
                   _emailField(context, 'Email'),
                   const SizedBox(height: 8.0),
-                  _passwordField(context, 'Password'),
+                  _passwordField(context, pwd),
                   const SizedBox(height: 15.0),
-                  const Text('_native',
-                      style: TextStyle(color: Colors.grey), textAlign: TextAlign.center),
+                  Text(_native,
+                      style: const TextStyle(color: Colors.grey), textAlign: TextAlign.center),
                   _buildMyLanguageDropdown(context),
                   const SizedBox(height: 8.0),
-                  const Text('_toLearn',
-                      style: TextStyle(color: Colors.grey), textAlign: TextAlign.center),
+                  Text(_toLearn,
+                      style: const TextStyle(color: Colors.grey), textAlign: TextAlign.center),
                   _buildWantLearnDropdown(context),
                   _buildSubmitButton(),
                   _buildSignInOption(context),
@@ -93,7 +111,7 @@ class _RegisterViewState extends State<RegisterView> {
             FilteringTextInputFormatter.allow(RegExp('[ a-zA-Z0-9 -]'))
           ],
           onChanged: (val) => context.read<RegistrationProvider>().onNameChange(val),
-          validator: (v) => (v != null && v.length > 2) ? null : 'Enter name',
+          validator: (v) => (v != null && v.length > 2) ? null : _empty,
           initialValue: '',
           keyboardType: TextInputType.text,
           obscureText: false,
@@ -112,9 +130,9 @@ class _RegisterViewState extends State<RegisterView> {
           ],
           onChanged: (val) => context.read<RegistrationProvider>().onEmailChange(val),
           validator: (v) {
-            if (v == null || v.isEmpty) return 'Please type email';
+            if (v == null || v.isEmpty) return _empty;
             bool emailValid = RegExp(_emailPattern).hasMatch(v);
-            if (!emailValid) return 'Email is not valid';
+            if (!emailValid) return _invalid;
             return null;
           },
           initialValue: '',
@@ -125,15 +143,17 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   Widget _passwordField(BuildContext context, String label) {
+    final String invalid =
+        '${AppLocalizations.of(context)?.invalidPwd ?? 'Invalid password!Example:'} Aa!123';
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
       child: TextFormField(
           cursorColor: Colors.black,
           onChanged: (val) => context.read<RegistrationProvider>().onPasswordChange(val),
           validator: (v) {
-            if (v == null || v.isEmpty) return 'Password cannot be empty!';
+            if (v == null || v.isEmpty) return _empty;
             bool passValid = RegExp(_passPattern2).hasMatch(v);
-            if (!passValid) return 'Invalid password! Example: Aa!123';
+            if (!passValid) return invalid;
             return null;
           },
           initialValue: '',
@@ -149,15 +169,14 @@ class _RegisterViewState extends State<RegisterView> {
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 35),
       child: Consumer<RegistrationProvider>(
           builder: (BuildContext context, RegistrationProvider provider, _) {
-          return LanguageDropdown<String>(
-              hintText: 'My language',
-              options: [...SupportedLanguages.names],
-              value: provider.native,
-              onChanged: (String? newValue) => provider.onNativeChange(newValue ?? 'English'),
-              getLabel: (String value) => value,
-              key: const Key('LanguageDropdown-My-language'));
-        }
-      ),
+        return LanguageDropdown<String>(
+            hintText: _native,
+            options: [...SupportedLanguages.names],
+            value: provider.native,
+            onChanged: (String? newValue) => provider.onNativeChange(newValue ?? 'English'),
+            getLabel: (String value) => value,
+            key: const Key('LanguageDropdown-My-language'));
+      }),
     );
   }
 
@@ -165,20 +184,20 @@ class _RegisterViewState extends State<RegisterView> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 35),
       child: Consumer<RegistrationProvider>(
-    builder: (BuildContext context, RegistrationProvider provider, _) {
-          return LanguageDropdown<String>(
-              hintText: 'I want to learn',
-              options: [...SupportedLanguages.names],
-              value: provider.learning,
-              onChanged: (String? newValue) => provider.onLearningChange(newValue ?? 'English'),
-              getLabel: (String value) => value,
-              key: const Key('LanguageDropdown-I-want-to-learn'));
-        }
-      ),
+          builder: (BuildContext context, RegistrationProvider provider, _) {
+        return LanguageDropdown<String>(
+            hintText: _toLearn,
+            options: [...SupportedLanguages.names],
+            value: provider.learning,
+            onChanged: (String? newValue) => provider.onLearningChange(newValue ?? 'other'),
+            getLabel: (String value) => value,
+            key: const Key('LanguageDropdown-I-want-to-learn'));
+      }),
     );
   }
 
   Padding _buildSubmitButton() {
+    final String wait = '${AppLocalizations.of(context)?.wait ?? 'Please wait'}...';
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 35),
       child: Consumer<RegistrationProvider>(
@@ -200,7 +219,7 @@ class _RegisterViewState extends State<RegisterView> {
             return FormSubmitBtn(
               key: const Key('register-view-submit - wait'),
               formState: _registerFormKye.currentState,
-              txt: 'Please wait...',
+              txt: wait,
               onSubmit: () {},
             );
         }
@@ -209,9 +228,9 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void _onFormSubmit(BuildContext context, FormState? fs) {
+    final String again = AppLocalizations.of(context)?.tryFromBeginniing ?? 'Please try again';
     if (fs == null) {
-      context.read<RegistrationProvider>().registrationErrorMsg =
-          'Please try again from the beginning';
+      context.read<RegistrationProvider>().registrationErrorMsg = again;
       return;
     }
     fs.save();

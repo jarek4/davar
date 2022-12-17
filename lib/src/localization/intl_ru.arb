@@ -16,17 +16,65 @@
   "@authName": {},
   "authYourLanguage": "ваш язык",
   "@authYourLanguage": {},
+  "cancel": "отменить",
+  "@cancel": {},
+  "cannotTryNoMore": "Вы не можете больше пытаться. Пожалуйста, зарегистрируйте нового пользователя",
+  "@cannotTryNoMore": {
+    "description": "You cannot try any more. Please register new user"
+  },
+  "canScore": "Вы можете забить:",
+  "@canScore": {
+    "description": "points"
+  },
+  "category": "категория",
+  "@category": {},
+  "changePwd": "Сменить пароль",
+  "@changePwd": {},
+  "chooseLang": "Пожалуйста, выберите язык",
+  "@chooseLang": {},
   "clickAdToSupport": "Поддержите мое приложение, нажав на эту рекламу!",
   "@clickAdToSupport": {
     "description": "click ad"
   },
+  "close": "закрыть",
+  "@close": {},
+  "clue": "подсказка",
+  "@clue": {},
+  "clueNotAdded": "подсказка не добавлена",
+  "@clueNotAdded": {},
+  "confirmDeleteWord": "Bu kelimeyi silmek istediğinizden emin misiniz?",
+  "@confirmDeleteWord": {},
+  "createdAt": "создано в",
+  "@createdAt": {},
+  "createLearningProfile": "Создайте свой профиль обучения",
+  "@createLearningProfile": {},
   "delete": "удалить",
   "@delete": {},
+  "doFillFields": "Вы заполнили все поля",
+  "@doFillFields": {},
+  "edit": "редактировать",
+  "@edit": {},
+  "error": "ошибка",
+  "@error": {},
   "favorite": "Любимый",
   "@favorite": {},
   "fieldNotEmpty": "Это поле не может быть пустым!",
   "@fieldNotEmpty": {
     "description": "field cannt be empty"
+  },
+  "forgotPwd": "Забыли пароль?",
+  "@forgotPwd": {
+    "description": "Forgot password?"
+  },
+  "invalidEmail": "неверный адрес",
+  "@invalidEmail": {},
+  "invalidPwd": "Неверный пароль! Пример:",
+  "@invalidPwd": {
+    "description": "Invalid password! Example:"
+  },
+  "languageToLearn": "язык, который вы хотите выучить",
+  "@languageToLearn": {
+    "description": "language you want to learn"
   },
   "listAddListTop": "Какой элемент вы хотите добавить в начало основного списка",
   "@listAddListTop": {
@@ -40,6 +88,8 @@
   "@loading": {
     "description": "loading"
   },
+  "loadMore": "Загрузить ещё",
+  "@loadMore": {},
   "moreAddCategory": "Добавить новую категорию",
   "@moreAddCategory": {},
   "moreInfo": "дополнительная информация",
@@ -48,6 +98,10 @@
   },
   "moreManageCategories": "Управляйте своими категориями. Добавить новый, удалить или изменить.",
   "@moreManageCategories": {},
+  "newPwd": "Новый пароль",
+  "@newPwd": {
+    "description": "New password"
+  },
   "newSentence": "Новое предложение",
   "@newSentence": {
     "description": "add new sentence"
@@ -56,19 +110,55 @@
   "@newWord": {
     "description": "add new word"
   },
+  "next": "следующий",
+  "@next": {},
+  "no": "нет",
+  "@no": {},
   "noData": "Данные недоступны",
   "@noData": {
     "description": "no data"
   },
+  "noMoreToPlay": "Больше нет слов для игры",
+  "@noMoreToPlay": {},
   "nothingFound": "Ничего не было найдено",
   "@nothingFound": {},
-  "pageAddClue": "подсказка",
-  "@pageAddClue": {},
-  "quizAddAtLeast": "Добавьте хотя бы: {num} больше, чтобы играть.",
+  "notSaved": "не сохранен",
+  "@notSaved": {},
+  "notThisTime": "Не в этот раз",
+  "@notThisTime": {
+    "description": "quiz lose"
+  },
+  "noUndo": "Вы не можете отменить удаление",
+  "@noUndo": {
+    "description": "delete"
+  },
+  "points": "точки",
+  "@points": {},
+  "pwd": "пароль",
+  "@pwd": {
+    "description": "password"
+  },
+  "pwdNotStrong": "пароль не надежный",
+  "@pwdNotStrong": {
+    "description": "password is not strong"
+  },
+  "pwdReset": "Восстановить пароль",
+  "@pwdReset": {
+    "description": "Reset password"
+  },
+  "pwdResetWhichLang": "Какой язык вы изучаете?",
+  "@pwdResetWhichLang": {
+    "description": "Which language you learn?"
+  },
+  "pwdWasChanged": "Пароль был изменен",
+  "@pwdWasChanged": {},
+  "quit": "выходить",
+  "@quit": {},
+  "quizAddAtLeast": "Добавьте хотя бы:",
   "@quizAddAtLeast": {
     "description": "add words number"
   },
-  "quizAdded": "До сих пор вы были добавлены {num} слова",
+  "quizAdded": "До сих пор вы были добавлены",
   "@quizAdded": {
     "description": "until now numbers of words"
   },
@@ -83,6 +173,24 @@
   "quizManual2": "Если вы добавили ключ к слову, вы сможете его использовать. Но это займет 1 балл. Количество точек конкретного слова будет соответственно увеличено",
   "@quizManual2": {
     "description": "how to play quiz"
+  },
+  "remove": "удалить",
+  "@remove": {},
+  "reset": "сброс",
+  "@reset": {},
+  "save": "сохранять",
+  "@save": {},
+  "saveChanges": "Сохраните изменения",
+  "@saveChanges": {},
+  "seeMore": "см. больше",
+  "@seeMore": {},
+  "seeYou": "Надеюсь увидеть вас в ближайшее время",
+  "@seeYou": {
+    "description": "log out hope to see you soon"
+  },
+  "selectCorrect": "Выберите правильный ответ",
+  "@selectCorrect": {
+    "description": "correct answer"
   },
   "sentence": "приговор",
   "@sentence": {
@@ -118,6 +226,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
+  "someThingHappend": "что-то случилось",
+  "@someThingHappend": {},
   "statsQuizScore": "Самый высокий балл викторины.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -138,14 +248,40 @@
   "@statsWords": {
     "description": "words"
   },
+  "takesPoint": "занимает 1 балл",
+  "@takesPoint": {
+    "description": "1"
+  },
+  "thankYou": "Спасибо",
+  "@thankYou": {},
+  "total": "Общее",
+  "@total": {},
   "tryAgain": "Попробуй снова",
   "@tryAgain": {},
+  "tryFromBeginniing": "Пожалуйста, попробуйте еще раз с самого начала",
+  "@tryFromBeginniing": {
+    "description": "Please try again from the beginning"
+  },
   "wait": "Ждать",
   "@wait": {
     "description": "wait"
   },
+  "welcomeBack": "Добро пожаловать обратно",
+  "@welcomeBack": {},
   "word": "слово",
   "@word": {
     "description": "word"
+  },
+  "words": "слова",
+  "@words": {
+    "description": "plural"
+  },
+  "wordsQuiz": "Викторина по словам",
+  "@wordsQuiz": {},
+  "yes": "да",
+  "@yes": {},
+  "youWin": "Вы выигрываете",
+  "@youWin": {
+    "description": "points"
   }
 }
