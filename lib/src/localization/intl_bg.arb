@@ -1,9 +1,13 @@
 {
   "@@locale": "bg",
+  "add": "добави",
+  "@add": {},
   "addTranslation": "превод",
   "@addTranslation": {
     "description": "translation"
   },
+  "all": "всички",
+  "@all": {},
   "authLearn": "учиш",
   "@authLearn": {
     "description": "you learn"
@@ -16,6 +20,12 @@
   "@authName": {},
   "authYourLanguage": "вашият език",
   "@authYourLanguage": {},
+  "backupConfirm": "Сигурни ли сте, че искате да замените всичките си данни?",
+  "@backupConfirm": {
+    "description": " replace all your data?"
+  },
+  "best": "най-добър",
+  "@best": {},
   "cancel": "отмени",
   "@cancel": {},
   "cannotTryNoMore": "Не можете да опитвате повече. Моля, регистрирайте нов потребител",
@@ -60,11 +70,15 @@
   "@favorite": {},
   "fieldNotEmpty": "Полето не може да бъде празно",
   "@fieldNotEmpty": {
-    "description": "field cannt be empty"
+    "description": "field cannot be empty"
   },
   "forgotPwd": "Забравена парола?",
   "@forgotPwd": {
     "description": "Forgot password?"
+  },
+  "importExport": "Импортиране/експортиране на резервно копие",
+  "@importExport": {
+    "description": "import/export backup copy"
   },
   "invalidEmail": "невалиден имейл",
   "@invalidEmail": {},
@@ -78,7 +92,7 @@
   },
   "listAddListTop": "Кой елемент искате да добавите в началото на основния списък",
   "@listAddListTop": {
-    "description": "elemet to add"
+    "description": "element to add"
   },
   "listEmpty": "Списъкът с вашите думи изглежда празен",
   "@listEmpty": {},
@@ -174,6 +188,8 @@
   "@quizManual2": {
     "description": "how to play quiz"
   },
+  "quizScore": "викторината",
+  "@quizScore": {},
   "remove": "премахване",
   "@remove": {},
   "reset": "нулиране",
@@ -196,6 +212,8 @@
   "@sentence": {
     "description": "sentence"
   },
+  "sentences": "изречения",
+  "@sentences": {},
   "settingsBackup": "Резервно копие",
   "@settingsBackup": {},
   "settingsBackupAttention": "Внимание! Ако импортирате данни от файл, всички текущи думи и изречения ще бъдат заменени.",
@@ -226,8 +244,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
-  "someThingHappend": "нещо се е случило",
-  "@someThingHappend": {},
+  "someThingHappened": "нещо се е случило",
+  "@someThingHappened": {},
   "statsQuizScore": "Най-висок резултат от викторината.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -258,14 +276,16 @@
   "@total": {},
   "tryAgain": "Опитай пак",
   "@tryAgain": {},
-  "tryFromBeginniing": "Моля, опитайте още веднъж от началото",
-  "@tryFromBeginniing": {
+  "tryFromBeginning": "Моля, опитайте още веднъж от началото",
+  "@tryFromBeginning": {
     "description": "Please try again from the beginning"
   },
   "wait": "Изчакайте",
   "@wait": {
     "description": "wait"
   },
+  "weakest": "най-слаб",
+  "@weakest": {},
   "welcomeBack": "Добре дошъл отново",
   "@welcomeBack": {},
   "word": "думичка",

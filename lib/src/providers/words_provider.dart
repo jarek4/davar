@@ -22,7 +22,7 @@ class WordsProvider with ChangeNotifier {
   String get wordsErrorMsg => _errorMsg;
 
   void confirmReadErrorMsg() {
-    if(_errorMsg.isNotEmpty) {
+    if (_errorMsg.isNotEmpty) {
       _errorMsg = '';
       notifyListeners();
     }
@@ -178,11 +178,5 @@ class WordsProvider with ChangeNotifier {
     }
     _status = WordsProviderStatus.success;
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    if (kDebugMode) print(' -- WORDS PROVIDER DISPOSE --');
-    super.dispose();
   }
 }

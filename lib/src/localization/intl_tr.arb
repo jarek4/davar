@@ -1,9 +1,13 @@
 {
   "@@locale": "tr",
+  "add": "ekle",
+  "@add": {},
   "addTranslation": "çeviri",
   "@addTranslation": {
     "description": "translation"
   },
+  "all": "tüm",
+  "@all": {},
   "authLearn": "sen öğrenirsin",
   "@authLearn": {
     "description": "you learn"
@@ -16,6 +20,12 @@
   "@authName": {},
   "authYourLanguage": "senin dilin",
   "@authYourLanguage": {},
+  "backupConfirm": "Tüm verilerinizi değiştirmek istediğinizden emin misiniz?",
+  "@backupConfirm": {
+    "description": " replace all your data?"
+  },
+  "best": "en iyi",
+  "@best": {},
   "cancel": "iptal",
   "@cancel": {},
   "cannotTryNoMore": "Daha fazla deneyemezsin. Lütfen yeni kullanıcı kaydedin",
@@ -60,11 +70,15 @@
   "@favorite": {},
   "fieldNotEmpty": "Bu alan boş olamaz",
   "@fieldNotEmpty": {
-    "description": "field cannt be empty"
+    "description": "field cannot be empty"
   },
   "forgotPwd": "Parolanızı mı unuttunuz?",
   "@forgotPwd": {
     "description": "Forgot password?"
+  },
+  "importExport": "Yedek kopyayı İçe/Dışa Aktar",
+  "@importExport": {
+    "description": "import/export backup copy"
   },
   "invalidEmail": "Geçersiz e-posta",
   "@invalidEmail": {},
@@ -78,7 +92,7 @@
   },
   "listAddListTop": "Ana listenin başında eklemek istediğiniz öğeyi",
   "@listAddListTop": {
-    "description": "elemet to add"
+    "description": "element to add"
   },
   "listEmpty": "Belki kelime listeniz boştur",
   "@listEmpty": {},
@@ -174,6 +188,8 @@
   "@quizManual2": {
     "description": "how to play quiz"
   },
+  "quizScore": "sınav puanı",
+  "@quizScore": {},
   "remove": "kaldır",
   "@remove": {},
   "reset": "sıfırlama",
@@ -196,6 +212,8 @@
   "@sentence": {
     "description": "sentence"
   },
+  "sentences": "cümleler",
+  "@sentences": {},
   "settingsBackup": "Yedekleme",
   "@settingsBackup": {},
   "settingsBackupAttention": "Dikkat! Bir dosyadan herhangi bir veri içe aktarırsanız, tüm geçerli kelimeler ve cümleler değiştirilecektir.",
@@ -226,8 +244,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
-  "someThingHappend": "bir şey oldu",
-  "@someThingHappend": {},
+  "someThingHappened": "bir şey oldu",
+  "@someThingHappened": {},
   "statsQuizScore": "En yüksek sınav puanı.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -258,14 +276,16 @@
   "@total": {},
   "tryAgain": "Tekrar deneyin",
   "@tryAgain": {},
-  "tryFromBeginniing": "Lütfen en baştan tekrar deneyin",
-  "@tryFromBeginniing": {
+  "tryFromBeginning": "Lütfen en baştan tekrar deneyin",
+  "@tryFromBeginning": {
     "description": "Please try again from the beginning"
   },
   "wait": "Bekle",
   "@wait": {
     "description": "wait"
   },
+  "weakest": "en zayıf",
+  "@weakest": {},
   "welcomeBack": "Tekrar hoşgeldiniz",
   "@welcomeBack": {},
   "word": "sözcük",

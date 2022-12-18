@@ -5,7 +5,13 @@ class AppLocalizationsBg extends AppLocalizations {
   AppLocalizationsBg([String locale = 'bg']) : super(locale);
 
   @override
+  String get add => 'добави';
+
+  @override
   String get addTranslation => 'превод';
+
+  @override
+  String get all => 'всички';
 
   @override
   String get authLearn => 'учиш';
@@ -18,6 +24,12 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get authYourLanguage => 'вашият език';
+
+  @override
+  String get backupConfirm => 'Сигурни ли сте, че искате да замените всичките си данни?';
+
+  @override
+  String get best => 'най-добър';
 
   @override
   String get cancel => 'отмени';
@@ -78,6 +90,9 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get forgotPwd => 'Забравена парола?';
+
+  @override
+  String get importExport => 'Импортиране/експортиране на резервно копие';
 
   @override
   String get invalidEmail => 'невалиден имейл';
@@ -182,6 +197,9 @@ class AppLocalizationsBg extends AppLocalizations {
   String get quizManual2 => 'Ако сте добавили подсказване към думата, ще можете да го използвате. Но това ще отнеме 1 точка. Броят на точките на определена дума ще бъде съответно увеличен.';
 
   @override
+  String get quizScore => 'викторината';
+
+  @override
   String get remove => 'премахване';
 
   @override
@@ -204,6 +222,9 @@ class AppLocalizationsBg extends AppLocalizations {
 
   @override
   String get sentence => 'изречение';
+
+  @override
+  String get sentences => 'изречения';
 
   @override
   String get settingsBackup => 'Резервно копие';
@@ -233,7 +254,7 @@ class AppLocalizationsBg extends AppLocalizations {
   String get settingsMode => 'Светъл/тъмен режим';
 
   @override
-  String get someThingHappend => 'нещо се е случило';
+  String get someThingHappened => 'нещо се е случило';
 
   @override
   String get statsQuizScore => 'Най-висок резултат от викторината.';
@@ -263,10 +284,13 @@ class AppLocalizationsBg extends AppLocalizations {
   String get tryAgain => 'Опитай пак';
 
   @override
-  String get tryFromBeginniing => 'Моля, опитайте още веднъж от началото';
+  String get tryFromBeginning => 'Моля, опитайте още веднъж от началото';
 
   @override
   String get wait => 'Изчакайте';
+
+  @override
+  String get weakest => 'най-слаб';
 
   @override
   String get welcomeBack => 'Добре дошъл отново';

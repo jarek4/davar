@@ -97,6 +97,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     try {
       await _authRepository.signOut();
+      // _authRepository.signOut() don't emit stream with auth status!
       _status = AuthenticationStatus.loggedOut;
       notifyListeners();
     } catch (e) {

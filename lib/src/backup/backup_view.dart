@@ -18,10 +18,7 @@ class BackupView extends StatelessWidget {
     final String export = AppLocalizations.of(context)?.settingsExport ?? 'Export backup copy';
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text(title), centerTitle: true),
       body: ChangeNotifierProvider<BackupProvider>(
           create: (context) => BackupProvider(),
           lazy: true,
@@ -36,12 +33,14 @@ class BackupView extends StatelessWidget {
               const SizedBox(height: 28.0),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 Text(import),
-                Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider bp, _) {
-                  final bool isLoading = bp.status == BackupStatus.loading;
-                  return IconButton(
-                      onPressed: () => isLoading ? null : _importHandle(context),
-                      icon: const Icon(Icons.cloud_download));
-                })
+                Selector<BackupProvider, BackupStatus>(
+                    selector: (_, state) => state.status,
+                    builder: (BuildContext context, status, child) {
+                      final bool isLoading = status == BackupStatus.loading;
+                      return IconButton(
+                          onPressed: () => isLoading ? null : _importHandle(context), icon: child!);
+                    },
+                    child: const Icon(Icons.cloud_download))
               ]),
               const Divider(thickness: 1.8, indent: 38.0, endIndent: 38.0),
               Padding(
@@ -51,42 +50,53 @@ class BackupView extends StatelessWidget {
               const SizedBox(height: 28.0),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 Text(export),
-                Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider p, _) {
-                  final bool isLoading = p.status == BackupStatus.loading;
-                  return IconButton(
-                      onPressed: () => isLoading ? null : p.makeDatabaseFileCopy(),
-                      icon: const Icon(Icons.cloud_upload_outlined));
-                })
+                Selector<BackupProvider, BackupStatus>(
+                    selector: (_, state) => state.status,
+                    builder: (BuildContext context, status, child) {
+                      final bool isLoading = status == BackupStatus.loading;
+                      return IconButton(
+                        onPressed: () => isLoading
+                            ? null
+                            : context.read<BackupProvider>().makeDatabaseFileCopy(),
+                        icon: child!,
+                      );
+                    },
+                    child: const Icon(Icons.cloud_upload_outlined))
               ]),
               const SizedBox(height: 10.0),
               const Divider(thickness: 1.8, indent: 38.0, endIndent: 38.0),
-              Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
-                if (state.status == BackupStatus.loading) {
-                  return const Center(
-                      child: SizedBox(height: 30.0, child: CircularProgressIndicator.adaptive()));
-                } else {
-                  return Text(state.info,
-                      style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
-                }
-              }),
+              // when loading or saved file location:
+              Selector<BackupProvider, BackupStatus>(
+                  selector: (_, state) => state.status,
+                  builder: (BuildContext context, status, _) {
+                    if (status == BackupStatus.loading) {
+                      return const Center(
+                          child:
+                              SizedBox(height: 30.0, child: CircularProgressIndicator.adaptive()));
+                    }
+                    return Text(context.read<BackupProvider>().info,
+                        style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
+                  }),
               const SizedBox(height: 8.0),
-              Consumer<BackupProvider>(builder: (BuildContext context, BackupProvider state, _) {
-                if (state.status == BackupStatus.error) {
-                  return Text(state.error,
-                      style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
-                }
-                return const SizedBox.shrink();
-              }),
+              Selector<BackupProvider, BackupStatus>(
+                  selector: (_, state) => state.status,
+                  builder: (BuildContext context, status, _) {
+                    if (status == BackupStatus.error) {
+                      return Text(context.read<BackupProvider>().error,
+                          style: const TextStyle(fontSize: 16.0), textAlign: TextAlign.center);
+                    }
+                    return const SizedBox.shrink();
+                  }),
             ]);
           }),
     );
   }
 
   void _importHandle(BuildContext context) {
-    // final String s = AppLocalizations.of(context)?.sentence ?? 'Are you sure?';
+    final String confirm = AppLocalizations.of(context)?.backupConfirm ?? 'Are you sure you want to replace all your data?';
     _showDialog(
       context,
-      'Are you sure you want to replace all your data?',
+      confirm,
       () {
         context.read<BackupProvider>().restoreDatabaseFromFile();
         Navigator.of(context).pop();

@@ -41,7 +41,7 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
       }).timeout(const Duration(seconds: 7), onTimeout: () => <Word>[]);
       List<Word> inGameWords = [];
       if (words.isNotEmpty && words.length >= 3) {
-        // .getRange(0, 3) need to have at least 3 items in list for quiz!
+        // .getRange(0, 3) need to have at least 3 items in list!
         inGameWords = (words.toList()..shuffle()).getRange(0, 3).toList();
       }
 

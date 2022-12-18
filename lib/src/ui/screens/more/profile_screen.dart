@@ -4,8 +4,10 @@ import 'package:davar/src/davar_ads/davar_ads.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:davar/src/ui/screens/more/add_edit_word_category/add_edit_word_category.dart';
+import 'package:davar/src/ui/widgets/widgets.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -15,27 +17,31 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Orientation orientation = MediaQuery.of(context).orientation;
     final bool isLandscape = orientation == Orientation.landscape;
+    final String name = '${utils.capitalize(AppLocalizations.of(context)?.authName ?? 'Name')}:';
+    final String learn =
+        '${utils.capitalize(AppLocalizations.of(context)?.authLearn ?? 'You learn')}:';
+    final String confirmLogout =
+        AppLocalizations.of(context)?.authLogout ?? 'Are you sure, you want to logout?';
     return Column(children: [
       Expanded(
         child: ListView(
             primary: true,
             padding: EdgeInsets.symmetric(horizontal: isLandscape ? 80 : 10),
             key: const Key('More-ProfileScreen-primaryList'),
-            // shrinkWrap: true,
             children: [
               OrientationBuilder(builder: (context, orientation) {
                 final bool isLandscape = orientation == Orientation.landscape;
                 return ListView(shrinkWrap: true, children: [
-                  _buildWordCategoriesList(isLandscape),
+                  _buildWordCategoriesList(context, isLandscape),
                 ]);
               }),
               const Divider(thickness: 1.2),
               Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider ap, _) {
                 return ListTile(
-                  title: Text('Name: ${ap.user.name}'),
+                  title: Text('$name ${ap.user.name}'),
                   subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Text('Email: ${ap.user.email}'),
-                    Text('You learn: ${ap.user.learning}'),
+                    Text('$learn ${ap.user.learning}'),
                   ]),
                   leading: const Icon(Icons.person_outline),
                 );
@@ -44,8 +50,8 @@ class ProfileScreen extends StatelessWidget {
               ListTile(
                 title: const Text('Logout'),
                 leading: const Icon(Icons.logout_outlined),
-                onTap: () => _showDialog(context, 'Are you sure, you want to logout?',
-                    () => context.read<AuthProvider>().signOut()),
+                onTap: () => _showDialog(
+                    context, confirmLogout, () => context.read<AuthProvider>().signOut()),
               ),
               const Divider(thickness: 1.2),
             ]),
@@ -58,6 +64,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _showDialog(BuildContext context, String title, VoidCallback onConfirmation) {
+    final String cancel = utils.capitalize(AppLocalizations.of(context)?.cancel ?? 'Cancel');
     void okBtnHandle() {
       onConfirmation();
       Navigator.of(context).pop();
@@ -68,14 +75,18 @@ class ProfileScreen extends StatelessWidget {
         builder: (_) => AlertDialog(
               title: Text(title, textAlign: TextAlign.center),
               content: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                TextButton(
-                    onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+                TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(cancel)),
                 TextButton(onPressed: okBtnHandle, child: const Text('OK'))
               ]),
             ));
   }
 
-  Container _buildWordCategoriesList(bool isLandscape) {
+  Container _buildWordCategoriesList(BuildContext context, bool isLandscape) {
+    final String manage =
+        AppLocalizations.of(context)?.moreManageCategories ?? 'Manage your categories';
+    final String addNew = AppLocalizations.of(context)?.moreAddCategory ?? 'Add new category';
+    final String wait = '${utils.capitalize(AppLocalizations.of(context)?.wait ?? 'Wait')}...';
+    final String add = utils.capitalize(AppLocalizations.of(context)?.add ?? 'Add');
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
@@ -93,7 +104,7 @@ class ProfileScreen extends StatelessWidget {
             children: [
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text('Manage your categories. Add new one, delete or edit.',
+                  child: Text(manage,
                       style: TextStyle(fontSize: isLandscape ? 20 : 16),
                       textAlign: TextAlign.center)),
             ]),
@@ -105,8 +116,8 @@ class ProfileScreen extends StatelessWidget {
             onPressed: !isStatusSuccess
                 ? null
                 : () => _showAddEditDialog(
-                    context: context, title: 'Add', onConfirmation: () => provider.create()),
-            child: Text(isStatusSuccess ? 'Add new category' : 'Wait...',
+                    context: context, title: add, onConfirmation: () => provider.create()),
+            child: Text(isStatusSuccess ? addNew : wait,
                 style: TextStyle(fontSize: isLandscape ? 20 : 16)),
           );
         }),
@@ -117,15 +128,16 @@ class ProfileScreen extends StatelessWidget {
             case CategoriesProviderStatus.success:
               return _buildCategoriesList(categories);
             case CategoriesProviderStatus.loading:
-              return const Text('Wait...');
+              return Text(wait);
             default:
-              return _buildErrorInformation();
+              return SmallUserDialog(provider.categoriesErrorMsg, provider.confirmReadErrorMsg);
           }
         }),
         Consumer<CategoriesProvider>(
             builder: (BuildContext context, CategoriesProvider provider, _) {
           final bool isError = provider.categoriesErrorMsg.isNotEmpty;
-          if (!isError) return const SizedBox();
+          final isStatusError = provider.status == CategoriesProviderStatus.error;
+          if (!isError && isStatusError) return const SizedBox();
           return Text(provider.categoriesErrorMsg,
               style: const TextStyle(color: Colors.red, fontSize: 11.0),
               textAlign: TextAlign.center);
@@ -153,6 +165,8 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildCategoryCard(BuildContext context, WordCategory item) {
+    final String edit = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Edit');
+    final String delete = utils.capitalize(AppLocalizations.of(context)?.delete ?? 'Delete');
     // prevent edit and delete default category: 'no category' id=1
     final bool isNotDefault = item.id != 1;
     return Container(
@@ -172,15 +186,15 @@ class ProfileScreen extends StatelessWidget {
                 ? IconButton(
                     onPressed: () => _showAddEditDialog(
                         context: context,
-                        title: 'Edit',
+                        title: edit,
                         onConfirmation: () => context.read<CategoriesProvider>().update(item),
                         category: item),
                     icon: const Icon(Icons.edit, size: 16, color: Colors.blue))
                 : const SizedBox(width: 6.0),
-            Text('${item.name}. id=${item.id}; userId=${item.userId}'),
+            Text(item.name),
             isNotDefault
                 ? IconButton(
-                    onPressed: () => _showDialog(context, 'Delete ${item.name}?',
+                    onPressed: () => _showDialog(context, '$delete ${item.name}?',
                         () => context.read<CategoriesProvider>().delete(item.id)),
                     icon: const Icon(Icons.delete, size: 16, color: Colors.red))
                 : const SizedBox(width: 6.0),
@@ -199,37 +213,11 @@ class ProfileScreen extends StatelessWidget {
       builder: (_) => AlertDialog(
         title: Text(title, textAlign: TextAlign.center),
         content: AddEditWordCategory(
-            title: title,
             onConfirmation: onConfirmation,
             category: category,
             onChangeHandle: (value) =>
                 context.read<CategoriesProvider>().onNewCategoryNameChange(value)),
       ),
     );
-  }
-
-  Widget _buildErrorInformation() {
-    return Consumer<CategoriesProvider>(
-        builder: (BuildContext context, CategoriesProvider provider, _) {
-      final String error = provider.categoriesErrorMsg;
-      final bool isErrorMessage = error.isNotEmpty;
-      switch (isErrorMessage) {
-        case true:
-          _showErrorSnackBar(context, error);
-          return Text(error,
-              style: const TextStyle(color: Colors.red), textAlign: TextAlign.center);
-        default:
-          return const SizedBox();
-      }
-    });
-  }
-
-  void _showErrorSnackBar(BuildContext context, String authenticationError) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.grey,
-        content: Text(authenticationError, textAlign: TextAlign.center),
-      ));
-    });
   }
 }

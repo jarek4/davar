@@ -95,7 +95,8 @@ class AuthenticationRepository implements IAuthenticationRepository<User> {
     }
     // important
     //if _user=AppConst.emptyUser then there is no loggedOut view shown, but onboarding screen!
-    _controller.add(_user = AppConst.unknownUser);
+    // AuthProvider.signOut() will set status: AuthenticationStatus.loggedOut!
+    // don't do:  _controller.add(_user = AppConst.unknownUser); here!
   }
 
   @override

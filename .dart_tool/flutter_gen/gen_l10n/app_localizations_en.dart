@@ -5,7 +5,13 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get add => 'add';
+
+  @override
   String get addTranslation => 'translation';
+
+  @override
+  String get all => 'all';
 
   @override
   String get authLearn => 'you learn';
@@ -18,6 +24,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get authYourLanguage => 'your language';
+
+  @override
+  String get backupConfirm => 'Are you sure you want to replace all your data?';
+
+  @override
+  String get best => 'best';
 
   @override
   String get cancel => 'cancel';
@@ -78,6 +90,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get forgotPwd => 'Forgot password?';
+
+  @override
+  String get importExport => 'Import/Export backup copy';
 
   @override
   String get invalidEmail => 'invalid email';
@@ -182,6 +197,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quizManual2 => 'If you have added a clue to the word,  you will be able to use it. But it will takes 1 point. The number of the points of a particular word will be increased accordingly.';
 
   @override
+  String get quizScore => 'Quiz score';
+
+  @override
   String get remove => 'remove';
 
   @override
@@ -204,6 +222,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sentence => 'sentence';
+
+  @override
+  String get sentences => 'sentences';
 
   @override
   String get settingsBackup => 'Backup';
@@ -233,7 +254,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsMode => 'Light/Dark mode';
 
   @override
-  String get someThingHappend => 'something has happened';
+  String get someThingHappened => 'something has happened';
 
   @override
   String get statsQuizScore => 'The highest quiz score.';
@@ -263,10 +284,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tryAgain => 'Try again';
 
   @override
-  String get tryFromBeginniing => 'Please try again from the beginning';
+  String get tryFromBeginning => 'Please try again from the beginning';
 
   @override
   String get wait => 'Wait';
+
+  @override
+  String get weakest => 'weakest';
 
   @override
   String get welcomeBack => 'Welcome back';

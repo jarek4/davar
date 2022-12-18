@@ -12,11 +12,6 @@ class LoginProvider with ChangeNotifier {
   LoginStatus _status = LoginStatus.success;
   String _errorMsg = '';
 
-  set loginErrorMsg(String value) {
-    _errorMsg = value;
-    notifyListeners();
-  }
-
   String _email = '';
   String _password = '';
 
@@ -27,6 +22,13 @@ class LoginProvider with ChangeNotifier {
   String get email => _email;
 
   String get password => _password;
+
+  void confirmReadErrorMsg() {
+    if(_errorMsg.isNotEmpty) {
+      _errorMsg = '';
+      notifyListeners();
+    }
+  }
 
   void onSubmit() async {
     _status = LoginStatus.submitting;

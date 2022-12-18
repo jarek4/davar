@@ -2,23 +2,20 @@ import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class PrivacyTermsView extends StatelessWidget {
-  const PrivacyTermsView(this._initData, this._futureReadStatement, {Key? key}) : super(key: key);
+  const PrivacyTermsView( this._futureReadStatement, {Key? key}) : super(key: key);
 
-  final String _initData;
   final Future<String> _futureReadStatement;
   static const String _noInfo = 'Sorry! The information is not available at the moment';
 
   @override
   Widget build(BuildContext context) {
-    return /*Consumer<PrivacyTermsProvider>(
-        builder: (BuildContext context, PrivacyTermsProvider ptp, _) {
-      return */Scaffold(
+    return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
         ),
         body: SingleChildScrollView(
           child: FutureBuilder(
-              initialData: _initData,
+              initialData: 'Loading...',
               future: _futureReadStatement.timeout(const Duration(seconds: 4),
                   onTimeout: () => _noInfo),
               builder: (context, snapshot) {

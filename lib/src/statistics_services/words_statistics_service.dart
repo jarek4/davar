@@ -1,4 +1,3 @@
-import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/domain/i_words_statistics.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/foundation.dart';
@@ -12,6 +11,7 @@ class WordsStatisticsService implements IWordsStatistics {
   static const String _date = utils.AppConst.statisticsLastUpdateDate;
 
   @override
+
   /// <String>['catchword', 'points', 'id']
   Future<bool> saveItemWithHighestPoints(List<String> item) async {
     try {
@@ -19,9 +19,7 @@ class WordsStatisticsService implements IWordsStatistics {
       final isSaved = await prefs.setStringList(_highest, item);
       return isSaved;
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-saveHPoints E: $e');
       return false;
     }
   }
@@ -36,14 +34,13 @@ class WordsStatisticsService implements IWordsStatistics {
       //print('readItemWithHighestPoints items = $items');
       return items;
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-readHPoints E: $e');
       return ['', '0', '0'];
     }
   }
 
   @override
+
   /// <String>['catchword', 'points', 'id']
   Future<bool> saveItemWithLowestPoints(List<String> item) async {
     try {
@@ -51,9 +48,7 @@ class WordsStatisticsService implements IWordsStatistics {
       final isSaved = await prefs.setStringList(_lowest, item);
       return isSaved;
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-saveLPoints E: $e');
       return false;
     }
   }
@@ -68,9 +63,7 @@ class WordsStatisticsService implements IWordsStatistics {
       if (items == null) return ['', '0', '0'];
       return items;
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-save:LPoints E: $e');
       return ['', '0', '0'];
     }
   }
@@ -80,12 +73,9 @@ class WordsStatisticsService implements IWordsStatistics {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final int? quantity = prefs.getInt(_sQuantity);
-      //print('readSentencesQuantity points = $quantity');
       return quantity ?? 0;
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-saveSQuantity E: $e');
       return -1;
     }
   }
@@ -98,9 +88,7 @@ class WordsStatisticsService implements IWordsStatistics {
       //print('readWordsQuantity points = $quantity');
       return quantity ?? 0;
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-saveWQuantity E: $e');
       return -1;
     }
   }
@@ -111,9 +99,7 @@ class WordsStatisticsService implements IWordsStatistics {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       return await prefs.setInt(_sQuantity, value);
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-saveSQuantity E: $e');
       return false;
     }
   }
@@ -124,9 +110,7 @@ class WordsStatisticsService implements IWordsStatistics {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       return await prefs.setInt(_wQuantity, value);
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-saveWQuantity E: $e');
       return false;
     }
   }
@@ -139,9 +123,7 @@ class WordsStatisticsService implements IWordsStatistics {
       //print('readWordsQuantity points = $quantity');
       return date ?? '';
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-readDate E: $e');
       return '';
     }
   }
@@ -152,9 +134,7 @@ class WordsStatisticsService implements IWordsStatistics {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       return await prefs.setString(_date, date);
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      if (kDebugMode) print('WStatisticsService-saveDate E: $e');
       return false;
     }
   }

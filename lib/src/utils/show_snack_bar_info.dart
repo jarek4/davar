@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 void showSnackBarInfo(BuildContext context, {required String msg, bool isError = false}) {
-  print('SHOW SNACKBAR --- --');
   final String info = utils.trimTextIfLong(msg, maxCharacters: 100);
   ScaffoldMessenger.of(context).clearSnackBars();
   SchedulerBinding.instance.addPostFrameCallback((_) {

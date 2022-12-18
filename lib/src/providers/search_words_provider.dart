@@ -23,7 +23,7 @@ class SearchWordsProvider with ChangeNotifier {
     }
   }
 
-  // tests using this method:
+  // tests
   set errorMsg(String value) {
     if (_errorMsg != value) {
       _errorMsg = value;

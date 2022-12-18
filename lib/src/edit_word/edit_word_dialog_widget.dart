@@ -27,10 +27,16 @@ class _EditWordDialogWidgetState extends State<EditWordDialogWidget> {
   void initState() {
     super.initState();
     _ctr = TextEditingController(text: widget.value);
+  }
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
     _edit = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Edit');
     _cancel = utils.capitalize(AppLocalizations.of(context)?.cancel ?? 'Cancel');
     _empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'Cannot be empty';
   }
+
 
   @override
   Widget build(BuildContext context) {

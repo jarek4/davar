@@ -24,7 +24,7 @@ class DropDownSelect<T> extends StatelessWidget {
       key: key,
       builder: (FormFieldState<T> state) {
         return InputDecorator(
-          decoration: inputDecoration(label: hintText),
+          decoration: inputDecoration(type: InputType.other, label: hintText),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
               dropdownColor: Colors.amberAccent,

@@ -24,7 +24,6 @@ class CategoriesProvider with ChangeNotifier {
   List<WordCategory> _categories = [];
 
   /// do not use this to create search by WordCategories! Use filterCategories.
-  // List<WordCategory> get categories => _categories;
   UnmodifiableListView<WordCategory> get categories => UnmodifiableListView(_categories);
 
   /// use this to create search by WordCategories. Contains AppConst.allCategoriesFilter id:0, name: 'all'.

@@ -14,9 +14,11 @@ class RegistrationProvider with ChangeNotifier {
   String get email => _email;
   String _errorMsg = '';
 
-  set registrationErrorMsg(String value) {
-    _errorMsg = value;
-    notifyListeners();
+  void confirmReadErrorMsg() {
+    if(_errorMsg.isNotEmpty) {
+      _errorMsg = '';
+      notifyListeners();
+    }
   }
 
   String _learning = 'Türkçe';

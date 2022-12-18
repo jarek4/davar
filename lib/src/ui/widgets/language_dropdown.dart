@@ -25,13 +25,14 @@ class LanguageDropdown<T> extends StatelessWidget {
       key: key,
       builder: (FormFieldState<T> state) {
         return InputDecorator(
-          decoration: inputDecoration(label: hintText),
+          decoration: inputDecoration(type: InputType.nativeLAng, label: hintText),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<T>(
               elevation: 16,
               hint: Text(hintText),
               value: value,
               isDense: true,
+              isExpanded: true,
               onChanged: onChanged,
               items: options.map<DropdownMenuItem<T>>((T value) {
                 return DropdownMenuItem<T>(

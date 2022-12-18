@@ -5,7 +5,13 @@ class AppLocalizationsPl extends AppLocalizations {
   AppLocalizationsPl([String locale = 'pl']) : super(locale);
 
   @override
+  String get add => 'dodaj';
+
+  @override
   String get addTranslation => 'tłumaczenie';
+
+  @override
+  String get all => 'wszystkie';
 
   @override
   String get authLearn => 'uczysz się';
@@ -18,6 +24,12 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get authYourLanguage => 'twój język';
+
+  @override
+  String get backupConfirm => 'Czy na pewno chcesz zastąpić wszystkie swoje dane?';
+
+  @override
+  String get best => 'najlepiej';
 
   @override
   String get cancel => 'anuluj';
@@ -78,6 +90,9 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get forgotPwd => 'Zapomniałeś hasła?';
+
+  @override
+  String get importExport => 'Importuj/eksportuj kopię zapasową';
 
   @override
   String get invalidEmail => 'niepoprawny email';
@@ -182,6 +197,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get quizManual2 => 'Jeśli dodałeś wskazówkę do słowa, będziesz mógł jej użyć. Jednak odejmie Ci to 1 punkt. Liczba punktów danego słowa zostanie odpowiednio zwiększona.';
 
   @override
+  String get quizScore => 'wynik quizu';
+
+  @override
   String get remove => 'usuń';
 
   @override
@@ -204,6 +222,9 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get sentence => 'zdanie';
+
+  @override
+  String get sentences => 'zdania';
 
   @override
   String get settingsBackup => 'Kopia zapasowa';
@@ -233,7 +254,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get settingsMode => 'Jasny/Ciemny tryb';
 
   @override
-  String get someThingHappend => 'coś się stało';
+  String get someThingHappened => 'coś się stało';
 
   @override
   String get statsQuizScore => 'Najlepszy wynik z quizu';
@@ -263,10 +284,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get tryAgain => 'Spróbuj ponownie';
 
   @override
-  String get tryFromBeginniing => 'Spróbuj ponownie od początku';
+  String get tryFromBeginning => 'Spróbuj ponownie od początku';
 
   @override
   String get wait => 'Chwila';
+
+  @override
+  String get weakest => 'słabo';
 
   @override
   String get welcomeBack => 'Witaj ponownie';
@@ -275,7 +299,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get word => 'słówko';
 
   @override
-  String get words => 'słów/słowa';
+  String get words => 'słówka';
 
   @override
   String get wordsQuiz => 'Quiz słowny';

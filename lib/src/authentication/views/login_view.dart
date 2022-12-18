@@ -4,7 +4,6 @@ import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -24,13 +23,14 @@ class _LoginViewState extends State<LoginView> {
   bool _isHidden = true;
   String _empty = 'cannot be empty';
   String _invalid = 'invalid value';
+  String _errorInfo = '';
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _loginFormKey = GlobalKey<FormState>(debugLabel: 'Login form');
     _empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'cannot be empty';
     _invalid = AppLocalizations.of(context)?.invalidEmail ?? 'invalid value';
-    super.initState();
   }
 
   void _togglePasswordView() {
@@ -67,7 +67,18 @@ class _LoginViewState extends State<LoginView> {
                         _buildSubmitButton(),
                         _buildForgotPasswordBtn(context),
                         _buildSignUpBtn(context),
-                        _buildErrorInformation(),
+                        _errorInfo.isNotEmpty
+                            ? SmallUserDialog(_errorInfo, _resetError)
+                            : const SizedBox.shrink(),
+                        Selector<LoginProvider, String>(
+                            selector: (_, state) => state.loginError,
+                            builder: (BuildContext context, err, __) {
+                              if (err.isNotEmpty) {
+                                return SmallUserDialog(
+                                    err, context.read<LoginProvider>().confirmReadErrorMsg);
+                              }
+                              return const SizedBox.shrink();
+                            }),
                       ]),
                     ),
                   ),
@@ -90,7 +101,7 @@ class _LoginViewState extends State<LoginView> {
           initialValue: '',
           keyboardType: TextInputType.visiblePassword,
           obscureText: _isHidden,
-          decoration: inputDecoration(
+          decoration: inputDecoration(type: InputType.pwd,
               label: label, togglePassVisibility: _togglePasswordView, isPassHidden: _isHidden)),
     );
   }
@@ -111,7 +122,7 @@ class _LoginViewState extends State<LoginView> {
           },
           initialValue: '',
           keyboardType: TextInputType.emailAddress,
-          decoration: inputDecoration(label: label)),
+          decoration: inputDecoration(type: InputType.email, label: label)),
     );
   }
 
@@ -185,37 +196,21 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
+  void _resetError() {
+    setState(() {
+      _errorInfo = '';
+    });
+  }
+
   void _onFormSubmit(BuildContext context, FormState? fs) {
-    final String again = AppLocalizations.of(context)?.tryFromBeginniing ?? 'Please try again';
+    final String again = AppLocalizations.of(context)?.tryFromBeginning ?? 'Please try again';
     if (fs == null) {
-      context.read<LoginProvider>().loginErrorMsg = again;
+      setState(() {
+        _errorInfo = again;
+      });
       return;
     }
     fs.save();
     context.read<LoginProvider>().onSubmit();
-  }
-
-  Consumer<LoginProvider> _buildErrorInformation() {
-    return Consumer<LoginProvider>(builder: (BuildContext context, LoginProvider provider, _) {
-      final String error = provider.loginError;
-      final bool isErrorMessage = error.isNotEmpty;
-      switch (isErrorMessage) {
-        case true:
-          _showErrorSnackBar(context, error);
-          return Text(error,
-              style: const TextStyle(color: Colors.red), textAlign: TextAlign.center);
-        default:
-          return const SizedBox();
-      }
-    });
-  }
-
-  void _showErrorSnackBar(BuildContext context, String authenticationError) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.grey,
-        content: Text(authenticationError, textAlign: TextAlign.center),
-      ));
-    });
   }
 }

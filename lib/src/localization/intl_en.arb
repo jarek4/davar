@@ -1,9 +1,13 @@
 {
   "@@locale": "en",
+  "add": "add",
+  "@add": {},
   "addTranslation": "translation",
   "@addTranslation": {
     "description": "translation"
   },
+  "all": "all",
+  "@all": {},
   "authLearn": "you learn",
   "@authLearn": {
     "description": "you learn"
@@ -16,6 +20,12 @@
   "@authName": {},
   "authYourLanguage": "your language",
   "@authYourLanguage": {},
+  "backupConfirm": "Are you sure you want to replace all your data?",
+  "@backupConfirm": {
+    "description": " replace all your data?"
+  },
+  "best": "best",
+  "@best": {},
   "cancel": "cancel",
   "@cancel": {},
   "cannotTryNoMore": "You cannot try any more. Please register new user",
@@ -60,11 +70,15 @@
   "@favorite": {},
   "fieldNotEmpty": "This field cannot be empty",
   "@fieldNotEmpty": {
-    "description": "field cannt be empty"
+    "description": "field cannot be empty"
   },
   "forgotPwd": "Forgot password?",
   "@forgotPwd": {
     "description": "Forgot password?"
+  },
+  "importExport": "Import/Export backup copy",
+  "@importExport": {
+    "description": "import/export backup copy"
   },
   "invalidEmail": "invalid email",
   "@invalidEmail": {},
@@ -78,7 +92,7 @@
   },
   "listAddListTop": "Which element you want to add at the beginning of the main list",
   "@listAddListTop": {
-    "description": "elemet to add"
+    "description": "element to add"
   },
   "listEmpty": "Maybe your word's list is empty",
   "@listEmpty": {},
@@ -174,6 +188,8 @@
   "@quizManual2": {
     "description": "how to play quiz"
   },
+  "quizScore": "Quiz score",
+  "@quizScore": {},
   "remove": "remove",
   "@remove": {},
   "reset": "reset",
@@ -196,6 +212,8 @@
   "@sentence": {
     "description": "sentence"
   },
+  "sentences": "sentences",
+  "@sentences": {},
   "settingsBackup": "Backup",
   "@settingsBackup": {},
   "settingsBackupAttention": "Attention! If you import any data from a file, all current words and sentences will be replaced.",
@@ -226,8 +244,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
-  "someThingHappend": "something has happened",
-  "@someThingHappend": {},
+  "someThingHappened": "something has happened",
+  "@someThingHappened": {},
   "statsQuizScore": "The highest quiz score.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -258,14 +276,16 @@
   "@total": {},
   "tryAgain": "Try again",
   "@tryAgain": {},
-  "tryFromBeginniing": "Please try again from the beginning",
-  "@tryFromBeginniing": {
+  "tryFromBeginning": "Please try again from the beginning",
+  "@tryFromBeginning": {
     "description": "Please try again from the beginning"
   },
   "wait": "Wait",
   "@wait": {
     "description": "wait"
   },
+  "weakest": "weakest",
+  "@weakest": {},
   "welcomeBack": "Welcome back",
   "@welcomeBack": {},
   "word": "word",

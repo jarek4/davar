@@ -5,7 +5,13 @@ class AppLocalizationsRu extends AppLocalizations {
   AppLocalizationsRu([String locale = 'ru']) : super(locale);
 
   @override
+  String get add => 'добавлять';
+
+  @override
   String get addTranslation => 'превод';
+
+  @override
+  String get all => 'все';
 
   @override
   String get authLearn => ' учишь';
@@ -18,6 +24,12 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get authYourLanguage => 'ваш язык';
+
+  @override
+  String get backupConfirm => 'Вы уверены, что хотите заменить все свои данные?';
+
+  @override
+  String get best => 'Лучший';
 
   @override
   String get cancel => 'отменить';
@@ -78,6 +90,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get forgotPwd => 'Забыли пароль?';
+
+  @override
+  String get importExport => 'Импорт/экспорт резервной копии';
 
   @override
   String get invalidEmail => 'неверный адрес';
@@ -182,6 +197,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get quizManual2 => 'Если вы добавили ключ к слову, вы сможете его использовать. Но это займет 1 балл. Количество точек конкретного слова будет соответственно увеличено';
 
   @override
+  String get quizScore => 'балл викторины';
+
+  @override
   String get remove => 'удалить';
 
   @override
@@ -204,6 +222,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sentence => 'приговор';
+
+  @override
+  String get sentences => 'приговоры';
 
   @override
   String get settingsBackup => 'Бэкап';
@@ -233,7 +254,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settingsMode => 'Светлый/темный режим';
 
   @override
-  String get someThingHappend => 'что-то случилось';
+  String get someThingHappened => 'что-то случилось';
 
   @override
   String get statsQuizScore => 'Самый высокий балл викторины.';
@@ -263,10 +284,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tryAgain => 'Попробуй снова';
 
   @override
-  String get tryFromBeginniing => 'Пожалуйста, попробуйте еще раз с самого начала';
+  String get tryFromBeginning => 'Пожалуйста, попробуйте еще раз с самого начала';
 
   @override
   String get wait => 'Ждать';
+
+  @override
+  String get weakest => 'слабый';
 
   @override
   String get welcomeBack => 'Добро пожаловать обратно';

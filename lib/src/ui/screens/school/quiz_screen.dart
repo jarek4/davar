@@ -16,22 +16,23 @@ class QuizScreen extends StatelessWidget {
         shouldRebuild: (WordsProviderStatus pre, WordsProviderStatus next) {
           return pre != next;
         },
-        builder: (BuildContext context,  status, _) {
-      switch (status) {
-        case WordsProviderStatus.loading:
-          final String wait = '${AppLocalizations.of(context)?.error ?? 'Loading wait'}...';
-          return LinearLoadingWidget(info: wait);
-        case WordsProviderStatus.success:
-          return _buildScreenBody(context, context.read<WordsProvider>());
-        case WordsProviderStatus.error:
-          final String er = AppLocalizations.of(context)?.error ?? 'Error';
-          String e = context.read<WordsProvider>().wordsErrorMsg;
-          return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? '$er: $e' : er);
-        default:
-          return const Center(child: CircularProgressIndicator.adaptive());
-      }
-    });
+        builder: (BuildContext context, status, _) {
+          switch (status) {
+            case WordsProviderStatus.loading:
+              final String wait = '${AppLocalizations.of(context)?.loading ?? 'Loading wait'}...';
+              return LinearLoadingWidget(info: wait);
+            case WordsProviderStatus.success:
+              return _buildScreenBody(context, context.read<WordsProvider>());
+            case WordsProviderStatus.error:
+              final String er = AppLocalizations.of(context)?.error ?? 'Error';
+              String e = context.read<WordsProvider>().wordsErrorMsg;
+              return LinearLoadingWidget(isError: true, info: e.isNotEmpty ? '$er: $e' : er);
+            default:
+              return const Center(child: CircularProgressIndicator.adaptive());
+          }
+        });
   }
+
   Widget _buildScreenBody(BuildContext context, WordsProvider provider) {
     return FutureBuilder(
         future: provider.wordsIds,
@@ -53,7 +54,7 @@ class QuizScreen extends StatelessWidget {
     final String how = AppLocalizations.of(context)?.quizHow.toUpperCase() ?? 'HOW TO PLAY';
     final String man1 = AppLocalizations.of(context)?.quizManual1 ?? _quizManual1;
     final String man2 = AppLocalizations.of(context)?.quizManual2 ?? _quizManual2;
-    // need at least 3 words to quiz!
+    // need at least 3 words for quiz!
     final bool isMoreThen3words = (sp.data != null && sp.data!.length >= 3);
     return _layoutBuilderWrapper(SingleChildScrollView(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -122,16 +123,15 @@ class QuizScreen extends StatelessWidget {
 
   Widget _showLessThen3wordsNotification(BuildContext context, int addedWords) {
     final String untilNow =
-        '${AppLocalizations.of(context)?.quizAdded ?? 'Until now you have been added'}:\n';
+        '${AppLocalizations.of(context)?.quizAdded ?? 'Until now you have been added'}:';
     final String w = AppLocalizations.of(context)?.words ?? 'words';
-    final String s = AppLocalizations.of(context)?.quizAddAtLeast ?? 'Add at least:';
-    final String add = AppLocalizations.of(context)?.quizManual1 ?? _quizManual1;
+    final String addMore = AppLocalizations.of(context)?.quizAddAtLeast ?? 'Add at least:';
     final int haveToAdd = 3 - addedWords;
     return Center(
         child: Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 12.0),
       child: Text(
-        '$untilNow $addedWords $w ($s).\n$add $haveToAdd.',
+        '$untilNow $addedWords $w.\n $addMore $haveToAdd.',
         softWrap: true,
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.titleMedium,

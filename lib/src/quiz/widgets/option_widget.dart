@@ -56,7 +56,6 @@ class _OptionWidgetState extends State<OptionWidget> {
     if (widget.option.isSelected) {
       return widget.option.isCorrect ? Colors.green : Colors.red;
     }
-    // return Colors.grey; // tests: widget.option.isCorrect ? Colors.green : Colors.red;
     return Colors.white;
   }
 

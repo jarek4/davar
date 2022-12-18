@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
-InputDecoration inputDecoration(
-    {required String label, VoidCallback? togglePassVisibility, bool isPassHidden = false}) {
+enum InputType { email, name, learnLang, nativeLAng, other, pwd }
+
+InputDecoration inputDecoration({
+  required InputType type,
+  required String label,
+  VoidCallback? togglePassVisibility,
+  bool isPassHidden = false,
+}) {
   return InputDecoration(
-    prefixIcon: _iconDecorationHandle(label),
-    suffixIcon: label == 'Password'
+    prefixIcon: _iconDecorationHandle(type),
+    suffixIcon: type == InputType.pwd
         ? GestureDetector(
             onTap: togglePassVisibility ?? () {},
             child: Icon(isPassHidden ? Icons.visibility_off : Icons.visibility,
-                color: isPassHidden ? Colors.grey : Colors.black // Add this line
+                color: isPassHidden ? Colors.black38 : Colors.black // Add this line
                 ),
           )
         : const SizedBox(
@@ -33,19 +39,18 @@ InputDecoration inputDecoration(
   );
 }
 
-Widget? _iconDecorationHandle(String? labelTxt) {
-  switch (labelTxt) {
-    case 'Email':
+Widget? _iconDecorationHandle(InputType type) {
+  switch (type) {
+    case InputType.email:
       return _buildIconData(Icons.alternate_email);
-    case 'Password':
+    case InputType.pwd:
       return _buildIconData(Icons.password);
-    case 'Your language':
+    case InputType.nativeLAng:
       return _buildIconData(Icons.language_rounded);
-    case 'Name':
+    case InputType.name:
       return _buildIconData(Icons.person);
-    case 'Language you want to learn':
+    case InputType.learnLang:
       return _buildIconData(Icons.translate_outlined);
-
     default:
       return null;
   }
@@ -53,5 +58,5 @@ Widget? _iconDecorationHandle(String? labelTxt) {
 
 Icon? _buildIconData(IconData? i) {
   if (i == null) return null;
-  return Icon(i, color: Colors.grey, size: 14.0);
+  return Icon(i, size: 14.0);
 }

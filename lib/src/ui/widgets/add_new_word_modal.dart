@@ -39,9 +39,15 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
     _isFavorite = false;
     _errorInfo = '';
     _selectedCategory = widget.categories[0];
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     userNativeLanguage = context.read<AuthProvider>().user.native;
     userLearningLanguage = context.read<AuthProvider>().user.learning;
-    super.initState();
   }
 
   @override
@@ -50,22 +56,6 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
     _translationCtrl.clear();
     _clueCtrl.clear();
     super.dispose();
-  }
-
-  Word _createModel() {
-    Word item = Word(
-      categoryId: _selectedCategory.id,
-      clue: _clueCtrl.value.text,
-      catchword: _catchwordCtrl.value.text,
-      userTranslation: _translationCtrl.value.text,
-      id: DateTime.now().millisecondsSinceEpoch,
-      isSentence: widget.isSentence ? 1 : 0,
-      userLearning: userLearningLanguage,
-      userNative: userNativeLanguage,
-      isFavorite: _isFavorite == true ? 1 : 0,
-      userId: -1,
-    );
-    return item;
   }
 
   @override
@@ -126,7 +116,6 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
       shadowColor: MaterialStateProperty.all<Color>(Colors.green.shade50));
 
   void _submitForm(BuildContext context) {
-    // final String fillAll = '${AppLocalizations.of(context)?.doFillFields}?';
     if (_addNewWordModalFormKey.currentState == null) {
       final String again = AppLocalizations.of(context)?.tryAgain ?? 'Try to restart';
       final String notSaved = AppLocalizations.of(context)?.notSaved ?? 'not saved';
@@ -139,6 +128,22 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
     }
     widget.handleSubmit(_createModel());
     Navigator.of(context).pop();
+  }
+
+  Word _createModel() {
+    Word item = Word(
+      categoryId: _selectedCategory.id,
+      clue: _clueCtrl.value.text,
+      catchword: _catchwordCtrl.value.text,
+      userTranslation: _translationCtrl.value.text,
+      id: DateTime.now().millisecondsSinceEpoch,
+      isSentence: widget.isSentence ? 1 : 0,
+      userLearning: userLearningLanguage,
+      userNative: userNativeLanguage,
+      isFavorite: _isFavorite == true ? 1 : 0,
+      userId: -1,
+    );
+    return item;
   }
 
   Padding _buildFormField(String label, int? maxCharacters, TextEditingController ctrl) {
@@ -185,17 +190,16 @@ class _AddNewWordModalState extends State<AddNewWordModal> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 20),
       child: DropDownSelect<WordCategory>(
-        key: const Key('AddNewWordModal-DropDownSelect-Category'),
-        hintText: hint,
-        options: widget.categories,
-        value: _selectedCategory,
-        onChanged: (WordCategory? newValue) {
-          setState(() {
-            _selectedCategory = newValue!;
-          });
-        },
-        getLabel: (WordCategory value) => value.name,
-      ),
+          key: const Key('AddNewWordModal-DropDownSelect-Category'),
+          hintText: hint,
+          options: widget.categories,
+          value: _selectedCategory,
+          onChanged: (WordCategory? newValue) {
+            setState(() {
+              _selectedCategory = newValue!;
+            });
+          },
+          getLabel: (WordCategory value) => value.name),
     );
   }
 }

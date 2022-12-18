@@ -25,20 +25,21 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
   String _empty = 'cannot be empty';
 
   @override
-  void initState() {
+  void didChangeDependencies(){
+    super.didChangeDependencies();
     _empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'cannot be empty';
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     AuthProvider ap = Provider.of<AuthProvider>(context, listen: false);
+    final String reset = AppLocalizations.of(context)?.pwdReset ?? 'Reset password';
     return ChangeNotifierProvider<ForgotPwdProvider>(
       create: (_) => ForgotPwdProvider(ap, widget.user),
       builder: (context, child) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Reset password'),
+            title: Text(reset),
             centerTitle: true,
           ),
           body:
@@ -57,7 +58,7 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
   }
 
   Widget _buildForm(BuildContext context) {
-    final String name = utils.capitalize(AppLocalizations.of(context)?.sentence ?? 'Username');
+    final String name = utils.capitalize(AppLocalizations.of(context)?.authName ?? 'Username');
     final String whichLang =
         AppLocalizations.of(context)?.pwdResetWhichLang ?? 'Which language you learn';
     final String reset = AppLocalizations.of(context)?.pwdReset ?? 'Reset password';
@@ -142,7 +143,7 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
           initialValue: '',
           keyboardType: TextInputType.text,
           obscureText: false,
-          decoration: theme.inputDecoration(label: label)),
+          decoration: theme.inputDecoration(type: theme.InputType.email, label: label)),
     );
   }
 
@@ -156,7 +157,7 @@ class _ForgotPwdViewState extends State<ForgotPwdView> {
           validator: (v) => (v != null && v.length >= 2) ? null : _empty,
           initialValue: '',
           keyboardType: TextInputType.text,
-          decoration: theme.inputDecoration(label: label)),
+          decoration: theme.inputDecoration(type: theme.InputType.learnLang, label: label)),
     );
   }
 

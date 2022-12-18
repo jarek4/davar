@@ -13,8 +13,6 @@ class QuestionClueWidget extends StatelessWidget {
 
   final String? clue;
   final bool isExpended;
-
-  //final ValueChanged<bool> onChanged;
   final VoidCallback onChanged;
 
   @override

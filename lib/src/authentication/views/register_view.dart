@@ -4,7 +4,6 @@ import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +19,7 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   final GlobalKey<FormState> _registerFormKye = GlobalKey<FormState>(debugLabel: 'Register form');
   bool _isHidden = true;
+  String _errorInfo = '';
   String _native = 'My language';
   String _toLearn = 'I will learn';
   String _empty = 'cannot be empty';
@@ -34,8 +34,8 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _native = utils.capitalize(AppLocalizations.of(context)?.authYourLanguage ?? 'My language');
     _toLearn = utils.capitalize(AppLocalizations.of(context)?.languageToLearn ?? 'I will learn');
     _empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'cannot be empty';
@@ -75,7 +75,18 @@ class _RegisterViewState extends State<RegisterView> {
                   _buildWantLearnDropdown(context),
                   _buildSubmitButton(),
                   _buildSignInOption(context),
-                  _buildErrorInformation(),
+                  _errorInfo.isNotEmpty
+                      ? SmallUserDialog(_errorInfo, _resetError)
+                      : const SizedBox.shrink(),
+                  Selector<RegistrationProvider, String>(
+                      selector: (_, state) => state.registrationError,
+                      builder: (BuildContext context, err, __) {
+                        if (err.isNotEmpty) {
+                          return SmallUserDialog(
+                              err, context.read<RegistrationProvider>().confirmReadErrorMsg);
+                        }
+                        return const SizedBox.shrink();
+                      }),
                 ]),
               ),
             )
@@ -115,7 +126,7 @@ class _RegisterViewState extends State<RegisterView> {
           initialValue: '',
           keyboardType: TextInputType.text,
           obscureText: false,
-          decoration: inputDecoration(label: label)),
+          decoration: inputDecoration(type: InputType.name, label: label)),
     );
   }
 
@@ -138,7 +149,7 @@ class _RegisterViewState extends State<RegisterView> {
           initialValue: '',
           keyboardType: TextInputType.emailAddress,
           obscureText: false,
-          decoration: inputDecoration(label: label)),
+          decoration: inputDecoration(type: InputType.email, label: label)),
     );
   }
 
@@ -160,7 +171,7 @@ class _RegisterViewState extends State<RegisterView> {
           keyboardType: TextInputType.visiblePassword,
           obscureText: _isHidden,
           decoration: inputDecoration(
-              label: label, togglePassVisibility: _togglePasswordView, isPassHidden: _isHidden)),
+              type: InputType.pwd, label: label, togglePassVisibility: _togglePasswordView, isPassHidden: _isHidden)),
     );
   }
 
@@ -228,37 +239,20 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void _onFormSubmit(BuildContext context, FormState? fs) {
-    final String again = AppLocalizations.of(context)?.tryFromBeginniing ?? 'Please try again';
+    final String again = AppLocalizations.of(context)?.tryFromBeginning ?? 'Please try again';
     if (fs == null) {
-      context.read<RegistrationProvider>().registrationErrorMsg = again;
+      setState(() {
+        _errorInfo = again;
+      });
       return;
     }
     fs.save();
     context.read<RegistrationProvider>().onSubmit();
   }
 
-  Consumer<RegistrationProvider> _buildErrorInformation() {
-    return Consumer<RegistrationProvider>(
-        builder: (BuildContext context, RegistrationProvider provider, _) {
-      final String error = provider.registrationError;
-      final bool isErrorMessage = error.isNotEmpty;
-      switch (isErrorMessage) {
-        case true:
-          _showErrorSnackBar(context, error);
-          return Text(error,
-              style: const TextStyle(color: Colors.red), textAlign: TextAlign.center);
-        default:
-          return const SizedBox();
-      }
-    });
-  }
-
-  void _showErrorSnackBar(BuildContext context, String authenticationError) {
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.grey,
-        content: Text(authenticationError, textAlign: TextAlign.center),
-      ));
+  void _resetError() {
+    setState(() {
+      _errorInfo = '';
     });
   }
 }

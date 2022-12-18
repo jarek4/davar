@@ -1,7 +1,6 @@
 import 'package:davar/src/ui/screens/add/add_screen.dart';
 import 'package:davar/src/ui/screens/more/more_screen.dart';
 import 'package:davar/src/ui/screens/school/school_screen.dart';
-// import 'package:davar/src/theme/theme.dart' as theme;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +47,6 @@ class BottomNavigation extends StatelessWidget {
       showUnselectedLabels: true,
       currentIndex: Provider.of<BottomNavigationController>(context).selectedIndex,
       selectedItemColor: Theme.of(context).colorScheme.primary,
-      // unselectedItemColor: theme.DavarColors.,
       onTap: (index) => context
           .read<BottomNavigationController>()
           .onScreenChange(_getRouteName(index), index: index),

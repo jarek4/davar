@@ -5,7 +5,13 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
+  String get add => 'ekle';
+
+  @override
   String get addTranslation => 'çeviri';
+
+  @override
+  String get all => 'tüm';
 
   @override
   String get authLearn => 'sen öğrenirsin';
@@ -18,6 +24,12 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get authYourLanguage => 'senin dilin';
+
+  @override
+  String get backupConfirm => 'Tüm verilerinizi değiştirmek istediğinizden emin misiniz?';
+
+  @override
+  String get best => 'en iyi';
 
   @override
   String get cancel => 'iptal';
@@ -78,6 +90,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get forgotPwd => 'Parolanızı mı unuttunuz?';
+
+  @override
+  String get importExport => 'Yedek kopyayı İçe/Dışa Aktar';
 
   @override
   String get invalidEmail => 'Geçersiz e-posta';
@@ -182,6 +197,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get quizManual2 => 'Kelimeye bir ipucu eklediyseniz, onu kullanabileceksiniz. Ama alacak 1 puan. Belirli bir kelimenin noktalarının sayısı buna göre artırılacaktır.';
 
   @override
+  String get quizScore => 'sınav puanı';
+
+  @override
   String get remove => 'kaldır';
 
   @override
@@ -204,6 +222,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get sentence => 'cümle';
+
+  @override
+  String get sentences => 'cümleler';
 
   @override
   String get settingsBackup => 'Yedekleme';
@@ -233,7 +254,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsMode => 'Işık/Koyu modu';
 
   @override
-  String get someThingHappend => 'bir şey oldu';
+  String get someThingHappened => 'bir şey oldu';
 
   @override
   String get statsQuizScore => 'En yüksek sınav puanı.';
@@ -263,10 +284,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tryAgain => 'Tekrar deneyin';
 
   @override
-  String get tryFromBeginniing => 'Lütfen en baştan tekrar deneyin';
+  String get tryFromBeginning => 'Lütfen en baştan tekrar deneyin';
 
   @override
   String get wait => 'Bekle';
+
+  @override
+  String get weakest => 'en zayıf';
 
   @override
   String get welcomeBack => 'Tekrar hoşgeldiniz';

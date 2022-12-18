@@ -1,9 +1,13 @@
 {
   "@@locale": "ru",
+  "add": "добавлять",
+  "@add": {},
   "addTranslation": "превод",
   "@addTranslation": {
     "description": "translation"
   },
+  "all": "все",
+  "@all": {},
   "authLearn": " учишь",
   "@authLearn": {
     "description": "you learn"
@@ -16,6 +20,12 @@
   "@authName": {},
   "authYourLanguage": "ваш язык",
   "@authYourLanguage": {},
+  "backupConfirm": "Вы уверены, что хотите заменить все свои данные?",
+  "@backupConfirm": {
+    "description": " replace all your data?"
+  },
+  "best": "Лучший",
+  "@best": {},
   "cancel": "отменить",
   "@cancel": {},
   "cannotTryNoMore": "Вы не можете больше пытаться. Пожалуйста, зарегистрируйте нового пользователя",
@@ -60,11 +70,15 @@
   "@favorite": {},
   "fieldNotEmpty": "Это поле не может быть пустым!",
   "@fieldNotEmpty": {
-    "description": "field cannt be empty"
+    "description": "field cannot be empty"
   },
   "forgotPwd": "Забыли пароль?",
   "@forgotPwd": {
     "description": "Forgot password?"
+  },
+  "importExport": "Импорт/экспорт резервной копии",
+  "@importExport": {
+    "description": "import/export backup copy"
   },
   "invalidEmail": "неверный адрес",
   "@invalidEmail": {},
@@ -78,7 +92,7 @@
   },
   "listAddListTop": "Какой элемент вы хотите добавить в начало основного списка",
   "@listAddListTop": {
-    "description": "elemet to add"
+    "description": "element to add"
   },
   "listEmpty": "Возможно, ваш список слов пуст",
   "@listEmpty": {},
@@ -174,6 +188,8 @@
   "@quizManual2": {
     "description": "how to play quiz"
   },
+  "quizScore": "балл викторины",
+  "@quizScore": {},
   "remove": "удалить",
   "@remove": {},
   "reset": "сброс",
@@ -196,6 +212,8 @@
   "@sentence": {
     "description": "sentence"
   },
+  "sentences": "приговоры",
+  "@sentences": {},
   "settingsBackup": "Бэкап",
   "@settingsBackup": {},
   "settingsBackupAttention": "Внимание! Если вы импортируете какие-либо данные из файла, все текущие слова и предложения будут заменены.",
@@ -226,8 +244,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
-  "someThingHappend": "что-то случилось",
-  "@someThingHappend": {},
+  "someThingHappened": "что-то случилось",
+  "@someThingHappened": {},
   "statsQuizScore": "Самый высокий балл викторины.",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -258,14 +276,16 @@
   "@total": {},
   "tryAgain": "Попробуй снова",
   "@tryAgain": {},
-  "tryFromBeginniing": "Пожалуйста, попробуйте еще раз с самого начала",
-  "@tryFromBeginniing": {
+  "tryFromBeginning": "Пожалуйста, попробуйте еще раз с самого начала",
+  "@tryFromBeginning": {
     "description": "Please try again from the beginning"
   },
   "wait": "Ждать",
   "@wait": {
     "description": "wait"
   },
+  "weakest": "слабый",
+  "@weakest": {},
   "welcomeBack": "Добро пожаловать обратно",
   "@welcomeBack": {},
   "word": "слово",

@@ -3,6 +3,7 @@ import 'package:davar/src/ui/screens/more/about/privacy_terms_provider.dart';
 import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'about/privacy_terms_view.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -23,35 +24,27 @@ class AboutScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 12.0),
               ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Version'),
-                    Text(utils.AppConst.appVersionAsString),
-                  ],
-                ),
+                title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
+                  Text('Version'),
+                  Text(utils.AppConst.appVersionAsString),
+                ]),
               ),
               const Divider(thickness: 1.2),
               _terms(context),
               const Divider(thickness: 1.2),
               ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Privacy statement'),
-                    Icon(Icons.arrow_forward_ios_rounded),
-                  ],
-                ),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => ChangeNotifierProvider<PrivacyTermsProvider>(
-                        create: (context) => PrivacyTermsProvider(),
-                        builder: (context, _) {
-                          return PrivacyTermsView('init data',
-                              context.read<PrivacyTermsProvider>().readPrivacyPolicy());
-                        }),
-                  ),
-                ),
+                title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
+                  Text('Privacy statement'),
+                  Icon(Icons.arrow_forward_ios_rounded),
+                ]),
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => ChangeNotifierProvider<PrivacyTermsProvider>(
+                      create: (context) => PrivacyTermsProvider(),
+                      builder: (context, _) {
+                        return PrivacyTermsView(
+                            context.read<PrivacyTermsProvider>().readPrivacyPolicy());
+                      }),
+                )),
               ),
               const Divider(thickness: 1.2),
               _devContact(context),
@@ -61,107 +54,41 @@ class AboutScreen extends StatelessWidget {
     ]);
   }
 
-/*  Column _buildScreenBody(BuildContext context) {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
-      const Padding(
-        padding: EdgeInsets.only(bottom: 4.0, top: 4.0),
-        child: DavarAdBanner(key: Key('More-AboutScreen-top-banner-320')),
-      ),
-      Expanded(
-        child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            key: const Key('More-AboutScreen'),
-            shrinkWrap: true,
-            children: [
-              const SizedBox(height: 12.0),
-              ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Version'),
-                    Text(utils.AppConst.appVersionAsString),
-                  ],
-                ),
-              ),
-              const Divider(thickness: 1.2),
-              _terms(context),
-              const Divider(thickness: 1.2),
-              ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text('Privacy statement'),
-                    Icon(Icons.arrow_forward_ios_rounded),
-                  ],
-                ),
-                onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => ChangeNotifierProvider<PrivacyTermsProvider>(
-                        create: (context) => PrivacyTermsProvider(),
-                        builder: (context, _) {
-                          return PrivacyTermsView('init data',
-                              context.read<PrivacyTermsProvider>().readPrivacyPolicy());
-                        }),
-                  ),
-                ),
-              ),
-              const Divider(thickness: 1.2),
-              _devContact(context),
-              const Divider(thickness: 1.2),
-            ]),
-      ),
-    ]);
-  }*/
-
   ListTile _terms(BuildContext context) {
     return ListTile(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          Text('Terms of service'),
-          Icon(Icons.arrow_forward_ios_rounded),
-        ],
-      ),
+      title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
+        Text('Terms of service'),
+        Icon(Icons.arrow_forward_ios_rounded),
+      ]),
       onTap: () => showAboutDialog(
-        context: context,
-        applicationVersion: utils.AppConst.appVersionAsString,
-        applicationIcon: Image.asset(utils.AssetsPath.davarLogo, width: 40, height: 40),
-        applicationLegalese: 'BSD 2 License',
-      ),
+          context: context,
+          applicationVersion: utils.AppConst.appVersionAsString,
+          applicationIcon: Image.asset(utils.AssetsPath.davarLogo, width: 40, height: 40),
+          applicationLegalese: 'BSD 2 License'),
     );
   }
 
   ListTile _devContact(BuildContext context) {
     return ListTile(
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
           Text('Contact with developer'),
           Icon(Icons.arrow_forward_ios_rounded),
-        ],
-      ),
-      onTap: () => _showDialog(context, 'Contact me', utils.AppConst.developerEmail),
-    );
+        ]),
+        onTap: () => _showDialog(context, 'Contact me', utils.AppConst.developerEmail));
   }
 
   void _showDialog(BuildContext context, String title, String info) {
     showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              title: Text(title, textAlign: TextAlign.center),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(info),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                          onPressed: () => Navigator.of(context).pop(), child: const Text('Close')),
-                    ],
-                  ),
-                ],
-              ),
-            ));
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(title, textAlign: TextAlign.center),
+        content: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text(info),
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Close')),
+          ]),
+        ]),
+      ),
+    );
   }
 }

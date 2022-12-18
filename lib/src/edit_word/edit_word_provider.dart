@@ -28,7 +28,7 @@ class EditWordProvider with ChangeNotifier {
 
   String get editWordProviderError => _editWordProviderError;
 
-  bool get hasChanged => _passedToEdit != _edited;
+  bool get wasItemChanged => _passedToEdit != _edited;
 
   EditWordProviderStatus _status = EditWordProviderStatus.success;
 

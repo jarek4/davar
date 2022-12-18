@@ -39,6 +39,11 @@ class _EditWordViewState extends State<EditWordView> {
   void initState() {
     super.initState();
     ctr = ScrollController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _edit = AppLocalizations.of(context)?.edit ?? 'EDIT';
     _category = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Category');
     _created = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Created at');
@@ -132,7 +137,7 @@ class _EditWordViewState extends State<EditWordView> {
       Positioned(
         bottom: 2,
         child: Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider wep, _) {
-          final bool isChanged = wep.hasChanged;
+          final bool isChanged = wep.wasItemChanged;
           return isChanged
               ? Text(
                   save,
@@ -204,26 +209,22 @@ class _EditWordViewState extends State<EditWordView> {
             final bool isSentence = wep.edited.isSentence == 1;
             final String catchword = wep.edited.catchword;
             final String itemType = isSentence ? _s : _w;
-            return OverflowBar(alignment: MainAxisAlignment.spaceBetween,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('$itemType:',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                  Text(catchword,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                  TextButton(
-                      onPressed: () {
-                        editField(
-                            context: context,
-                            description: itemType.toLowerCase(),
-                            value: catchword,
-                            handle: wep.onEditCatchword);
-                      },
-                      child: Text(
-                        utils.capitalize(_edit),
-                        style: const TextStyle(color: Color(0xff0E9447)),
-                      ))
-                ]);
+            return OverflowBar(alignment: MainAxisAlignment.spaceBetween, children: [
+              Text('$itemType:', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+              Text(catchword, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+              TextButton(
+                  onPressed: () {
+                    editField(
+                        context: context,
+                        description: itemType.toLowerCase(),
+                        value: catchword,
+                        handle: wep.onEditCatchword);
+                  },
+                  child: Text(
+                    utils.capitalize(_edit),
+                    style: const TextStyle(color: Color(0xff0E9447)),
+                  ))
+            ]);
           },
         ));
   }
@@ -319,6 +320,7 @@ class _EditWordViewState extends State<EditWordView> {
         Widget text = Text(utils.capitalize(_clue),
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold));
         final String? clue = wep.edited.clue;
+        final bool isClueEmpty = clue == null || clue.isEmpty;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             text,
@@ -337,7 +339,7 @@ class _EditWordViewState extends State<EditWordView> {
                 )),
           ]),
           Text(
-            clue ?? _noClue,
+            isClueEmpty ? _noClue : clue,
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
             textAlign: TextAlign.justify,
             overflow: TextOverflow.ellipsis,

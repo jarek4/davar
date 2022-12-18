@@ -99,11 +99,23 @@ abstract class AppLocalizations {
     Locale('tr')
   ];
 
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'add'**
+  String get add;
+
   /// translation
   ///
   /// In en, this message translates to:
   /// **'translation'**
   String get addTranslation;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'all'**
+  String get all;
 
   /// you learn
   ///
@@ -128,6 +140,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'your language'**
   String get authYourLanguage;
+
+  ///  replace all your data?
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to replace all your data?'**
+  String get backupConfirm;
+
+  /// No description provided for @best.
+  ///
+  /// In en, this message translates to:
+  /// **'best'**
+  String get best;
 
   /// No description provided for @cancel.
   ///
@@ -237,7 +261,7 @@ abstract class AppLocalizations {
   /// **'Favorite'**
   String get favorite;
 
-  /// field cannt be empty
+  /// field cannot be empty
   ///
   /// In en, this message translates to:
   /// **'This field cannot be empty'**
@@ -248,6 +272,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Forgot password?'**
   String get forgotPwd;
+
+  /// import/export backup copy
+  ///
+  /// In en, this message translates to:
+  /// **'Import/Export backup copy'**
+  String get importExport;
 
   /// No description provided for @invalidEmail.
   ///
@@ -267,7 +297,7 @@ abstract class AppLocalizations {
   /// **'language you want to learn'**
   String get languageToLearn;
 
-  /// elemet to add
+  /// element to add
   ///
   /// In en, this message translates to:
   /// **'Which element you want to add at the beginning of the main list'**
@@ -453,6 +483,12 @@ abstract class AppLocalizations {
   /// **'If you have added a clue to the word,  you will be able to use it. But it will takes 1 point. The number of the points of a particular word will be increased accordingly.'**
   String get quizManual2;
 
+  /// No description provided for @quizScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz score'**
+  String get quizScore;
+
   /// No description provided for @remove.
   ///
   /// In en, this message translates to:
@@ -500,6 +536,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'sentence'**
   String get sentence;
+
+  /// No description provided for @sentences.
+  ///
+  /// In en, this message translates to:
+  /// **'sentences'**
+  String get sentences;
 
   /// No description provided for @settingsBackup.
   ///
@@ -555,11 +597,11 @@ abstract class AppLocalizations {
   /// **'Light/Dark mode'**
   String get settingsMode;
 
-  /// No description provided for @someThingHappend.
+  /// No description provided for @someThingHappened.
   ///
   /// In en, this message translates to:
   /// **'something has happened'**
-  String get someThingHappend;
+  String get someThingHappened;
 
   /// quiz score
   ///
@@ -619,13 +661,19 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Please try again from the beginning'**
-  String get tryFromBeginniing;
+  String get tryFromBeginning;
 
   /// wait
   ///
   /// In en, this message translates to:
   /// **'Wait'**
   String get wait;
+
+  /// No description provided for @weakest.
+  ///
+  /// In en, this message translates to:
+  /// **'weakest'**
+  String get weakest;
 
   /// No description provided for @welcomeBack.
   ///

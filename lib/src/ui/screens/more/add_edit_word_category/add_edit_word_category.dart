@@ -1,16 +1,13 @@
 import 'package:davar/src/data/models/models.dart';
+import 'package:davar/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddEditWordCategory extends StatefulWidget {
   const AddEditWordCategory(
-      {Key? key,
-      required this.title,
-      required this.onConfirmation,
-      required this.onChangeHandle,
-      this.category})
+      {Key? key, required this.onConfirmation, required this.onChangeHandle, this.category})
       : super(key: key);
 
-  final String title;
   final VoidCallback onConfirmation;
   final ValueChanged<String> onChangeHandle;
   final WordCategory? category;
@@ -21,48 +18,51 @@ class AddEditWordCategory extends StatefulWidget {
 
 class _AddEditWordCategoryState extends State<AddEditWordCategory> {
   late GlobalKey<FormState> _addEditCategoryFormKey;
-  late String header;
-  late VoidCallback onSubmit;
-  late ValueChanged<String> onChangeHandle;
-  WordCategory? category;
-  String errorInfo = '';
+
+  late VoidCallback _onSubmit;
+  late ValueChanged<String> _onChangeHandle;
+  WordCategory? _category;
+  String _errorInfo = '';
 
   @override
   void initState() {
     super.initState();
     _addEditCategoryFormKey = GlobalKey<FormState>();
-    header = widget.title;
-    onSubmit = widget.onConfirmation;
-    onChangeHandle = widget.onChangeHandle;
-    category = widget.category;
-    errorInfo = '';
+    _onSubmit = widget.onConfirmation;
+    _onChangeHandle = widget.onChangeHandle;
+    _category = widget.category;
+    _errorInfo = '';
   }
 
   @override
   Widget build(BuildContext context) {
+    final String c = AppLocalizations.of(context)?.category ?? 'new category';
+    final String empty = AppLocalizations.of(context)?.fieldNotEmpty ?? 'Cannot be empty';
+    final String save = utils.capitalize(AppLocalizations.of(context)?.save ?? 'Save');
+    final String cancel = utils.capitalize(AppLocalizations.of(context)?.cancel ?? 'Cancel');
     return Form(
       key: _addEditCategoryFormKey,
       child: Column(mainAxisSize: MainAxisSize.min, children: [
         TextFormField(
           maxLength: 20,
-          decoration: const InputDecoration(hintText: 'new category'),
-          initialValue: category != null ? category!.name : '',
+          decoration: InputDecoration(hintText: c),
+          initialValue: _category != null ? _category!.name : '',
           keyboardType: TextInputType.text,
-          onChanged: (e) => onChangeHandle(e),
+          onChanged: (e) => _onChangeHandle(e),
           autocorrect: false,
           validator: (v) {
-            if (v == null || v.isEmpty) return 'Cannot be empty!';
+            if (v == null || v.isEmpty) return empty;
             return null;
           },
         ),
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          TextButton(onPressed: () => _onSubmit(context), child: Text('Save')),
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('Cancel')),
+          TextButton(onPressed: () => _handleSubmit(context), child: Text(save)),
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(cancel)),
         ]),
-        errorInfo.isEmpty
+        _errorInfo.isEmpty
             ? const SizedBox()
             : Text(
-                errorInfo,
+                _errorInfo,
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.red, fontSize: 12.0),
               ),
@@ -70,24 +70,24 @@ class _AddEditWordCategoryState extends State<AddEditWordCategory> {
     );
   }
 
-  void _onSubmit(BuildContext context) {
+  void _handleSubmit(BuildContext context) {
+    final String category = AppLocalizations.of(context)?.category ?? 'Category';
+    final String notSaved = AppLocalizations.of(context)?.notSaved ?? 'cannot be saved';
+    final String again = AppLocalizations.of(context)?.tryAgain ?? 'try again';
     if (_addEditCategoryFormKey.currentState == null) {
-      // context.read<LoginProvider>().loginErrorMsg = 'Please try again from the beginning';
-      print('_addEditCategoryFormKey.currentState == null');
       setState(() {
-        errorInfo = 'Sorry! Category cannot be saved.';
+        _errorInfo = '$category $notSaved.';
       });
       return;
     }
     if (_addEditCategoryFormKey.currentState!.validate()) {
       _addEditCategoryFormKey.currentState!.save();
-      print('form state is valid');
-      onSubmit();
+      _onSubmit();
       Navigator.of(context).pop();
       return;
     }
     setState(() {
-      errorInfo = 'Sorry! Category is not saved.\nClose this window and try again';
+      _errorInfo = '$category $notSaved.\n$again.';
     });
   }
 }

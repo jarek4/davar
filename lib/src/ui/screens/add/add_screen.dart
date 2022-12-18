@@ -86,11 +86,10 @@ class AddScreen extends StatelessWidget {
         child: Stack(alignment: AlignmentDirectional.center, fit: StackFit.passthrough, children: [
           Image.asset(utils.AssetsPath.davarLogoBackground, fit: BoxFit.fill),
           Positioned(
-            //alignment: Alignment.topRight,
             right: isHeightLess350 ? 12 : null,
-            top: isHeightLess350 ? 4 : null,
+            top: isHeightLess350 ? 3 : null,
             child: Image.asset(utils.AssetsPath.davarLogo,
-                fit: BoxFit.scaleDown, width: 70, height: 70),
+                fit: BoxFit.scaleDown, width: isHeightLess350 ? 60: 68, height: isHeightLess350 ? 60 : 68),
           ),
         ]),
       ),
@@ -104,7 +103,7 @@ class AddScreen extends StatelessWidget {
       padding: EdgeInsets.only(top: isHeight ? 50.0 : 16.0),
       child: Wrap(
           direction: isWidthMore600 ? Axis.horizontal : Axis.vertical,
-          spacing: 76,
+          spacing: 70,
           crossAxisAlignment: WrapCrossAlignment.center,
           runAlignment: WrapAlignment.center,
           children: [
@@ -157,7 +156,7 @@ class AddScreen extends StatelessWidget {
         .select<WordsProvider, WordsProviderStatus>((WordsProvider provider) => provider.status);
     final bool isLoading = status == WordsProviderStatus.loading;
     return Container(
-      constraints: const BoxConstraints(minWidth: 178, maxWidth: 200.0, minHeight: 70.0),
+      constraints: const BoxConstraints(minWidth: 172, maxWidth: 188.0, minHeight: 66.0),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(20),

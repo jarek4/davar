@@ -1,9 +1,13 @@
 {
   "@@locale": "pl",
+  "add": "dodaj",
+  "@add": {},
   "addTranslation": "tłumaczenie",
   "@addTranslation": {
     "description": "translation"
   },
+  "all": "wszystkie",
+  "@all": {},
   "authLearn": "uczysz się",
   "@authLearn": {
     "description": "you learn"
@@ -16,6 +20,12 @@
   "@authName": {},
   "authYourLanguage": "twój język",
   "@authYourLanguage": {},
+  "backupConfirm": "Czy na pewno chcesz zastąpić wszystkie swoje dane?",
+  "@backupConfirm": {
+    "description": " replace all your data?"
+  },
+  "best": "najlepiej",
+  "@best": {},
   "cancel": "anuluj",
   "@cancel": {},
   "cannotTryNoMore": "Nie możesz próbować dalej. Proszę zarejestruj nowego użytkownika",
@@ -60,11 +70,15 @@
   "@favorite": {},
   "fieldNotEmpty": "To pole nie może być puste",
   "@fieldNotEmpty": {
-    "description": "field cannt be empty"
+    "description": "field cannot be empty"
   },
   "forgotPwd": "Zapomniałeś hasła?",
   "@forgotPwd": {
     "description": "Forgot password?"
+  },
+  "importExport": "Importuj/eksportuj kopię zapasową",
+  "@importExport": {
+    "description": "import/export backup copy"
   },
   "invalidEmail": "niepoprawny email",
   "@invalidEmail": {},
@@ -78,7 +92,7 @@
   },
   "listAddListTop": "Który element chcesz dodać na początek głównej listy",
   "@listAddListTop": {
-    "description": "elemet to add"
+    "description": "element to add"
   },
   "listEmpty": "Możliwe, że  lista twoich słów jest pusta",
   "@listEmpty": {},
@@ -174,6 +188,8 @@
   "@quizManual2": {
     "description": "how to play quiz"
   },
+  "quizScore": "wynik quizu",
+  "@quizScore": {},
   "remove": "usuń",
   "@remove": {},
   "reset": "zerowanie",
@@ -196,6 +212,8 @@
   "@sentence": {
     "description": "sentence"
   },
+  "sentences": "zdania",
+  "@sentences": {},
   "settingsBackup": "Kopia zapasowa",
   "@settingsBackup": {},
   "settingsBackupAttention": "Uwaga! Jeśli zaimportujesz jakiekolwiek dane z pliku, wszystkie bieżące słowa i zdania zostaną zastąpione.",
@@ -226,8 +244,8 @@
   "@settingsMode": {
     "description": "light/dark theme"
   },
-  "someThingHappend": "coś się stało",
-  "@someThingHappend": {},
+  "someThingHappened": "coś się stało",
+  "@someThingHappened": {},
   "statsQuizScore": "Najlepszy wynik z quizu",
   "@statsQuizScore": {
     "description": "quiz score"
@@ -258,21 +276,23 @@
   "@total": {},
   "tryAgain": "Spróbuj ponownie",
   "@tryAgain": {},
-  "tryFromBeginniing": "Spróbuj ponownie od początku",
-  "@tryFromBeginniing": {
+  "tryFromBeginning": "Spróbuj ponownie od początku",
+  "@tryFromBeginning": {
     "description": "Please try again from the beginning"
   },
   "wait": "Chwila",
   "@wait": {
     "description": "wait"
   },
+  "weakest": "słabo",
+  "@weakest": {},
   "welcomeBack": "Witaj ponownie",
   "@welcomeBack": {},
   "word": "słówko",
   "@word": {
     "description": "word"
   },
-  "words": "słów/słowa",
+  "words": "słówka",
   "@words": {
     "description": "plural"
   },

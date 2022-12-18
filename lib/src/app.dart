@@ -42,79 +42,69 @@ class DavarApp extends StatelessWidget {
         // Provider<AdState>.value(value: AdState(_initFuture)),
       ],
       child: AnimatedBuilder(
-        animation: settingsController,
-        builder: (BuildContext context, Widget? child) {
-          return MaterialApp(
-            // Providing a restorationScopeId allows the Navigator built by the
-            // MaterialApp to restore the navigation stack when a user leaves and
-            // returns to the app after it has been killed while running in the
-            // background.
-            scaffoldMessengerKey: scaffoldKey,
-            restorationScopeId: 'app',
-            //navigatorObservers: [SentryNavigatorObserver()],
-
-            // Provide the generated AppLocalizations to the MaterialApp. This
-            // allows descendant Widgets to display the correct translations
-            // depending on the user's locale.
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: L10n.all,
-            locale: settingsController.localeCode == null
-                ? null
-                : Locale(settingsController.localeCode!),
-
-            // Use AppLocalizations to configure the correct application title
-            // depending on the user's locale.
-            //
-            // The appTitle is defined in .arb files found in the localization
-            // directory.
-            // onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
-            onGenerateTitle: (_) => AppConst.appName,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSwatch(
-                primarySwatch: DavarColors.materialPrimarySwatch,
+          animation: settingsController,
+          builder: (BuildContext context, Widget? child) {
+            return MaterialApp(
+              // Providing a restorationScopeId allows the Navigator built by the
+              // MaterialApp to restore the navigation stack when a user leaves and
+              // returns to the app after it has been killed while running in the
+              // background.
+              scaffoldMessengerKey: scaffoldKey,
+              restorationScopeId: 'app',
+              //navigatorObservers: [SentryNavigatorObserver()],
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: L10n.all,
+              locale: settingsController.localeCode == null
+                  ? null
+                  : Locale(settingsController.localeCode!),
+              onGenerateTitle: (_) => AppConst.appName,
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSwatch(
+                  primarySwatch: DavarColors.materialPrimarySwatch,
+                ),
+                scaffoldBackgroundColor: DavarColors.mainBackground,
               ),
-              scaffoldBackgroundColor: DavarColors.mainBackground,
-            ),
-            darkTheme: ThemeData.dark(),
-            themeMode: settingsController.themeMode,
-            // themeMode: ThemeMode.dark,
-            home: Consumer<AuthProvider>(builder: (BuildContext context, AuthProvider provider, _) {
-              switch (provider.status) {
-                case AuthenticationStatus.authenticated:
-                  // WordsProvider need to be here because inside RootWidget, it is disposing
-                  // when navigate Navigator.push()!
-                  return ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
-                    create: (_) => WordsProvider(context.read<AuthProvider>().user),
-                    update: (_, auth, __) => WordsProvider(auth.user),
-                    builder: (BuildContext context, _) {
-                      return const RootWidget();
-                    },
-                  );
-                case AuthenticationStatus.error:
-                  return _onAuthenticationError(provider.authenticationError, context);
-                case AuthenticationStatus.unauthenticated:
-                  return const Onboarding();
-                case AuthenticationStatus.login:
-                  return ChangeNotifierProvider<LoginProvider>(
-                      create: (_) => LoginProvider(), child: const LoginView());
-                case AuthenticationStatus.register:
-                  return ChangeNotifierProvider<RegistrationProvider>(
-                      create: (_) => RegistrationProvider(), child: const RegisterView());
-                case AuthenticationStatus.loggedOut:
-                  return LoggedOutView(
-                      loginOnPressed: () => context.read<AuthProvider>().onLoginRequest());
-                default:
-                  return _authenticationStatusUnknown(context, 'Try to log you in...');
-              }
-            }),
-          );
-        },
-      ),
+              darkTheme: ThemeData.dark(),
+              themeMode: settingsController.themeMode,
+              home: Selector<AuthProvider, AuthenticationStatus>(
+                  selector: (_, state) => state.status,
+                  builder: (BuildContext context, status, _) {
+                    switch (status) {
+                      case AuthenticationStatus.authenticated:
+                        // WordsProvider need to be here because inside RootWidget, it is disposing
+                        // when navigate Navigator.push()!
+                        return ChangeNotifierProxyProvider<AuthProvider, WordsProvider>(
+                          create: (_) => WordsProvider(context.read<AuthProvider>().user),
+                          update: (_, auth, __) => WordsProvider(auth.user),
+                          builder: (BuildContext context, _) {
+                            return const RootWidget();
+                          },
+                        );
+                      case AuthenticationStatus.error:
+                        return _onAuthenticationError(
+                            context.read<AuthProvider>().authenticationError, context);
+                      case AuthenticationStatus.unauthenticated:
+                        return const Onboarding();
+                      case AuthenticationStatus.login:
+                        return ChangeNotifierProvider<LoginProvider>(
+                            create: (_) => LoginProvider(), child: const LoginView());
+                      case AuthenticationStatus.register:
+                        return ChangeNotifierProvider<RegistrationProvider>(
+                            create: (_) => RegistrationProvider(), child: const RegisterView());
+                      case AuthenticationStatus.loggedOut:
+                        return LoggedOutView(
+                            loginOnPressed: () => context.read<AuthProvider>().onLoginRequest());
+                      default:
+                        return _authenticationStatusUnknown(context, 'Try to log you in...');
+                    }
+                  }),
+            );
+          }),
     );
   }
 
@@ -122,19 +112,16 @@ class DavarApp extends StatelessWidget {
         body: Container(
           color: theme.DavarColors.mainBackground,
           child: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(text, textAlign: TextAlign.center),
               const SizedBox(height: 30),
               const CircularProgressIndicator(),
               const SizedBox(height: 30),
               TextButton(
-                onPressed: () => context.read<AuthProvider>().onCancelAuthenticationRequest(),
-                child: const Icon(Icons.arrow_circle_left_outlined),
-              ),
-            ],
-          )),
+                  onPressed: () => context.read<AuthProvider>().onCancelAuthenticationRequest(),
+                  child: const Icon(Icons.arrow_circle_left_outlined)),
+            ]),
+          ),
         ),
       );
 
