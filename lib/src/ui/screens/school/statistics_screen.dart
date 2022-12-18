@@ -132,7 +132,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           // color: color,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: color),
-          boxShadow: [
+        // on iOS BoxShadow makes little squer inside container
+          /*boxShadow: [
             BoxShadow(
               color: color.withOpacity(0.2),
               spreadRadius: 1,
@@ -140,7 +141,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
               offset: const Offset(0.5, 1.2),
               blurStyle: BlurStyle.outer,
             ),
-          ]),
+          ]*/),
       padding: const EdgeInsets.all(8),
 
       // color: Colors.teal[100],
