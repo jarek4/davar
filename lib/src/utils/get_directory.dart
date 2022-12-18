@@ -55,7 +55,6 @@ class GetDirectory {
     // iOS: /data/Containers/Data/Application/CA..6/Documents -> Locations/on my iPhone/Davar/
     try {
       Directory d = await pp.getApplicationDocumentsDirectory();
-      print('GetDirectory AppDocumentsDirectory: ${d.path}');
       if (await d.exists()) return d;
       return d;
     } on pp.MissingPlatformDirectoryException catch (e) {
