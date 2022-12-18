@@ -73,7 +73,7 @@ class SearchWordsProvider with ChangeNotifier {
   }
 
   // items per single fetch query (pagination)
-  int _queryLimit = 3;
+  int _queryLimit = 15;
 
   int get queryLimit => _queryLimit;
 

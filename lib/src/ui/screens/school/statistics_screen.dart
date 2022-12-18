@@ -129,7 +129,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
       decoration: BoxDecoration(
-          // color: color,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: color),
         // on iOS BoxShadow makes little squer inside container
