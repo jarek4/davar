@@ -29,11 +29,12 @@ class WordsListScreen extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraint) {
       final bool isOrientationPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
       final double maxWidth = constraint.maxWidth;
+      final bool isWidth = maxWidth > 500.0;
       final double landscapeMaxW = (maxWidth * 3) / 4;
       return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         const Flexible(child: SizedBox()),
         SizedBox(
-            width: isOrientationPortrait ? maxWidth - 30 : landscapeMaxW,
+            width: (isOrientationPortrait && !isWidth) ? maxWidth - 30 : landscapeMaxW,
             child: const PaginatedStreamList()),
         const Flexible(child: SizedBox()),
       ]);
