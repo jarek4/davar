@@ -69,7 +69,7 @@ class OnboardingBottomBar extends StatelessWidget {
   TextButton _buildPrivacyLink(BuildContext context) {
     return TextButton(
         onPressed: () => _pushFullScreenDialog(context, utils.AssetsPath.txtPrivacyStatement),
-        child: const Text('privacy statement', style: TextStyle(fontSize: 12)));
+        child: const Text('privacy statement.', style: TextStyle(fontSize: 12)));
   }
 
   TextButton _buildTermsLink(BuildContext context) {
