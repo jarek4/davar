@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum InputType { email, name, learnLang, nativeLAng, other, pwd }
+enum InputType { email, name, learnLang, nativeLang, other, pwd }
 
 InputDecoration inputDecoration({
   required InputType type,
@@ -32,7 +32,7 @@ InputDecoration inputDecoration({
     ),
     // isCollapsed: true,
     floatingLabelStyle: const TextStyle(
-      color: Colors.green,
+      color: Color(0xff094f27),
     ),
     labelText: label,
     labelStyle: const TextStyle(fontSize: 12),
@@ -45,7 +45,7 @@ Widget? _iconDecorationHandle(InputType type) {
       return _buildIconData(Icons.alternate_email);
     case InputType.pwd:
       return _buildIconData(Icons.password);
-    case InputType.nativeLAng:
+    case InputType.nativeLang:
       return _buildIconData(Icons.language_rounded);
     case InputType.name:
       return _buildIconData(Icons.person);

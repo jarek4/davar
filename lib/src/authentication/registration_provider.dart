@@ -21,9 +21,9 @@ class RegistrationProvider with ChangeNotifier {
     }
   }
 
-  String _learning = 'Türkçe';
+  String _learning = '';
   String _name = '';
-  String _native = 'English';
+  String _native = '';
   String _password = '';
   RegistrationStatus _status = RegistrationStatus.success;
 
@@ -74,7 +74,7 @@ class RegistrationProvider with ChangeNotifier {
   }
 
   Future<void> onSubmit() async {
-    _errorMsg = '';
+    if(!_validateFormFields()) return;
     _status = RegistrationStatus.submitting;
     notifyListeners();
     User submittingUser = const User().copyWith(
@@ -108,5 +108,31 @@ class RegistrationProvider with ChangeNotifier {
       _status = RegistrationStatus.error;
       notifyListeners();
     }
+  }
+  bool _validateFormFields() {
+    bool areValid = true;
+    _errorMsg = '';
+    if(_name.isEmpty) {
+      areValid = false;
+      _errorMsg = 'Username is not valid.';
+    }
+    if(_email.length < 5) {
+      areValid = false;
+      _errorMsg = '$_errorMsg Email is not valid.';
+    }
+    if(_password.length < 4) {
+      areValid = false;
+      _errorMsg = '$_errorMsg Password is not valid.';
+    }
+    if(_native.isEmpty) {
+      areValid = false;
+      _errorMsg = '$_errorMsg Native language is not valid.';
+    }
+    if(_learning.isEmpty) {
+      areValid = false;
+      _errorMsg = '$_errorMsg Learning language is not valid.';
+    }
+    notifyListeners();
+    return areValid;
   }
 }

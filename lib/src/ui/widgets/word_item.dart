@@ -125,7 +125,7 @@ class WordItem extends StatelessWidget {
           final String sure = AppLocalizations.of(context)?.confirmDeleteWord ??
               'Are you sure, you want to delete this word?';
           final String noUndo = AppLocalizations.of(context)?.noUndo ?? 'You cannot undo deleting';
-          final String y = AppLocalizations.of(context)?.sentence ?? 'Yes';
+          final String y = AppLocalizations.of(context)?.yes ?? 'Yes';
           final String n = AppLocalizations.of(context)?.no ?? 'No';
           final String delete = AppLocalizations.of(context)?.delete ?? 'delete';
           final String cancel = AppLocalizations.of(context)?.cancel ?? 'cancel';

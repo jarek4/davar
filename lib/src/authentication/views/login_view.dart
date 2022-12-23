@@ -161,7 +161,7 @@ class _LoginViewState extends State<LoginView> {
           // horizontal: MediaQuery.of(context).size.width * 34.0 / 100
           horizontal: 2.0),
       child: TextButton(
-        child: const Text('Sign Up',
+        child: const Text('Register',
             style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold)),
         onPressed: () => context.read<AuthProvider>().onRegisterRequest(),
       ),
@@ -178,13 +178,11 @@ class _LoginViewState extends State<LoginView> {
             return FormSubmitBtn(
                 key: const Key('login-view-submit'),
                 formState: _loginFormKey.currentState,
-                txt: 'Sign In',
+                txt: 'Login',
                 onSubmit: () => _onFormSubmit(context, _loginFormKey.currentState));
           case LoginStatus.submitting:
             return const Center(
-                child: CircularProgressIndicator(
-              color: Colors.grey,
-            ));
+                child: CircularProgressIndicator.adaptive());
           default:
             return FormSubmitBtn(
                 key: const Key('login-view-wait'),

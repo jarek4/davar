@@ -12,9 +12,11 @@ class Question {
     return inGameWords[0].id;
   }
 
+  // if Question.text() => inGameWords[0].catchword
+  // options should be inGameWords[i].userTranslation
   String text() {
     if (inGameWords.isEmpty) return errorInfo;
-    return inGameWords[0].userTranslation;
+    return inGameWords[0].catchword;
   }
 
   String? clue() {

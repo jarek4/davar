@@ -55,7 +55,7 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
           words.map((e) => e.id).where((element) => element != inGameWords[0].id).toList();
       final Question question = Question(inGameWords: inGameWords);
       final List<Option> options = _makeOptions(inGameWords);
-      final int successId = inGameWords.isEmpty ? -1 : inGameWords[0].id;
+      final int successId = inGameWords.isNotEmpty ? inGameWords[0].id : -1;
 
       _state = QuizState(
         words: words,
@@ -95,6 +95,7 @@ class QuizProvider with ChangeNotifier, QuizStatisticsService {
   }
 
   List<Option> _makeOptions(List<Word> inGameWords) {
+    // Question.text() => inGameWords[0].catchword, so options should be inGameWords[i].userTranslation
     if (inGameWords.isEmpty) return <Option>[];
     List<Option> options = [];
     Word first = inGameWords[0];

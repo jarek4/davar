@@ -126,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
           List<WordCategory> categories = provider.categories;
           switch (provider.status) {
             case CategoriesProviderStatus.success:
-              return _buildCategoriesList(categories);
+              return _categoriesList(categories);
             case CategoriesProviderStatus.loading:
               return Text(wait);
             default:
@@ -146,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoriesList(List<WordCategory> categories) {
+  Widget _categoriesList(List<WordCategory> categories) {
     if (categories.isEmpty) return const Text('You have no categories.');
     return SizedBox(
       height: 40.0,
@@ -194,7 +194,7 @@ class ProfileScreen extends StatelessWidget {
             Text(item.name),
             isNotDefault
                 ? IconButton(
-                    onPressed: () => _showDialog(context, '$delete ${item.name}?',
+                    onPressed: () => _showDialog(context, '$delete: ${item.name}?',
                         () => context.read<CategoriesProvider>().delete(item.id)),
                     icon: const Icon(Icons.delete, size: 16, color: Colors.red))
                 : const SizedBox(width: 6.0),

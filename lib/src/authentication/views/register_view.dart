@@ -57,6 +57,7 @@ class _RegisterViewState extends State<RegisterView> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 35.0, right: 35.0, top: 30.0),
                 child: Column(children: <Widget>[
+                  const SizedBox(height: 26.0),
                   Text(profile,
                       textAlign: TextAlign.center, style: const TextStyle(fontSize: 18.0)),
                   const SizedBox(height: 20.0),
@@ -66,13 +67,11 @@ class _RegisterViewState extends State<RegisterView> {
                   const SizedBox(height: 8.0),
                   _passwordField(context, pwd),
                   const SizedBox(height: 15.0),
-                  Text(_native,
-                      style: const TextStyle(color: Colors.grey), textAlign: TextAlign.center),
-                  _buildMyLanguageDropdown(context),
-                  const SizedBox(height: 8.0),
-                  Text(_toLearn,
-                      style: const TextStyle(color: Colors.grey), textAlign: TextAlign.center),
-                  _buildWantLearnDropdown(context),
+                  Text(_native, textAlign: TextAlign.center),
+                  _buildNativeLAnguageField(context),
+                  const SizedBox(height: 2.0),
+                  Text(_toLearn, textAlign: TextAlign.center),
+                  _buildLearningLanguageField(context),
                   _buildSubmitButton(),
                   _buildSignInOption(context),
                   _errorInfo.isNotEmpty
@@ -101,7 +100,7 @@ class _RegisterViewState extends State<RegisterView> {
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
       child: TextButton(
         child: const Text(
-          'Sign In',
+          'Login',
           style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
@@ -119,10 +118,14 @@ class _RegisterViewState extends State<RegisterView> {
           cursorColor: Colors.black,
           maxLength: 30,
           inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp('[ a-zA-Z0-9 -]'))
+            FilteringTextInputFormatter.deny(RegExp("['+;=?!*^%#([\\)<>/&/,\":]"))
           ],
           onChanged: (val) => context.read<RegistrationProvider>().onNameChange(val),
-          validator: (v) => (v != null && v.length > 2) ? null : _empty,
+          validator: (v) {
+            if(v != null && v.length > 2) return null;
+           if(v == null || v.isEmpty) return _empty;
+           return 'invalid!';
+          },
           initialValue: '',
           keyboardType: TextInputType.text,
           obscureText: false,
@@ -175,35 +178,39 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  Widget _buildMyLanguageDropdown(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 35),
-      child: Consumer<RegistrationProvider>(
-          builder: (BuildContext context, RegistrationProvider provider, _) {
-        return LanguageDropdown<String>(
-            hintText: _native,
-            options: [...SupportedLanguages.names],
-            value: provider.native,
-            onChanged: (String? newValue) => provider.onNativeChange(newValue ?? 'English'),
-            getLabel: (String value) => value,
-            key: const Key('LanguageDropdown-My-language'));
-      }),
+  Widget _buildNativeLAnguageField(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
+      child: TextFormField(
+          cursorColor: Colors.black,
+          maxLength: 20,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.deny(RegExp("['+;=?!*^%#([\\)<>/&/,\":]"))
+          ],
+          onChanged: (val) => context.read<RegistrationProvider>().onNativeChange(val),
+          validator: (v) => (v != null && v.isNotEmpty) ? null : _empty,
+          // initialValue: '',
+          keyboardType: TextInputType.text,
+          obscureText: false,
+          decoration: inputDecoration(type: InputType.nativeLang, label: _native)),
     );
   }
 
-  Widget _buildWantLearnDropdown(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 35),
-      child: Consumer<RegistrationProvider>(
-          builder: (BuildContext context, RegistrationProvider provider, _) {
-        return LanguageDropdown<String>(
-            hintText: _toLearn,
-            options: [...SupportedLanguages.names],
-            value: provider.learning,
-            onChanged: (String? newValue) => provider.onLearningChange(newValue ?? 'other'),
-            getLabel: (String value) => value,
-            key: const Key('LanguageDropdown-I-want-to-learn'));
-      }),
+  Widget _buildLearningLanguageField(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
+      child: TextFormField(
+          cursorColor: Colors.black,
+          maxLength: 20,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.deny(RegExp("['+;=?!*^%#([\\)<>/&/,\":]"))
+          ],
+          onChanged: (val) => context.read<RegistrationProvider>().onLearningChange(val),
+          validator: (v) => (v != null && v.isNotEmpty) ? null : _empty,
+          initialValue: '',
+          keyboardType: TextInputType.text,
+          obscureText: false,
+          decoration: inputDecoration(type: InputType.learnLang, label: _toLearn)),
     );
   }
 
@@ -218,7 +225,7 @@ class _RegisterViewState extends State<RegisterView> {
             return FormSubmitBtn(
               key: const Key('register-view-submit'),
               formState: _registerFormKye.currentState,
-              txt: 'Sign Up',
+              txt: 'Register',
               onSubmit: () => _onFormSubmit(context, _registerFormKye.currentState),
             );
           case RegistrationStatus.submitting:
