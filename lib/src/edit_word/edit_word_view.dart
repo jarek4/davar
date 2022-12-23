@@ -45,8 +45,8 @@ class _EditWordViewState extends State<EditWordView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _edit = AppLocalizations.of(context)?.edit ?? 'EDIT';
-    _category = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Category');
-    _created = utils.capitalize(AppLocalizations.of(context)?.edit ?? 'Created at');
+    _category = utils.capitalize(AppLocalizations.of(context)?.category ?? 'Category');
+    _created = utils.capitalize(AppLocalizations.of(context)?.createdAt ?? 'Created at');
     _clue = AppLocalizations.of(context)?.clue ?? 'clue';
     _noClue = AppLocalizations.of(context)?.clueNotAdded ?? 'clue not added';
     _points = AppLocalizations.of(context)?.points ?? 'points';
@@ -101,15 +101,15 @@ class _EditWordViewState extends State<EditWordView> {
             onPressed: () => Navigator.pop(context, null)),
         actions: [
           // save changes
-          Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider wep, _) {
-            final bool isLoading = wep.status == EditWordProviderStatus.loading;
-            final bool isError = wep.status == EditWordProviderStatus.loading;
-            if (isError) {
+          Consumer<EditWordProvider>(builder: (BuildContext context, EditWordProvider ewp, _) {
+            final bool isLoading = ewp.status == EditWordProviderStatus.loading;
+            final bool hasError = ewp.editWordProviderError.isNotEmpty;
+            if (hasError) {
               final String er = '${AppLocalizations.of(context)?.error.toUpperCase() ?? 'ERROR'}!';
-              return Text(er);
+              return Text('$er: ${ewp.editWordProviderError}');
             }
             return TextButton(
-                onPressed: isLoading ? null : () => _onSave(wep),
+                onPressed: isLoading ? null : () => _onSave(ewp),
                 child: _buildSaveBtnChild(isLoading));
           }),
         ]);
@@ -172,7 +172,7 @@ class _EditWordViewState extends State<EditWordView> {
   Widget _buildMenuBtn(BuildContext ctx) {
     final String remove = AppLocalizations.of(context)?.remove ?? 'Remove';
     final String favAdd = AppLocalizations.of(context)?.favorite ?? 'Add to Favorites'; // favorite!
-    final String close = utils.capitalize(AppLocalizations.of(context)?.saveChanges ?? 'Close');
+    final String close = utils.capitalize(AppLocalizations.of(context)?.close ?? 'Close');
     return PopupMenuButton(
       icon: const Icon(Icons.menu_outlined),
       itemBuilder: (context) {
