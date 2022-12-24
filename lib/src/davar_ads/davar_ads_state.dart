@@ -17,5 +17,6 @@ class AdState {
       dotenv.env['ADMOB_ANDROID_BANNER_UNIT_1_ID'] ?? _androidTest;
   final String _iosBannerAdUnitId = dotenv.env['ADMOB_IOS_BANNER_UNIT_1_ID'] ?? _iosTest;
 
-  String get bannerAdUnitId => Platform.isAndroid ? _androidTest : _iosTest;
+  // String get bannerAdUnitId => Platform.isAndroid ? _androidTest : _iosTest;
+  String get bannerAdUnitId => Platform.isAndroid ? _androidBannerAdUnitId : _iosBannerAdUnitId;
 }

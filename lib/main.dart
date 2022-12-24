@@ -15,15 +15,16 @@ void main() async {
   setupLocator();
   final settingsController = SettingsController();
   await settingsController.loadSettings();
+  // ads
   final String testDeviceId = dotenv.env['ADMOB_TEST_DEVICE_ID'] ?? '';
   RequestConfiguration configuration = RequestConfiguration(testDeviceIds: [testDeviceId]);
   final Future<InitializationStatus> initFuture = MobileAds.instance.initialize();
   MobileAds.instance.updateRequestConfiguration(configuration);
+  // sentry
   await ErrorsReporter.setup(
     Provider<AdState>.value(
       value: AdState(initFuture),
       child: DavarApp(settingsController: settingsController),
     ),
   );
-  // DavarApp(settingsController: settingsController);
 }
