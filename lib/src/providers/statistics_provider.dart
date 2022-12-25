@@ -11,11 +11,11 @@ class StatisticsProvider with ChangeNotifier, QuizStatisticsService, WordsStatis
 
   final WordsProvider _wordsProvider;
 
-  StatisticsProviderStatus _status = StatisticsProviderStatus.success;
+  final StatisticsProviderStatus _status = StatisticsProviderStatus.success;
 
   StatisticsProviderStatus get status => _status;
 
-  String _errorMsg = '';
+  final String _errorMsg = '';
 
   String get errorMsg => _errorMsg;
 

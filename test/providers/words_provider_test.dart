@@ -69,14 +69,13 @@ void main() {
         verify(sut.readAllWords()).called(1);
       });
       test('returns empty array when repository throws exception', () async {
-        List<Word> words2 = [...words, ...words];
+        // List<Word> words2 = [...words, ...words];
         // arrange
         when(repository.readAll(u.id)).thenThrow(Exception('e'));
         expect(await sut.readAllWords(), []);
         verify(sut.readAllWords()).called(1);
       });
       test('sets WordsProviderStatus.success when repository throws exception', () async {
-        List<Word> words2 = [...words, ...words];
         // arrange
         when(repository.readAll(u.id)).thenThrow(Exception('e2'));
         // act

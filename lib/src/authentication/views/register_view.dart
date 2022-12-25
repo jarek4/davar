@@ -1,5 +1,4 @@
 import 'package:davar/src/authentication/authentication.dart';
-import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/theme/theme.dart';
 import 'package:davar/src/ui/widgets/widgets.dart';
 import 'package:davar/src/utils/utils.dart' as utils;

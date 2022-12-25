@@ -21,7 +21,7 @@ void main() {
   late IWordsRepository<Word> wordsRepo;
   late WordsProvider wp;
   late SearchWordsProvider sut;
-  const User user = User(id: 1, name: 'user');
+  // const User user = User(id: 1, name: 'user');
 
   setUpAll(() {
     setupLocator();
@@ -158,7 +158,7 @@ void main() {
     test('data returned from Future', () async {
       // arrange
       const Word item = Word(catchword: 'cw1', id: 1, userId: 1, userTranslation: 't');
-      const List<Word> data = [item];
+      // const List<Word> data = [item];
       List<Map<String, dynamic>>? map = [item.toJson()];
       when(wordsRepo.rawQuery('', [1])).thenAnswer((_) => Future.value(map));
       // act  // assert

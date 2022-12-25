@@ -38,14 +38,6 @@ class MockWordsProviderImpl extends _i1.Mock implements _i2.WordsProvider {
         returnValueForMissingStub: '',
       ) as String);
   @override
-  set errorMsg(String? value) => super.noSuchMethod(
-        Invocation.setter(
-          #errorMsg,
-          value,
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
   _i3.Future<List<int>> get wordsIds => (super.noSuchMethod(
         Invocation.getter(#wordsIds),
         returnValue: _i3.Future<List<int>>.value(<int>[]),
@@ -57,6 +49,14 @@ class MockWordsProviderImpl extends _i1.Mock implements _i2.WordsProvider {
         returnValue: false,
         returnValueForMissingStub: false,
       ) as bool);
+  @override
+  void confirmReadErrorMsg() => super.noSuchMethod(
+        Invocation.method(
+          #confirmReadErrorMsg,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      );
   @override
   _i3.Future<List<_i4.Word>> readAllWords() => (super.noSuchMethod(
         Invocation.method(
@@ -137,14 +137,6 @@ class MockWordsProviderImpl extends _i1.Mock implements _i2.WordsProvider {
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
   @override
-  void dispose() => super.noSuchMethod(
-        Invocation.method(
-          #dispose,
-          [],
-        ),
-        returnValueForMissingStub: null,
-      );
-  @override
   void addListener(_i5.VoidCallback? listener) => super.noSuchMethod(
         Invocation.method(
           #addListener,
@@ -157,6 +149,14 @@ class MockWordsProviderImpl extends _i1.Mock implements _i2.WordsProvider {
         Invocation.method(
           #removeListener,
           [listener],
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  void dispose() => super.noSuchMethod(
+        Invocation.method(
+          #dispose,
+          [],
         ),
         returnValueForMissingStub: null,
       );

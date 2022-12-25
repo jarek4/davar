@@ -20,7 +20,7 @@ class AddNewWordModal extends StatefulWidget {
   final Function handleSubmit;
 
   @override
-  _AddNewWordModalState createState() => _AddNewWordModalState();
+  State<AddNewWordModal> createState() => _AddNewWordModalState();
 }
 
 class _AddNewWordModalState extends State<AddNewWordModal> {

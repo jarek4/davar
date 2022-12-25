@@ -1,4 +1,3 @@
-import 'package:davar/src/data/models/models.dart';
 import 'package:davar/src/providers/providers.dart';
 import 'package:davar/src/quiz/quiz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,11 +12,11 @@ void main() {
   late QuizProvider sut;
   late WordsProvider wp;
 
-  const List<Word> words = [
-    Word(catchword: 'c', id: 176, userId: 2, userTranslation: 'T'),
-    Word(catchword: 'c2', id: 18, userId: 2, userTranslation: 'T2'),
-    Word(catchword: 'c3', id: 26, userId: 2, userTranslation: 'T3'),
-  ];
+  // const List<Word> words = [
+  //   Word(catchword: 'c', id: 176, userId: 2, userTranslation: 'T'),
+  //   Word(catchword: 'c2', id: 18, userId: 2, userTranslation: 'T2'),
+  //   Word(catchword: 'c3', id: 26, userId: 2, userTranslation: 'T3'),
+  // ];
 
   // setUp(() {
   // });
