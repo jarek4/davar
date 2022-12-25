@@ -7,7 +7,6 @@ class AppConst {
   static const int appVersionMinor = 0;
   static const int appVersionTiny = 0;
   static const int appVersionBuildNumber = 5;
-git
   /// major.minor.tiny.build number
   static const String appVersionAsString =
       '$appVersionMajor.$appVersionMinor.$appVersionTiny.$appVersionBuildNumber';
