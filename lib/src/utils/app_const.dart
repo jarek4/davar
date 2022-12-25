@@ -3,11 +3,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConst {
   static const String appName = 'davar';
-  static const int appVersionMajor = 0;
+  static const int appVersionMajor = 1;
   static const int appVersionMinor = 0;
-  static const int appVersionTiny = 1;
-  static const int appVersionBuildNumber = 1;
-
+  static const int appVersionTiny = 0;
+  static const int appVersionBuildNumber = 5;
+git
   /// major.minor.tiny.build number
   static const String appVersionAsString =
       '$appVersionMajor.$appVersionMinor.$appVersionTiny.$appVersionBuildNumber';
