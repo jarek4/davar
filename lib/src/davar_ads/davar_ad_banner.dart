@@ -77,14 +77,12 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
         padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
         child: Column(children: [
           SizedBox(height: 50, child: AdWidget(ad: _bottomBannerAd!)),
-          _isTextVisible
-              ? Padding(
+          Padding(
                   padding: const EdgeInsets.only(bottom: 2.6, top: 2.0),
                   child: Text(
-                    '$support!',
+                    _isTextVisible ? '$support!' : 'Ad',
                     textAlign: TextAlign.center,
                   ))
-              : const SizedBox(height: 20.0)
         ]),
       );
     }

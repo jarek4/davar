@@ -16,12 +16,12 @@ class BackupProvider with ChangeNotifier {
   // db directory:
   // Android:
   // /data/user/0/com.example.davar/files/${DbConsts.dbName}.db
+  // or /storage/emulated/0/Android/data/...
   // iOS simulator:
   // /data/Containers/Data/Application/CA..6/Library/Application Support/${DbConsts.dbName}.db
 
   static const String _backupFileName = 'davar_backup';
   static const String _backupFileExtension = '.db';
-  static const String _androidEasyAccessPath = 'storage/emulated/0/Davar';
   static const String _noPermissionInfo =
       'Please check application permissions, or your device does not support this option.';
 
@@ -77,8 +77,8 @@ class BackupProvider with ChangeNotifier {
     _handleStatusChange(BackupStatus.loading);
     try {
       // grant permissions
-      final PermissionStatus permissionsStatus = await Permission.manageExternalStorage.status;
-      if (!permissionsStatus.isGranted) await _grantPermissions();
+      final PermissionStatus permissionsStatus = await Permission.storage.status;
+      if (!permissionsStatus.isGranted) await _grantStoragePermission();
 
       // get directory to writ the backup file
       final Directory? saveTo = await _getDirectoryToSave();
@@ -125,12 +125,10 @@ class BackupProvider with ChangeNotifier {
   // finds platform specific user accessible directory
   Future<Directory?> _getDirectoryToSave() async {
     try {
-      // android user easy-access folder
-      if (Platform.isAndroid) {
-        Directory? easyAccess = await _tryToGetAndroidDir(_androidEasyAccessPath);
-        if (easyAccess != null && await easyAccess.exists()) return easyAccess;
+      bool isPermitted = await Permission.storage.isGranted;
+      if (!isPermitted) {
+        isPermitted = await _grantStoragePermission();
       }
-      // user easy-access folder inaccessible or iOS platform
       return await utils.GetDirectory.getUserAccessibleDirectory();
     } on FileSystemException catch (e) {
       if (kDebugMode) print('BP getDirectoryToSave FileSystemException: $e');
@@ -141,33 +139,10 @@ class BackupProvider with ChangeNotifier {
     }
   }
 
-  Future<Directory?> _tryToGetAndroidDir(String path) async {
-    try {
-      final Directory copyTo = Directory(path);
-      if (await Permission.manageExternalStorage.request().isGranted) {
-        if (await copyTo.exists()) return copyTo;
-      } else {
-        final bool isPermitted = await _grantPermissions();
-        if (isPermitted) {
-          Directory newDirectory = await copyTo.create();
-          if (await newDirectory.exists()) return newDirectory;
-        }
-      }
-    } on FileSystemException catch (e) {
-      if (kDebugMode) print('BP tryToGetAndroidDir FileSystemException: $e');
-      return null;
-    } catch (e) {
-      if (kDebugMode) print('tryToGetAndroidUserDirectory $path ERROR: $e');
-    }
-    return null;
-  }
-
-  Future<bool> _grantPermissions() async {
-    // iOS ExternalStorage is not granted!
-    final PermissionStatus es = await Permission.manageExternalStorage.request();
+  Future<bool> _grantStoragePermission() async {
     // iOS Storage is granted
     final PermissionStatus s = await Permission.storage.request();
-    if (es.isGranted && s.isGranted) return true;
+    if (s.isGranted) return true;
     return false;
   }
 
