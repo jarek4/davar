@@ -53,6 +53,17 @@ class DB {
       await db.execute(DbConsts.createWordsTableStatement);
       await db.execute(DbConsts.createWordCategoriesTableStatement);
       await db.insert(DbConsts.tableUsers, utils.AppConst.emptyUser.toJson());
+      // test account for Play Console tests:
+      await db.insert(DbConsts.tableUsers, {
+        'name': 'TestUser',
+        'id': 2,
+        'email': 'test4@example.com',
+        'createdAt': '0000:00:00',
+        'learning': 'learning',
+        'native': 'native',
+        'password': '4Aa1z4444vB',
+        'authToken': '4authToken'
+      });
       // create common category [no category] in word_categories table
       await db.insert(DbConsts.tableWordCategories, DbConsts.commonNoCategory);
     } on DatabaseException catch (e) {

@@ -35,6 +35,7 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
             });
             SchedulerBinding.instance.addPostFrameCallback((_) {
               Future.delayed(const Duration(milliseconds: 800)).then((_) {
+                if (!mounted) return;
                 setState(() {
                   _isTextVisible = true;
                 });
@@ -42,9 +43,11 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
             });
             if (kDebugMode) print('BannerAdListener Ad loaded.');
           }, onAdFailedToLoad: (Ad ad, LoadAdError error) {
-            setState(() {
-              _isBottomAdLoaded = false;
-            });
+            if (mounted) {
+              setState(() {
+                _isBottomAdLoaded = false;
+              });
+            }
             ad.dispose();
             if (kDebugMode) print('BannerAdListener Ad failed to load: $error');
           }),
@@ -78,11 +81,11 @@ class _DavarAdBannerState extends State<DavarAdBanner> {
         child: Column(children: [
           SizedBox(height: 50, child: AdWidget(ad: _bottomBannerAd!)),
           Padding(
-                  padding: const EdgeInsets.only(bottom: 2.6, top: 2.0),
-                  child: Text(
-                    _isTextVisible ? '$support!' : 'Ad',
-                    textAlign: TextAlign.center,
-                  ))
+              padding: const EdgeInsets.only(bottom: 2.6, top: 2.0),
+              child: Text(
+                _isTextVisible ? '$support!' : 'Ad',
+                textAlign: TextAlign.center,
+              ))
         ]),
       );
     }
